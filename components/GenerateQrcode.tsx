@@ -98,8 +98,8 @@ const GenerateQrcode = () => {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50">
       <div className="bg-white rounded-xl shadow-lg p-8 flex flex-col items-center gap-6">
-        <h1 className="text-2xl font-bold text-gray-800 mb-2">Download Your QR Code</h1>
-        <p className="text-gray-500 mb-4 text-center">Scan this QR code to visit our website. The logo in the center makes it unique to your brand!</p>
+        <h1 className="text-2xl font-bold text-gray-800 mb-2">Your next computer is one scan away.</h1>
+        {/* <p className="text-gray-500 mb-4 text-center">Your next computer is one scan away.!</p> */}
         <div style={{ position: "relative", display: "inline-block", marginBottom: 16 }}>
           <canvas
             ref={canvasRef}
