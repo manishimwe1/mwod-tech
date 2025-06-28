@@ -1,11 +1,10 @@
 'use client'
 
-import React, { useState, useRef } from "react";
+import React, { useRef } from "react";
 import QRCode from "qrcode";
 import { Button } from "./ui/button";
 
 const GenerateQrcode = () => {
-  const [qrUrl, setQrUrl] = useState<string | null>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const qrData = `https://mozze-project.vercel.app/`; // You can make this a prop or state if you want dynamic URLs
   const logoSrc = "/convex.svg"; // Path to your logo
