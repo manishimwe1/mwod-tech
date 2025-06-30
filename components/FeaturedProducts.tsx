@@ -1,26 +1,48 @@
-// components/FeaturedProducts.jsx
+import {
+  Card,
+  CardContent,
+} from "@/components/ui/card";
 import React from "react";
+import { Heart } from "lucide-react";
+import { getProductData } from "@/sanity/getData";
+import Image from "next/image";
+import { Button } from "./ui/button";
 
-const featured = [
-  { name: "Smartwatch X200", price: "$199", image: "https://via.placeholder.com/150" },
-  { name: "Wireless Earbuds", price: "$59", image: "https://via.placeholder.com/150" },
-  { name: "Portable Speaker", price: "$89", image: "https://via.placeholder.com/150" },
-];
-
-export default function FeaturedProducts() {
+export default async function FeaturedProducts() {
+  const product = await getProductData()
+  console.log(product,'product');
+  if(!product) return null
   return (
-    <section className="py-12 container mx-auto">
-      <h2 className="text-2xl font-bold mb-6 text-center">Featured Products</h2>
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
-        {featured.map((item, idx) => (
-          <div key={idx} className="bg-white p-4 rounded shadow hover:shadow-lg transition">
-            <img src={item.image} alt={item.name} className="w-full mb-3 rounded"/>
-            <h3 className="font-semibold">{item.name}</h3>
-            <p className="text-blue-700 font-bold">{item.price}</p>
-            <button className="mt-2 bg-blue-700 text-white px-4 py-1 rounded hover:bg-blue-800">
-              Add to Cart
+    <section className="py-12 container mx-auto px-6 lg:px-8">
+      <h2 className="text-2xl font-bold mb-6 text-center">Collection Products</h2>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {product.map((item) => (
+          <Card
+            key={item._id}
+            className="bg-white text-black rounded-2xl p-3 relative flex flex-col shadow hover:shadow-lg transition min-h-[290px] py-6 group cursor-pointer"
+          >
+            {/* Heart icon */}
+            <button className="absolute top-3 right-4 z-10 p-1 rounded-full bg-black/40 hover:bg-black/70">
+              <Heart className="w-5 h-5 text-white" fill="white" strokeWidth={1.5} />
             </button>
-          </div>
+            <CardContent className="flex flex-col items-start p-0 justify-center">
+              <Image
+                height={120}
+                width={500}
+                src={item.imageUrl ?? ''}
+                alt={item.title}
+                className="w-full h-[200px] object-contain rounded-t-xl mb-2 bg-white"
+              />
+              <div className=" w-full overflow-hidden p-2">
+              <h3 className="font-semibold text-sm truncate mb-1 mt-1 leading-tight line-clamp-1">
+                {item.title}
+              </h3>
+              <span className="text-xs text-neutral-600 py-1 line-clamp-2">{item.description}</span>
+              <div className="text-2xl line-clamp-3 font-extrabold py-3 text-end">5000 <span className="text-sm font-normal">rwf</span></div>
+             <Button className="bg-[hsl(201,100%,36%)] w-full group-hover:bg-[#0077b6] cursor-pointer">Add to cart</Button>
+              </div>
+            </CardContent>
+          </Card>
         ))}
       </div>
     </section>
