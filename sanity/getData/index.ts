@@ -44,3 +44,23 @@ export const getProductBySlug = async (slug: string) => {
     return null;
   }
 };
+
+export const getSimilarProducts = async (title: string, excludeId: string) => {
+  try {
+    // Split the title into keywords, take the first 2-3 for simplicity
+    const keywords = title.split(" ").slice(0, 3).join(" ");
+    const data = await client.fetch(
+      groq`*[_type == "product" && _id != $excludeId && title match $keywords][0...4]{
+        _id, title, slug, price, "imageUrl": mainImage.asset->url, _createdAt, description
+      }`,
+      { keywords: `*${keywords}*`, excludeId },
+      options
+    );
+    return data as ProductType[];
+  } catch (error) {
+    console.log(error, "ERROR IN GETTING SIMILAR PRODUCTS");
+    return [];
+  }
+};
+
+

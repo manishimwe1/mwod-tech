@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { SanityLive } from "@/sanity/lib/live";
 import Header from "@/components/Header";
+import NextTopLoader from 'nextjs-toploader';
 
 // const geistSans = Geist({
 //   variable: "--font-geist-sans",
@@ -29,7 +30,7 @@ export default function RootLayout({
         className={` antialiased bg-[#caf0f8]`}
       >
       <Header />
-
+      <NextTopLoader color="#FFFFFF" />
         {children}
         <SanityLive/>
       </body>

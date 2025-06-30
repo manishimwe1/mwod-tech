@@ -1,13 +1,12 @@
 // App.jsx
-import BestSellers from "@/components/BestSellers";
-import BrandsCarousel from "@/components/BrandsCarousel";
-import DealsOfTheDay from "@/components/DealsOfTheDay";
+// import BrandsCarousel from "@/components/BrandsCarousel";
+// import DealsOfTheDay from "@/components/DealsOfTheDay";
 import FeaturedProducts from "@/components/FeaturedProducts";
 import Footer from "@/components/Footer";
 import HeroSection from "@/components/HeroSection";
-import NewsSection from "@/components/NewsSection";
+// import NewsSection from "@/components/NewsSection";
 // import ProductCategories from "@/components/ProductCategories";
-import TrendingTags from "@/components/TrendingTags";
+// import TrendingTags from "@/components/TrendingTags";
 import { getHeroSection } from "@/sanity/getData";
 import React from "react";
 
@@ -21,11 +20,11 @@ export default async function App() {
       {/* <ProductCategories /> */}
       
       <FeaturedProducts />
-      <BestSellers />
-      <DealsOfTheDay />
+      {/* <BestSellers /> */}
+      {/* <DealsOfTheDay />
       <BrandsCarousel />
       <TrendingTags />
-      <NewsSection />
+      <NewsSection /> */}
       <Footer />
     </div>
   );

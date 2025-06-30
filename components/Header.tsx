@@ -4,10 +4,12 @@ import React from "react";
 import { AlignRight, Search } from "lucide-react";
 import { Button } from "./ui/button";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { NavLinks } from "@/constants";
 
 export default function Header() {
   return (
-    <header className="bg-primary text-white w-full">
+    <header className="bg-[#03045e] text-white w-full">
       <div className="container mx-auto flex justify-between items-center p-4">
         <Link href={'/'} className="flex items-center justify-center gap-2">
           <Image src={'/convex.svg'} alt="logo" height={20} width={40} />
@@ -19,15 +21,15 @@ export default function Header() {
         <SearchBox />
         <div className=" items-center justify-end gap-2 md:gap-4 hidden md:flex">
           <nav className="hidden md:flex space-x-4">
-            <Link href="#products" className="hover:text-blue-300">
+            {
+              NavLinks.map((link)=>(
+
+            <Link href={link.link} key={link.label} className="hover:text-blue-300 capitalize">
               Products
             </Link>
-            <Link href="#deals" className="hover:text-blue-300">
-              Deals
-            </Link>
-            <Link href="#contact" className="hover:text-blue-300">
-              Contact
-            </Link>
+              ))
+            }
+            
           </nav>
           <Button
             size={"sm"}
@@ -47,12 +49,13 @@ export default function Header() {
 function SearchBox() {
   const [query, setQuery] = React.useState("");
   const inputRef = React.useRef<HTMLInputElement>(null);
+  const router = useRouter();
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    // TODO: Implement search logic
     if (query.trim()) {
-      // For now, just blur the input
+      router.push(`/search?q=${encodeURIComponent(query)}`);
+      setQuery("");
       inputRef.current?.blur();
     }
   }
@@ -65,14 +68,14 @@ function SearchBox() {
   return (
     <form
       onSubmit={handleSubmit}
-      className="relative flex items-center w-full max-w-xs md:max-w-sm lg:max-w-md bg-stone-700 rounded-md "
+      className="relative flex items-center w-full max-w-xs md:max-w-sm lg:max-w-md bg-stone-900 rounded-md "
       role="search"
       aria-label="Site search"
     >
       <input
         ref={inputRef}
         type="text"
-        className="w-full rounded-l-md border border-stone-600 border-r-0 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 text-primary-foreground placeholder:text-xs"
+        className="w-full rounded-l-md border border-stone-600 border-r-0 px-3 py-2 focus:outline-none focus:ring-0 focus:ring-blue-500 text-primary-foreground placeholder:text-xs"
         placeholder="Search products, brands, or categories..."
         value={query}
         onChange={(e) => setQuery(e.target.value)}
@@ -82,7 +85,7 @@ function SearchBox() {
         <button
           type="button"
           onClick={handleClear}
-          className="absolute right-12 text-gray-100 hover:text-gray-600 focus:outline-none bg-stone-600 rounded-full p-1"
+          className="absolute right-12 text-gray-100 focus:outline-none bg-stone-600 rounded-full p-1 cursor-pointer hover:text-red-500"
           tabIndex={0}
           aria-label="Clear search"
         >
@@ -105,7 +108,7 @@ function SearchBox() {
       <Button
         type="submit"
         size="sm"
-        className="rounded-l-none rounded-r-md px-3 py-2 h-full flex items-center gap-1 bg-stone-700"
+        className="rounded-l-none rounded-r-md px-3 py-2 h-full flex items-center gap-1 bg-stone-700 cursor-pointer"
         aria-label="Submit search"
       >
         <Search className="w-4 h-4" />

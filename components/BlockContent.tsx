@@ -9,6 +9,8 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import { ScrollArea } from "./ui/scroll-area";
+import { ProductType } from "@/typeing";
+import SmilarComponent from "./SmilarComponent";
 
 // Helper to extract all images from PortableText content
 function extractImages(content: any[]): any[] {
@@ -73,11 +75,13 @@ export const BlockContent = ({
   title,
   description,
   price,
+  similar,
 }: {
   content: any;
   title: string;
   description: string;
-  price:number
+  price:number,
+  similar:ProductType[]
 }) => {
   const images = extractImages(content || []);
   return (
@@ -133,8 +137,15 @@ export const BlockContent = ({
           </div>
         </div>
       </div>
-      <div className="flex flex-col w-full px-4 h-full">
+      <div className="flex border w-full px-4 h-full items-center justify-between gap-10">
+        <div className="w-full border ">
+
         <PortableText components={portableTextComponents} value={content} />
+        </div>
+        <div className="w-[30%] h-full">
+          <SmilarComponent similar={similar}/>
+
+        </div>
       </div>
     </div>
   );

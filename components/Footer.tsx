@@ -1,4 +1,6 @@
 // components/Footer.jsx
+import { NavLinks } from "@/constants";
+import Link from "next/link";
 import React from "react";
 
 export default function Footer() {
@@ -6,15 +8,15 @@ export default function Footer() {
     <footer className="bg-blue-900 text-white py-8">
       <div className="container mx-auto grid md:grid-cols-3 gap-6 text-center md:text-left">
         <div>
-          <h3 className="font-semibold mb-2">eCommax</h3>
+          <h3 className="font-semibold mb-2">Mosse tech ltd</h3>
           <p className="text-sm">High-quality electronics & great deals.</p>
         </div>
         <div>
           <h3 className="font-semibold mb-2">Links</h3>
           <ul className="space-y-1">
-            <li><a href="#" className="hover:text-blue-300">About</a></li>
-            <li><a href="#" className="hover:text-blue-300">Contact</a></li>
-            <li><a href="#" className="hover:text-blue-300">Privacy</a></li>
+            {NavLinks.map((link)=>(
+              <Link key={link.label} href={link.link}>{link.label}</Link>
+            ))}
           </ul>
         </div>
         <div>
@@ -27,7 +29,7 @@ export default function Footer() {
         </div>
       </div>
       <div className="text-center mt-4 text-sm text-blue-200">
-        &copy; 2025 eCommax. All rights reserved.
+        &copy; {new Date().getFullYear()} eCommax. All rights reserved.
       </div>
     </footer>
   );
