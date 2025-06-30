@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { SanityLive } from "@/sanity/lib/live";
+import Header from "@/components/Header";
 
 // const geistSans = Geist({
 //   variable: "--font-geist-sans",
@@ -27,6 +28,8 @@ export default function RootLayout({
       <body
         className={` antialiased bg-[#caf0f8]`}
       >
+      <Header />
+
         {children}
         <SanityLive/>
       </body>

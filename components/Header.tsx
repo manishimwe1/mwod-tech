@@ -9,13 +9,13 @@ export default function Header() {
   return (
     <header className="bg-primary text-white w-full">
       <div className="container mx-auto flex justify-between items-center p-4">
-        <div className="flex items-center justify-center gap-2">
+        <Link href={'/'} className="flex items-center justify-center gap-2">
           <Image src={'/convex.svg'} alt="logo" height={20} width={40} />
           <div className="md:flex items-center justify-center flex-col hidden">
           <h1 className="text-xl font-bold">Mosse Tech</h1>
           <p>LTd</p>
         </div>
-        </div>
+        </Link>
         <SearchBox />
         <div className=" items-center justify-end gap-2 md:gap-4 hidden md:flex">
           <nav className="hidden md:flex space-x-4">

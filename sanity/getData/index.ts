@@ -30,3 +30,17 @@ export const getProductData = async () => {
     console.log(error, "ERROR IN GETTING product SECTION");
   }
 };
+
+export const getProductBySlug = async (slug: string) => {
+  try {
+    const data = await client.fetch(
+      groq`*[_type == "product" && slug.current == $slug][0]{_id, title, slug, "imageUrl": mainImage.asset->url, _createdAt, body, description }`,
+      { slug },
+      options
+    );
+    return data as ProductType | null;
+  } catch (error) {
+    console.log(error, "ERROR IN GETTING PRODUCT BY SLUG");
+    return null;
+  }
+};

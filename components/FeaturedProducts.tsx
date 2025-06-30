@@ -7,6 +7,7 @@ import { Heart } from "lucide-react";
 import { getProductData } from "@/sanity/getData";
 import Image from "next/image";
 import { Button } from "./ui/button";
+import Link from "next/link";
 
 export default async function FeaturedProducts() {
   const product = await getProductData()
@@ -17,8 +18,11 @@ export default async function FeaturedProducts() {
       <h2 className="text-2xl font-bold mb-6 text-center">Collection Products</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {product.map((item) => (
-          <Card
+          <Link
+            href={`/product-detail/${item.slug.current}`}
             key={item._id}
+          >
+          <Card
             className="bg-white text-black rounded-2xl p-3 relative flex flex-col shadow hover:shadow-lg transition min-h-[290px] py-6 group cursor-pointer"
           >
             {/* Heart icon */}
@@ -43,6 +47,7 @@ export default async function FeaturedProducts() {
               </div>
             </CardContent>
           </Card>
+          </Link>
         ))}
       </div>
     </section>
