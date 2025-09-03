@@ -13,11 +13,11 @@ export default function TechEditorsBento() {
           {/* Main Hero Card - Tech editors' top picks */}
           <div className="col-span-12 lg:col-span-6 row-span-2 bg-gradient-to-br from-gray-100 to-gray-200 rounded-2xl p-6 lg:p-10 flex flex-col justify-between relative overflow-hidden hover:shadow-lg transition-shadow">
             {/* Text Content */}
-            <div className="relative z-20 max-w-md">
+            <div className="relative z-20 max-w-md flex flex-col gap-4">
               <p className="text-blue-800 text-sm font-medium mb-2">
                 Computers, Phones, Beats & more
               </p>
-              <h1 className="sm:text-3xl md:text-4xl lg:text-5xl font-bold text-blue-900 mb-6 leading-tight">
+              <h1 className="sm:text-3xl md:text-4xl font-bold text-blue-900 mb-6 leading-tight">
                 Tech editors top picks
               </h1>
               
@@ -27,8 +27,8 @@ export default function TechEditorsBento() {
             <div className="absolute mx-auto bottom-4 md:-bottom-8 w-[90%] bg-white h-[66%] md:h-[60%] lg:w-[600px] lg:h-[400px] z-10 rounded-xl overflow-hidden">
               <HeroCarrousel />
             </div>
-            <div className="absolute left-1/2 bottom-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20">
-              <Button className="bg-gradient-to-b from-blue-50 via-blue-100 to-blue-200 border border-gray-200 px-6 py-3 rounded-full text-blue-950 font-bold hover:bg-gradient-to-r hover:from-white hover:to-blue-200 transition-all">
+            <div className="absolute left-1/2 bottom-0 transform -translate-x-1/2 -translate-y-1/2 z-20">
+              <Button className="bg-gradient-to-t from-blue-950  to-blue-800 border border-blue-500 px-6 py-3 rounded-full text-white font-bold hover:bg-blue-500 cursor-pointer transition-all">
                 Shop now
               </Button>
             </div>
@@ -58,7 +58,7 @@ export default function TechEditorsBento() {
           </div>
 
           {/* Smart Watches Card */}
-          <div className="col-span-6 lg:col-span-3 bg-blue-50 rounded-2xl p-6 relative overflow-hidden hover:shadow-lg transition-shadow">
+          <div className="col-span-12 md:col-span-6 lg:col-span-3 bg-blue-50 rounded-2xl p-6 relative overflow-hidden hover:shadow-lg transition-shadow">
             <div className="relative z-10">
               <h3 className="text-xl font-bold text-blue-900 mb-1">Smart Watches</h3>
               <p className="text-blue-800 mb-4">Track your life</p>
@@ -78,7 +78,7 @@ export default function TechEditorsBento() {
           </div>
 
           {/* Smart Home Tech Card */}
-          <div className="col-span-6 lg:col-span-3 bg-white rounded-2xl p-6 relative overflow-hidden shadow-sm hover:shadow-lg transition-shadow">
+          <div className=" hidden md:block col-span-6 md:col-span-6 lg:col-span-3 bg-white rounded-2xl p-6 relative overflow-hidden shadow-sm hover:shadow-lg transition-shadow">
             <div className="relative z-10">
               <h3 className="text-xl font-bold text-gray-900 mb-1">Smart Home</h3>
               <p className="text-gray-700 mb-4">Tech</p>
