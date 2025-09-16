@@ -16,9 +16,10 @@ export const createInvoice = mutation({
       })
     ),
     status: v.union(v.literal("draft"), v.literal("sent"), v.literal("paid")),
-    notes: v.optional(v.string()),
     totalAmount: v.number(),
     updatedAt: v.number(),
+    date: v.number(),
+
   },
   handler: async (ctx, args) => {
     return await ctx.db.insert("invoice", args);
@@ -48,6 +49,7 @@ export const updateInvoice = mutation({
     id: v.id("invoice"),
     clientName: v.optional(v.string()),
     clientPhone: v.optional(v.string()),
+    clientTIN: v.optional(v.string()),
     items: v.optional(
       v.array(
         v.object({
@@ -58,9 +60,9 @@ export const updateInvoice = mutation({
       )
     ),
     status: v.optional(v.union(v.literal("draft"), v.literal("sent"), v.literal("paid"))),
-    notes: v.optional(v.string()),
     totalAmount: v.optional(v.number()),
     updatedAt: v.number(),
+    date: v.number(),
   },
   handler: async (ctx, args) => {
     const { id, ...updateData } = args;

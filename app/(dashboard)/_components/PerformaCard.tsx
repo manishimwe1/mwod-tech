@@ -68,7 +68,7 @@ export function ProformaInvoiceCard({ invoice }: { invoice: Doc<"invoice"> }) {
     );
     rightY += 5;
     pdf.text(
-      `Date: ${new Date(invoice._creationTime).toLocaleDateString()}`,
+      `Date: ${new Date(invoice.date).toLocaleDateString()}`,
       rightMargin,
       rightY,
       { align: "right" }
@@ -198,7 +198,7 @@ export function ProformaInvoiceCard({ invoice }: { invoice: Doc<"invoice"> }) {
           <p className="font-bold text-blue-500">
             {invoice.totalAmount?.toLocaleString() ?? 0} Rwf
           </p>
-          <p>Date: {new Date(invoice._creationTime).toLocaleDateString()}</p>
+          <p>Date: {new Date(invoice.date).toLocaleDateString()}</p>
         </div>
       </CardHeader>
 

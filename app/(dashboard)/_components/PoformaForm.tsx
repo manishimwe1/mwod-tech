@@ -4,6 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, useFieldArray } from "react-hook-form";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
+import { format } from "date-fns";
 import {
   Form,
   FormControl,
@@ -12,45 +13,61 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Plus, Trash2, Save } from "lucide-react";
+import { Plus, Trash2, Save, CalendarIcon } from "lucide-react";
 import { Dispatch, SetStateAction, useState } from "react";
 import { useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { toast } from "sonner";
+import { cn } from "@/lib/utils";
+import { Calendar } from "@/components/ui/calendar";
+import { Doc } from "@/convex/_generated/dataModel";
 
-// Item schema
 const itemSchema = z.object({
   description: z.string().min(1, "Description is required"),
-  quantity: z.number().min(1, "Quantity must be at least 1"),
-  unitPrice: z.number().min(0, "Unit price must be positive"),
+  quantity: z.coerce.number().min(1, "Quantity must be at least 1"),
+  unitPrice: z.coerce.number().min(0, "Unit price must be positive"),
 });
 
-// Main form schema
 const formSchema = z.object({
   clientName: z.string().min(2, "Client name is required"),
   clientPhone: z.string().optional().or(z.literal("")),
   clientTIN: z.string().optional().or(z.literal("")),
+  date: z.coerce.date({
+    error: "Date is required",
+  }),
   items: z.array(itemSchema).min(1, "At least one item is required"),
   status: z.enum(["draft", "sent", "paid"]).default("draft"),
-  notes: z.string().optional(),
 });
 
-export function ProformaInvoiceForm({ onClose }: { onClose: Dispatch<SetStateAction<boolean>>}) {
+export function ProformaInvoiceForm({
+  onClose,
+  invoice
+}: {
+  onClose: Dispatch<SetStateAction<boolean>>;
+  invoice?:Doc<'invoice'>
+}) {
   const [isSaving, setIsSaving] = useState(false);
 
   const createInvoice = useMutation(api.invoice.createInvoice);
+  const updateInvoice = useMutation(api.invoice.updateInvoice); // Import update mutation
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    mode: "onBlur", // triggers validation on blur
+    mode: "onChange", // validate as user types/selects
     defaultValues: {
-      clientName: "",
-      clientPhone: "",
-      clientTIN: "",
-      items: [{ description: "", quantity: 1, unitPrice: 0 }],
-      status: "draft",
-      notes: "",
+      clientName: invoice?.clientName || "",
+      clientPhone: invoice?.clientPhone || "",
+      clientTIN: invoice?.clientTIN || "",
+      items: invoice?.items || [{ description: "", quantity: 1, unitPrice: 0 }],
+      status: invoice?.status || "draft",
+      date: invoice?.date ? new Date(invoice.date) : new Date(), // prefill with invoice date or today
     },
   });
 
@@ -75,14 +92,26 @@ export function ProformaInvoiceForm({ onClose }: { onClose: Dispatch<SetStateAct
     setIsSaving(true);
     try {
       const invoiceData = {
-        ...values,
+        clientName: values.clientName,
+        clientPhone: values.clientPhone,
+        clientTIN: values.clientTIN,
+        date: values.date.getTime(),
+        items: values.items,
+        status: values.status,
         totalAmount: calculateGrandTotal(),
-        updatedAt: Date.now(),
+        updatedAt: Date.now(), // Always update updatedAt on save
       };
-      // Call Convex mutation
-      await createInvoice(invoiceData);
-      toast.success("Proforma invoice saved successfully!");
-      form.reset(); // optional: reset form after save
+
+      if (invoice?._id) {
+        // If invoice exists, update it
+        await updateInvoice({ id: invoice._id, ...invoiceData });
+        toast.success("Proforma invoice updated successfully!");
+      } else {
+        // Otherwise, create a new one
+        await createInvoice(invoiceData);
+        toast.success("Proforma invoice saved successfully!");
+        form.reset();
+      }
       setIsSaving(false);
       onClose(false);
     } catch (error) {
@@ -126,7 +155,9 @@ export function ProformaInvoiceForm({ onClose }: { onClose: Dispatch<SetStateAct
               )}
             />
           </div>
-          <FormField
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <FormField
               control={form.control}
               name="clientTIN"
               render={({ field }) => (
@@ -139,6 +170,44 @@ export function ProformaInvoiceForm({ onClose }: { onClose: Dispatch<SetStateAct
                 </FormItem>
               )}
             />
+
+            {/* Date */}
+            <FormField
+              control={form.control}
+              name="date"
+              render={({ field }) => (
+                <FormItem className="w-full">
+                  <FormLabel>Select a Date</FormLabel>
+                  <FormControl>
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <Button
+                          variant="outline"
+                          className={cn(
+                            "w-full justify-start text-left bg-indigo-50/30 overflow-hidden cursor-pointer",
+                            !field.value && "text-muted-foreground"
+                          )}
+                        >
+                          <CalendarIcon className="mr-2 h-4 w-4" />
+                          {field.value
+                            ? format(new Date(field.value), "dd MMMM yyyy") // Changed format here
+                            : "Pick a month"}
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-auto p-0">
+                        <Calendar
+                          mode="single"
+                          selected={field.value}
+                          onSelect={(date) => field.onChange(date)}
+                        />
+                      </PopoverContent>
+                    </Popover>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
 
           {/* Items */}
           <div className="space-y-4">
@@ -167,17 +236,7 @@ export function ProformaInvoiceForm({ onClose }: { onClose: Dispatch<SetStateAct
                     <FormItem>
                       <FormLabel>Quantity</FormLabel>
                       <FormControl>
-                        <Input
-                          type="number"
-                          min={1}
-                          {...field}
-                          value={field.value}
-                          onChange={(e) => {
-                            const value = e.target.value;
-                            const parsedValue = Number(value);
-                            field.onChange(isNaN(parsedValue) || parsedValue < 1 ? 1 : parsedValue);
-                          }}
-                        />
+                        <Input type="number" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -190,18 +249,7 @@ export function ProformaInvoiceForm({ onClose }: { onClose: Dispatch<SetStateAct
                     <FormItem>
                       <FormLabel>Unit Price</FormLabel>
                       <FormControl>
-                        <Input
-                          type="number"
-                          min={0}
-                          step={0.01}
-                          {...field}
-                          value={field.value}
-                          onChange={(e) => {
-                            const value = e.target.value;
-                            const parsedValue = Number(value);
-                            field.onChange(isNaN(parsedValue) || parsedValue < 0 ? 0 : parsedValue);
-                          }}
-                        />
+                        <Input type="number" step="0.01" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>

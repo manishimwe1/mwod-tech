@@ -17,7 +17,6 @@ const PerformaPage = () => {
         <span className="mt-2 text-lg text-gray-600">Loading Invoices...</span>
       </div>
     );
-  console.log({ fetchedInvoices });
   return (
     <div className="flex flex-col items-center w-full p-4 sm:p-6 lg:p-8">
       <div className="flex flex-col sm:flex-row items-center justify-between gap-4 w-full max-w-6xl mx-auto mb-8">

@@ -18,12 +18,20 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { MoreVertical, Edit, Trash2, CheckCircle, Save } from "lucide-react";
 import { Doc } from "@/convex/_generated/dataModel";
 import { useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { toast } from "sonner";
+import { ProformaInvoiceForm } from "./PoformaForm";
 
 export function InvoiceActions({
   handleExport,
@@ -34,6 +42,7 @@ export function InvoiceActions({
 }) {
   const [isConfirming, setIsConfirming] = React.useState(false);
   const [openDelete, setOpenDelete] = React.useState(false);
+  const [openEdit, setopenEdit] = React.useState(false);
 
   const deleteInvoice = useMutation(api.invoice.deleteInvoice);
 
@@ -64,7 +73,7 @@ export function InvoiceActions({
         <DropdownMenuItem onClick={() => handleExport(invoice)}>
           <Save className="w-4 h-4 mr-2" /> Export
         </DropdownMenuItem>
-        <DropdownMenuItem>
+        <DropdownMenuItem onClick={() => setopenEdit(true)}>
           <Edit className="w-4 h-4 mr-2" /> Edit
         </DropdownMenuItem>
 
@@ -108,17 +117,35 @@ export function InvoiceActions({
             <AlertDialogHeader>
               <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
               <AlertDialogDescription>
-                Are you sure you want to delete this invoice? Once deleted, you won&apos;t be able to recover the invoice details and all associated data will be permanently removed.
+                Are you sure you want to delete this invoice? Once deleted, you
+                won&apos;t be able to recover the invoice details and all
+                associated data will be permanently removed.
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
               <AlertDialogCancel>Cancel</AlertDialogCancel>
-              <AlertDialogAction onClick={handleDelete} className="cursor-pointer bg-red-400 text-white hover:bg-red-700">
+              <AlertDialogAction
+                onClick={handleDelete}
+                className="cursor-pointer bg-red-400 text-white hover:bg-red-700"
+              >
                 Delete
               </AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>
+      )}
+      {openEdit && (
+        <Dialog open={openEdit} onOpenChange={setopenEdit}>
+          <DialogTrigger asChild>
+            <Button>Add poforma</Button>
+          </DialogTrigger>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle></DialogTitle>
+            </DialogHeader>
+            <ProformaInvoiceForm onClose={setopenEdit} invoice={invoice} />
+          </DialogContent>
+        </Dialog>
       )}
     </DropdownMenu>
   );

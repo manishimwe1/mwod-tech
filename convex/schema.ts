@@ -13,9 +13,9 @@ export default defineSchema({
     })
   ),
   status: v.union(v.literal("draft"), v.literal("sent"), v.literal("paid")),
-  notes:v.optional(v.string()),
   totalAmount:v.number(),
   updatedAt:v.number(),
+  date:v.number(),
 }),
 
   users: defineTable({
