@@ -155,9 +155,11 @@ export function ProformaInvoiceForm() {
                           min={1}
                           {...field}
                           value={field.value}
-                          onChange={(e) =>
-                            field.onChange(Number(e.target.value))
-                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            const parsedValue = Number(value);
+                            field.onChange(isNaN(parsedValue) || parsedValue < 1 ? 1 : parsedValue);
+                          }}
                         />
                       </FormControl>
                       <FormMessage />
@@ -177,9 +179,11 @@ export function ProformaInvoiceForm() {
                           step={0.01}
                           {...field}
                           value={field.value}
-                          onChange={(e) =>
-                            field.onChange(Number(e.target.value))
-                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            const parsedValue = Number(value);
+                            field.onChange(isNaN(parsedValue) || parsedValue < 0 ? 0 : parsedValue);
+                          }}
                         />
                       </FormControl>
                       <FormMessage />

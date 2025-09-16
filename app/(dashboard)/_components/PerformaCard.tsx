@@ -9,116 +9,160 @@ import autoTable from "jspdf-autotable";
 
 export function ProformaInvoiceCard({ invoice }: { invoice: Doc<"invoice"> }) {
   const handleExport = async (invoice: Doc<"invoice">) => {
-  const pdf = new jsPDF("p", "mm", "a4");
+    const pdf = new jsPDF("p", "mm", "a4");
+    const pageWidth = pdf.internal.pageSize.width;
+    const leftMargin = 15;
+    const rightMargin = pageWidth - 15;
+    let y = 20;
 
-  const leftMargin = 15;
-  let y = 20;
-
-  // Header
-  pdf.setFontSize(14);
-  pdf.setFont("helvetica", "bold");
-  pdf.text("EASYFIX TECH", leftMargin, y);
-  y += 6;
-  pdf.setFontSize(11);
-  pdf.setFont("helvetica", "normal");
-  pdf.text("NYARUNGENGE", leftMargin, y);
-  y += 5;
-  pdf.text("KIGALI-RWANDA", leftMargin, y);
-  y += 5;
-  pdf.text("PHONE: 0783805516", leftMargin, y);
-  y += 5;
-  pdf.text("TIN: 128218272", leftMargin, y);
-
-  // Right-side invoice info
-  y = 20;
-  pdf.setFont("helvetica", "bold");
-  pdf.text("PROFORMA INVOICE", 150, y, { align: "right" });
-  y += 6;
-  pdf.setFont("helvetica", "normal");
-  pdf.text(`Client: ${invoice.clientName}`, 150, y, { align: "right" });
-  y += 5;
-  if (invoice.clientPhone) {
-    pdf.text(`TEL: ${invoice.clientPhone}`, 150, y, { align: "right" });
+    // Header
+    pdf.setFontSize(14);
+    pdf.setFont("helvetica", "bold");
+    pdf.text("EASYFIX TECH", leftMargin, y);
+    y += 6;
+    pdf.setFontSize(11);
+    pdf.setFont("helvetica", "normal");
+    pdf.text("NYARUNGENGE", leftMargin, y);
     y += 5;
-  }
-  pdf.text(`Balance due: ${invoice.totalAmount} Rwf`, 150, y, {
-    align: "right",
-  });
-  y += 5;
-  pdf.text(
-    `Date: ${new Date(invoice._creationTime).toLocaleDateString()}`,
-    150,
-    y,
-    { align: "right" }
-  );
+    pdf.text("KIGALI-RWANDA", leftMargin, y);
+    y += 5;
+    pdf.text("PHONE: 0783805516", leftMargin, y);
+    y += 5;
+    pdf.text("TIN: 128218272", leftMargin, y);
+    y += 5;
+    pdf.text("Email: baganinezajb@gmail.com", leftMargin, y);
+    y += 5;
 
-  y += 10;
-
-  // Items table
-  const tableColumn = ["Qty", "Description", "U.Price", "T.Price"];
-  const items = JSON.parse(JSON.stringify(invoice.items ?? []));
-  const tableRows = items.map((item: any) => [
-    String(item.quantity ?? 0),
-    item.description ?? "",
-    (item.unitPrice ?? 0).toLocaleString(),
-    ((item.quantity ?? 0) * (item.unitPrice ?? 0)).toLocaleString(),
-  ]);
-
-  autoTable(pdf, {
-    startY: y,
-    head: [tableColumn],
-    body: tableRows,
-    headStyles: { fillColor: [41, 128, 185], textColor: 'white' },
-    styles: { fontSize: 10 },
-  });
-
-  // Total amount
- 
-  const finalY = pdf.lastAutoTable.finalY ?? y + 20;
-  pdf.setFont("helvetica", "bold");
-  pdf.text(
-    `TOTAL: ${invoice.totalAmount?.toLocaleString() ?? 0} Rwf`,
-    150,
-    finalY + 10,
-    { align: "right" }
-  );
-
-  // Footer text
-  pdf.setFont("helvetica", "normal");
-  pdf.setFontSize(10);
-  pdf.text("EASYFIX TECH LIMITED", leftMargin, finalY + 25);
-  pdf.text("Managing Director: Baganineza Jean Bosco", leftMargin, finalY + 30);
-
-  // Thank you note
-  pdf.setFont("helvetica", "italic");
-  pdf.setFontSize(11);
-  pdf.text(
-    `Thank you ${invoice.clientName} for trusting EasyFix Tech. We truly appreciate your business!`,
-    105,
-    finalY + 70,
-    { align: "center" }
-  );
-
-  // ✅ Add stamp image
-  const stampImg = await fetch("/stamp.png") // path in public/
-    .then((res) => res.blob())
-    .then(
-      (blob) =>
-        new Promise<string>((resolve) => {
-          const reader = new FileReader();
-          reader.onload = () => resolve(reader.result as string);
-          reader.readAsDataURL(blob);
-        })
+    // Right-side invoice info
+    y = 20;
+    pdf.setFont("helvetica", "bold");
+    pdf.text("PROFORMA INVOICE", rightMargin, y, { align: "right" });
+    y += 6;
+    pdf.setFont("helvetica", "normal");
+    pdf.text(`Client: ${invoice.clientName}`, rightMargin, y, {
+      align: "right",
+    });
+    y += 5;
+    if (invoice.clientPhone) {
+      pdf.text(`TEL: ${invoice.clientPhone}`, rightMargin, y, {
+        align: "right",
+      });
+      y += 5;
+    }
+    pdf.text(
+      `Balance due: ${invoice.totalAmount.toLocaleString()} Rwf`,
+      rightMargin,
+      y,
+      {
+        align: "right",
+      }
+    );
+    y += 5;
+    pdf.text(
+      `Date: ${new Date(invoice._creationTime).toLocaleDateString()}`,
+      rightMargin,
+      y,
+      { align: "right" }
     );
 
-  pdf.addImage(stampImg, "PNG", 150, finalY + 20, 40, 40);
+    y += 15; // Increased spacing before table
 
-  pdf.save(`Proforma_Invoice_${invoice.clientName}.pdf`);
-};
+    // Items table with full width and matching style
+    const tableColumn = ["Qty", "Description", "U.Price", "T.Price"];
+    const items = JSON.parse(JSON.stringify(invoice.items ?? []));
+    const tableRows = items.map((item: any) => [
+      String(item.quantity ?? 0),
+      item.description ?? "",
+      (item.unitPrice ?? 0).toLocaleString(),
+      ((item.quantity ?? 0) * (item.unitPrice ?? 0)).toLocaleString(),
+    ]);
 
+    autoTable(pdf, {
+      startY: y,
+      head: [tableColumn],
+      body: tableRows,
+      headStyles: {
+        fillColor: [41, 128, 185],
+        textColor: 255,
+        fontSize: 11,
+        halign: "left",
+        font: "helvetica",
+        fontStyle: "bold",
+      },
+      styles: {
+        fontSize: 10,
+        cellPadding: 5,
+      },
+      columnStyles: {
+        0: { cellWidth: 20 }, // Qty
+        1: { cellWidth: "auto" }, // Description
+        2: { cellWidth: 35 }, // U.Price
+        3: { cellWidth: 35 }, // T.Price
+      },
+      margin: { left: leftMargin, right: leftMargin },
+      tableWidth: "auto",
+    });
+
+    // Total amount with better alignment
+    const finalY = pdf.lastAutoTable.finalY ?? y + 20;
+    pdf.setFont("helvetica", "bold");
+    pdf.text(
+      `TOTAL: ${invoice.totalAmount?.toLocaleString() ?? 0} Rwf`,
+      rightMargin,
+      finalY + 10,
+      { align: "right" }
+    );
+
+    // Footer text
+    pdf.setFont("helvetica", "normal");
+    pdf.setFontSize(10);
+    pdf.text("EASYFIX TECH LIMITED", leftMargin, finalY + 25);
+    pdf.text(
+      "Managing Director: Baganineza Jean Bosco",
+      leftMargin,
+      finalY + 30
+    );
+
+    // Thank you note
+    pdf.setFont("helvetica", "italic");
+    pdf.setFontSize(11);
+    const thankYouText = `Thank you ${invoice.clientName} for trusting EasyFix Tech. We truly appreciate your business!`;
+    pdf.text(thankYouText, pageWidth / 2, finalY + 70, { align: "center" });
+
+    // Add stamp image with better positioning
+    const signatureImg = await fetch("/sign.png")
+      .then((res) => res.blob())
+      .then(
+        (blob) =>
+          new Promise<string>((resolve) => {
+            const reader = new FileReader();
+            reader.onload = () => resolve(reader.result as string);
+            reader.readAsDataURL(blob);
+          })
+      );
+
+    // Position stamp to the right of the footer text
+    pdf.addImage(signatureImg, "PNG", rightMargin - 40, finalY + 20, 40, 40);
+    const stampImg = await fetch("/stamp.png")
+      .then((res) => res.blob())
+      .then(
+        (blob) =>
+          new Promise<string>((resolve) => {
+            const reader = new FileReader();
+            reader.onload = () => resolve(reader.result as string);
+            reader.readAsDataURL(blob);
+          })
+      );
+
+    // Position stamp to the right of the footer text
+    pdf.addImage(stampImg, "PNG", rightMargin - 40, finalY + 20, 40, 40);
+    
+
+    pdf.save(`Proforma_Invoice_${invoice.clientName}.pdf`);
+  };
 
   return (
-    <Card className="max-w-4xl mx-auto shadow-lg border border-gray-200 p-6">
+    <Card className="w-full mx-auto shadow-lg border border-gray-200 p-6">
       <CardHeader className="flex flex-row justify-between items-start p-0 mb-4">
         <div className="flex flex-col text-sm">
           <CardTitle className="text-base font-bold mb-1">
@@ -126,6 +170,7 @@ export function ProformaInvoiceCard({ invoice }: { invoice: Doc<"invoice"> }) {
             <p>NYARUNGENGE</p>
             <p>KIGALI-RWANDA</p>
             <p>PHONE: 0783805516</p>
+            <p>Email: baganinezajb@gmail.com</p>
             <p>TIN: 128218272</p>
           </CardTitle>
         </div>
@@ -136,7 +181,9 @@ export function ProformaInvoiceCard({ invoice }: { invoice: Doc<"invoice"> }) {
           <p>Client: {invoice.clientName}</p>
           {invoice.clientPhone && <p>TEL: {invoice.clientPhone}</p>}
           <p>Balance due</p>
-          <p>{invoice.totalAmount} Rwf</p>
+          <p className="font-bold text-blue-500">
+            {invoice.totalAmount?.toLocaleString() ?? 0} Rwf
+          </p>
           <p>Date: {new Date(invoice._creationTime).toLocaleDateString()}</p>
         </div>
       </CardHeader>
@@ -169,10 +216,11 @@ export function ProformaInvoiceCard({ invoice }: { invoice: Doc<"invoice"> }) {
                     {item.description}
                   </td>
                   <td className="px-4 py-2 border border-gray-300">
-                    {item.unitPrice}
+                    {item.unitPrice?.toLocaleString() ?? 0}
                   </td>
                   <td className="px-4 py-2 border border-gray-300">
-                    {(item.quantity ?? 0) * (item.unitPrice ?? 0)}
+                    {((item.quantity ?? 0) * (item.unitPrice ?? 0)).toLocaleString()
+                      }
                   </td>
                 </tr>
               ))}
@@ -184,7 +232,7 @@ export function ProformaInvoiceCard({ invoice }: { invoice: Doc<"invoice"> }) {
                   TOTAL
                 </td>
                 <td className="px-4 py-2 border border-gray-300">
-                  {invoice.totalAmount}
+                  {invoice.totalAmount?.toLocaleString() ?? 0}
                 </td>
               </tr>
             </tbody>
@@ -206,11 +254,23 @@ export function ProformaInvoiceCard({ invoice }: { invoice: Doc<"invoice"> }) {
               priority
             />
           </div>
+          <div className=" -mt-32 z-10 w-40 h-40 flex items-center justify-end">
+            <Image
+              src={"/sign.png"}
+              alt="Company Stamp"
+              className="max-w-full max-h-full object-contain"
+              width={500}
+              height={500}
+              priority
+            />
+          </div>
         </div>
 
         <div className="w-full flex justify-end">
-          <InvoiceActions invoice={invoice} handleExport={() => handleExport(invoice)} />
-
+          <InvoiceActions
+            invoice={invoice}
+            handleExport={() => handleExport(invoice)}
+          />
         </div>
       </CardContent>
     </Card>
