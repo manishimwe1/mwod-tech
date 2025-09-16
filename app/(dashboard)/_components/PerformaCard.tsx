@@ -35,47 +35,48 @@ export function ProformaInvoiceCard({ invoice }: { invoice: Doc<"invoice"> }) {
     pdf.text("Equity bank: 4002201284211", leftMargin, y);
     y += 5;
     pdf.text("Equity USD: 4002201284215", leftMargin, y);
-    y += 5;
 
     // Right-side invoice info
-    y = 20;
+    let rightY = 20;  // Separate Y coordinate for right-side content
     pdf.setFont("helvetica", "bold");
-    pdf.text("PROFORMA INVOICE", rightMargin, y, { align: "right" });
-    y += 6;
+    pdf.text("PROFORMA INVOICE", rightMargin, rightY, { align: "right" });
+    rightY += 6;
     pdf.setFont("helvetica", "normal");
-    pdf.text(`Client: ${invoice.clientName}`, rightMargin, y, {
+    pdf.text(`Client: ${invoice.clientName}`, rightMargin, rightY, {
       align: "right",
     });
-    y += 5;
+    rightY += 5;
     if (invoice.clientPhone) {
-      pdf.text(`TEL: ${invoice.clientPhone}`, rightMargin, y, {
+      pdf.text(`TEL: ${invoice.clientPhone}`, rightMargin, rightY, {
         align: "right",
       });
-      y += 5;
+      rightY += 5;
     }
     if (invoice.clientTIN) {
-      pdf.text(`TIN: ${invoice.clientTIN}`, rightMargin, y, {
+      pdf.text(`TIN: ${invoice.clientTIN}`, rightMargin, rightY, {
         align: "right",
       });
-      y += 5;
+      rightY += 5;
     }
     pdf.text(
       `Balance due: ${invoice.totalAmount.toLocaleString()} Rwf`,
       rightMargin,
-      y,
+      rightY,
       {
         align: "right",
       }
     );
-    y += 5;
+    rightY += 5;
     pdf.text(
       `Date: ${new Date(invoice._creationTime).toLocaleDateString()}`,
       rightMargin,
-      y,
+      rightY,
       { align: "right" }
     );
 
-    y += 15; // Increased spacing before table
+    // Use the maximum Y position from both left and right sides
+    y = Math.max(y, rightY);
+    y += 25; // Increased spacing before table (changed from 15 to 25)
 
     // Items table with full width and matching style
     const tableColumn = ["Qty", "Description", "U.Price", "T.Price"];
