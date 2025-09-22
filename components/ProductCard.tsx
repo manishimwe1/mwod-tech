@@ -49,7 +49,10 @@ const ProductCard = ({ product }: { product: Doc<"products"> }) => {
   };
 
   return (
-    <Link href={`/product/${product._id}`} className="bg-white rounded-lg shadow-sm shadow-blue-100 cursor-pointer border border-gray-100 p-4 hover:shadow-md transition-shadow duration-200 group relative">
+    <Link
+      href={`/product/${product._id}`}
+      className="bg-white rounded-lg shadow-sm shadow-blue-100 cursor-pointer border border-gray-100 p-4 py-6 hover:shadow-md transition-shadow duration-200 group relative"
+    >
       {/* Product Image */}
       <div>
         <Carousel
@@ -94,13 +97,13 @@ const ProductCard = ({ product }: { product: Doc<"products"> }) => {
         </span>
       )}
 
-      <Button  className="absolute cursor-pointer top-1/2 right-2 bg-blue-500 text-sm font-medium text-gray-900 p-2 rounded-full group">
+      <Button className="absolute cursor-pointer top-1/2 right-2 bg-blue-500 text-sm font-medium text-gray-900 p-2 rounded-full group">
         <ShoppingCart className="h-5 w-5 text-white group-hover:scale-110 transition-transform duration-200" />
       </Button>
 
       <div className="flex flex-col pb-4 space-y-2">
         <h3 className="text-xl font-semibold text-gray-900 h-full line-clamp-2 tracking-tight hover:text-blue-600 transition-colors">
-          {product.name.length > 60 
+          {product.name.length > 60
             ? `${product.name.substring(0, 1).toUpperCase()}${product.name.substring(1, 60)}...`
             : `${product.name.substring(0, 1).toUpperCase()}${product.name.substring(1)}`}
         </h3>
@@ -131,9 +134,9 @@ const ProductCard = ({ product }: { product: Doc<"products"> }) => {
         </div>
       </div>
 
-      <div className="absolute bottom-2 left-0 right-0">
+      <div className="absolute bottom-0 left-0 right-0 py-2">
         <div className="flex justify-center mt-4 items-center">
-          <Button className="bg-gradient-to-b from-blue-50 via-blue-100 to-blue-200  px-6 py-3 rounded-full text-blue-950 font-bold hover:bg-gradient-to-r hover:from-white hover:to-blue-200 transition-all">
+          <Button className="bg-gradient-to-b from-blue-50 via-blue-100 to-blue-200  px-6  rounded-full text-blue-950 font-bold hover:bg-gradient-to-r hover:from-white hover:to-blue-200 transition-all w-[90%] py-4 hover:scale-110 cursor-pointer">
             Shop now
           </Button>
         </div>

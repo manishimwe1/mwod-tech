@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { Eye, List } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 
 type CategoryCardProps = {
   title: string;
@@ -13,43 +14,53 @@ type CategoryCardProps = {
   gradient?: string;
 };
 
-const CategoryCard = ({ title, image, listings, sellers, gradient }: CategoryCardProps) => {
+const CategoryCard = ({
+  title,
+  image,
+  listings,
+  sellers,
+  gradient,
+}: CategoryCardProps) => {
   return (
-    <Card
-      className={cn(
-        "rounded-xl shadow-sm hover:shadow-md transition-all border border-gray-100 overflow-hidden",
-        gradient
-      )}
-    >
-      <CardHeader className="text-center">
-        <CardTitle className="text-lg font-semibold">{title}</CardTitle>
-      </CardHeader>
-      <CardContent className="flex flex-col items-center">
-        {/* Image */}
-        <div
-          className={`w-40 h-40 relative rounded-lg mb-6`}
-
-        >
-          <Image src={image} alt={title} fill className="object-contain p-4" />
-        </div>
-
-        {/* Stats */}
-        <div className="flex items-center justify-between gap-2 w-full text-sm text-gray-700">
-          <div className="flex items-center gap-2 justify-center">
-            <List className="w-4 h-4 text-blue-600" />
-            <span className="text-nowrap">
-              <strong>{listings.toLocaleString()}</strong> approved 
-            </span>
+    <Link href={`/product?category=${title}`}>
+      <Card
+        className={cn(
+          "rounded-xl shadow-sm hover:shadow-md transition-all border border-gray-100 overflow-hidden",
+          gradient
+        )}
+      >
+        <CardHeader className="text-center">
+          <CardTitle className="text-lg font-semibold">{title}</CardTitle>
+        </CardHeader>
+        <CardContent className="flex flex-col items-center">
+          {/* Image */}
+          <div className={`w-40 h-40 relative rounded-lg mb-6`}>
+            <Image
+              src={image}
+              alt={title}
+              fill
+              className="object-contain p-4"
+            />
           </div>
-          <div className="flex items-center gap-2 justify-center">
-            <Eye className="w-4 h-4 text-blue-600" />
-            <span className="text-nowrap">
-              <strong>{sellers.toLocaleString()}</strong> Viewed 
-            </span>
+
+          {/* Stats */}
+          <div className="flex items-center justify-between gap-2 w-full text-sm text-gray-700">
+            <div className="flex items-center gap-2 justify-center">
+              <List className="w-4 h-4 text-blue-600" />
+              <span className="text-nowrap">
+                <strong>{listings.toLocaleString()}</strong> approved
+              </span>
+            </div>
+            <div className="flex items-center gap-2 justify-center">
+              <Eye className="w-4 h-4 text-blue-600" />
+              <span className="text-nowrap">
+                <strong>{sellers.toLocaleString()}</strong> Viewed
+              </span>
+            </div>
           </div>
-        </div>
-      </CardContent>
-    </Card>
+        </CardContent>
+      </Card>
+    </Link>
   );
 };
 
