@@ -35,3 +35,27 @@ export const productSchema = z.object({
 
   status: z.enum(["active", "inactive", "draft"]).default("draft"),
 });
+
+export const formSchema = z.object({
+  clientName: z.string().min(2, {
+    message: "Client name must be at least 2 characters.",
+  }),
+  invoiceNumber: z.coerce.number().optional(),
+  items: z.array(
+    z.object({
+      quantity: z.preprocess(
+        (val) => Number(val),
+        z.number().min(1, { message: "Quantity must be at least 1." })
+      ),
+      description: z.string().min(1, { message: "Description cannot be empty." }),
+      unitPrice: z.preprocess(
+        (val) => Number(val),
+        z.number().min(0, { message: "Unit price cannot be negative." })
+      ),
+      totalPrice: z.preprocess(
+        (val) => Number(val),
+        z.number().min(0, { message: "Total price cannot be negative." })
+      ),
+    })
+  ).min(1, { message: "At least one item is required." }),
+});

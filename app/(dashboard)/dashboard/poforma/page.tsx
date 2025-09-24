@@ -1,11 +1,11 @@
 "use client";
 
 import React from "react";
-import AddPoforma from "../../_components/AddPoforma";
 import { ProformaInvoiceCard } from "../../_components/PerformaCard";
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { Loader2 } from "lucide-react";
+import AddNewItemBtn from "../../_components/AddNewItemBtn";
 
 const PerformaPage = () => {
   const fetchedInvoices = useQuery(api.invoice.getInvoices);
@@ -21,7 +21,7 @@ const PerformaPage = () => {
     <div className="flex flex-col items-center w-full p-4 sm:p-6 lg:p-8">
       <div className="flex flex-col sm:flex-row items-center justify-between gap-4 w-full max-w-6xl mx-auto mb-8">
         <h1 className="text-3xl font-bold text-gray-800">Proforma Invoices</h1>
-        <AddPoforma />
+        <AddNewItemBtn title='Add Poforma'/>
       </div>
       <div className="w-full max-w-6xl mx-auto">
         {fetchedInvoices.length === 0 ? (

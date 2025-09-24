@@ -1,3 +1,5 @@
+'use client'
+
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
@@ -8,22 +10,34 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { ProformaInvoiceForm } from "./PoformaForm";
-const AddPoforma = () => {
+import { FactureInvoiceForm } from "./FactureInvoiceForm";
+
+const AddNewItemBtn = ({ title }: { title: string }) => {
   const [isOpen, setIsOpen] = useState(false);
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button>Add poforma</Button>
+        <Button>{title}</Button>
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent >
         <DialogHeader>
           <DialogTitle></DialogTitle>
-          
         </DialogHeader>
-        <ProformaInvoiceForm onClose={setIsOpen} />
+        {
+          title === 'Add Facture'&&(
+            
+            <FactureInvoiceForm onClose={setIsOpen} />
+          )
+        }
+        {
+          title === 'Add Poforma'&&(
+
+            <ProformaInvoiceForm onClose={setIsOpen} />
+          )
+        }
       </DialogContent>
     </Dialog>
   );
 };
 
-export default AddPoforma;
+export default AddNewItemBtn;

@@ -58,7 +58,7 @@ const data = {
     },
     {
       title: "Facture",
-      url: "/dashbard/facture",
+      url: "/dashboard/facture",
       icon: IconChartBar,
     },
     {

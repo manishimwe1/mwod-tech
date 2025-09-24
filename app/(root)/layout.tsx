@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "../globals.css";
 import Header from "@/components/Header";
 
+
 export const metadata: Metadata = {
   title: "EasyFix - Electronics Repair & Shop",
   description:
@@ -13,10 +14,11 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  
   return (
-      <main className="min-h-screen flex flex-col justify-start w-full border border-red-700">
-        <Header />
-        {children}
-      </main>
+    <main className="min-h-screen flex flex-col justify-start w-full">
+      <Header />
+      {children}
+    </main>
   );
 }

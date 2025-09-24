@@ -13,6 +13,7 @@ import type {
   FilterApi,
   FunctionReference,
 } from "convex/server";
+import type * as facture from "../facture.js";
 import type * as invoice from "../invoice.js";
 import type * as product from "../product.js";
 import type * as users from "../users.js";
@@ -26,6 +27,7 @@ import type * as users from "../users.js";
  * ```
  */
 declare const fullApi: ApiFromModules<{
+  facture: typeof facture;
   invoice: typeof invoice;
   product: typeof product;
   users: typeof users;
