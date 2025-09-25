@@ -21,7 +21,7 @@ export const categories = [
   "Audio & Headphones",
   "Storage & Memory",
   "Gaming",
-  "Accessories",
+  "watches+accessories",
 ];
 
 export const brands = [

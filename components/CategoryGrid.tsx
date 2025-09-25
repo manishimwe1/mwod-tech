@@ -81,7 +81,7 @@ export default function CategoryGrid() {
       image: "/laptops.png",
       listings: 920,
       sellers: 408,
-      slug:'macbooks+laptops',
+      slug:'computers & laptops',
       gradient: "bg-gradient-to-b from-white via-purple-50 to-purple-100",
     },
     {
