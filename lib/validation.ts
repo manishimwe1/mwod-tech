@@ -40,6 +40,9 @@ export const formSchema = z.object({
   clientName: z.string().min(2, {
     message: "Client name must be at least 2 characters.",
   }),
+  phone: z.coerce.number().min(10, {
+    message: "Phone number must be at least 10 characters.",
+  }),
   invoiceNumber: z.coerce.number().optional(),
   items: z.array(
     z.object({

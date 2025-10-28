@@ -33,26 +33,27 @@ import { format } from "date-fns";
 
 export function FactureInvoiceForm({
   onClose,
-  invoice,
+  facture,
 }: {
   onClose: Dispatch<SetStateAction<boolean>>;
-  invoice?: Doc<"facture">;
+  facture?: Doc<"facture">;
 }) {
   const createFacture = useMutation(api.facture.createFacture);
   const updateFacture = useMutation(api.facture.updateFacture);
   const getFacture = useQuery(api.facture.getFactures);
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      clientName: invoice?.clientName || "",
-      invoiceNumber: invoice?.factureNumber || 0,
-      items: invoice?.items.map((item) => ({
+      clientName: facture?.clientName || "",
+      invoiceNumber: facture?.factureNumber || 0,
+      items: facture?.items.map((item) => ({
         quantity: item.quantity,
         description: item.description,
         unitPrice: item.unitPrice,
         totalPrice: item.totalPrice,
+        phone: facture?.phone || 0,
       })),
     },
   });
@@ -75,20 +76,21 @@ export function FactureInvoiceForm({
       (acc, item) => acc + Number(item.totalPrice),
       0
     );
-    setLoading(true)
+    setLoading(true);
     try {
-      if (invoice) {
+      if (facture) {
         await updateFacture({
-          id: invoice._id,
+          id: facture._id,
           fields: {
             clientName: values.clientName,
             date: values.date.getTime(),
             items: values.items,
             status: "draft",
             totalAmount,
+            phone: values.phone,
           },
         });
-        toast.success("Invoice updated successfully!", { richColors: true });
+        toast.success("Facture updated successfully!", { richColors: true });
       } else {
         await createFacture({
           clientName: values.clientName,
@@ -97,15 +99,16 @@ export function FactureInvoiceForm({
           status: "draft",
           totalAmount,
           factureNumber: getFacture ? getFacture.length + 1 : 1,
+          phone: values.phone,
         });
-        toast.success("Invoice created successfully!", { richColors: true });
+        toast.success("Facture created successfully!", { richColors: true });
       }
       onClose(false);
     } catch (error) {
-      console.error("Failed to save invoice:", error);
-      toast.error("Failed to save invoice.", { richColors: true });
-    }finally{
-      setLoading(false)
+      console.error("Failed to save facture:", error);
+      toast.error("Failed to save facture.", { richColors: true });
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -113,19 +116,39 @@ export function FactureInvoiceForm({
     <ScrollArea className="h-[80vh] w-full max-w-4xl mx-auto p-6">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-          <FormField
-            control={form.control}
-            name="clientName"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Client Name</FormLabel>
-                <FormControl>
-                  <Input placeholder="Enter client name" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+          <div className="flex items-center justify-between gap-2 flex-col md:flex-row">
+            <FormField
+              control={form.control}
+              name="clientName"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Client Name</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Enter client name" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="phone"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Client Phone</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="number"
+                      placeholder="Enter client phone"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
           <FormField
             control={form.control}
             name="date"
@@ -190,6 +213,7 @@ export function FactureInvoiceForm({
                     </FormItem>
                   )}
                 />
+
                 <FormField
                   control={form.control}
                   name={`items.${index}.description`}
@@ -269,11 +293,11 @@ export function FactureInvoiceForm({
           <Button type="submit" className="w-full">
             {loading ? (
               <>
-                <Loader className="mr-2 h-5 w-5 animate-spin"/>
-                <span>{invoice ? "Updating..." : "Creating..."}</span>
+                <Loader className="mr-2 h-5 w-5 animate-spin" />
+                <span>{facture ? "Updating..." : "Creating..."}</span>
               </>
             ) : (
-              <span>{invoice ? "Update Invoice" : "Create Invoice"}</span>
+              <span>{facture ? "Update Facture" : "Create Facture"}</span>
             )}
           </Button>
         </form>

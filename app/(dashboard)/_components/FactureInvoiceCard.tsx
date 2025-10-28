@@ -8,6 +8,8 @@ import { Button } from "@/components/ui/button";
 import { Download } from "lucide-react";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { InvoiceActions } from "./InvoiceActions";
 
 interface FactureInvoiceCardProps {
   facture: Doc<"facture">;
@@ -24,25 +26,68 @@ export const FactureInvoiceCard: React.FC<FactureInvoiceCardProps> = ({
     });
 
     const pageWidth = doc.internal.pageSize.getWidth();
-    let y = 10; // Initial Y position
-    // const leftMargin = 15;
+    const leftMargin = 15;
     const rightMargin = pageWidth - 15;
-    // Header
-    doc.setFontSize(16);
-    doc.text("FACTURE N° " + (facture.factureNumber || ""), pageWidth / 2, y, {
-      align: "center",
-    });
-    y += 10;
+    let y = 20; // Initial Y position for content
 
+    // Company Header
+    doc.setFontSize(14);
+    doc.setFont("helvetica", "bold");
+    doc.text("EASYFIX TECH", leftMargin, y);
+    y += 6;
+    doc.setFontSize(11);
+    doc.setFont("helvetica", "normal");
+    doc.text("NYARUNGENGE", leftMargin, y);
+    y += 5;
+    doc.text("KIGALI-RWANDA", leftMargin, y);
+    y += 5;
+    doc.text("PHONE: 0783805516", leftMargin, y);
+    y += 5;
+    doc.text("TIN: 128218272", leftMargin, y);
+    y += 5;
+    doc.text("Email: baganinezajb@gmail.com", leftMargin, y);
+    y += 5;
+    doc.text("Equity bank: 4002201284211", leftMargin, y);
+    y += 5;
+    doc.text("Equity USD: 4002201284215", leftMargin, y);
+
+    // Facture Number and Date (moved to right side, adjusted Y)
+    let rightY = 20; // Separate Y coordinate for right-side content
+    doc.setFontSize(16);
+    doc.setFont("helvetica", "bold");
+    doc.text("FACTURE N° " + (facture.factureNumber || ""), rightMargin, rightY, {
+      align: "right",
+    });
+    rightY += 6;
     doc.setFontSize(10);
-    doc.text(`Client: ${facture.clientName}`, 10, y);
+    doc.setFont("helvetica", "normal");
     doc.text(
       `Date: ${format(new Date(facture.date), "dd MMMM yyyy")}`,
-      pageWidth - 10,
-      y,
+      rightMargin,
+      rightY,
       { align: "right" }
     );
-    y += 10;
+    rightY += 5;
+    doc.text(`Client: ${facture.clientName}`, rightMargin, rightY, {
+      align: "right",
+    });
+    rightY += 5;
+    if (facture.phone) {
+      doc.text(`TEL: ${facture.phone}`, rightMargin, rightY, {
+        align: "right",
+      });
+      rightY += 5;
+    }
+    // if (facture.clientTIN) {
+    //   doc.text(`TIN: ${facture.clientTIN}`, rightMargin, rightY, {
+    //     align: "right",
+    //   });
+    //   rightY += 5;
+    // }
+
+    // Use the maximum Y position from both left and right sides
+    y = Math.max(y, rightY);
+    y += 25; // Increased spacing before table
 
     // Items Table
     const tableColumn = ["Quantité", "Libellé", "Prix unitaire", "Prix total"];
@@ -93,15 +138,21 @@ export const FactureInvoiceCard: React.FC<FactureInvoiceCardProps> = ({
       0
     );
     doc.setFontSize(12);
-    doc.text(`Total: ${totalAmount.toFixed(2)} Rwf`, pageWidth - 10, y, {
+    doc.text(`Total: ${totalAmount.toFixed(2)} Rwf`, rightMargin, y, {
       align: "right",
     });
     y += 20;
 
+    //@ts-ignore
     const finalY = doc.lastAutoTable.finalY ?? y + 20;
     // Signature and Stamp (placeholders)
     doc.setFontSize(10);
-    doc.text("Signature:", 10, y);
+    doc.text("EASYFIX TECH LIMITED", leftMargin, finalY + 25);
+    doc.text(
+      "Managing Director: Baganineza Jean Bosco",
+      leftMargin,
+      finalY + 30
+    );
     // Thank you note
     doc.setFont("helvetica", "italic");
     doc.setFontSize(11);
@@ -136,84 +187,88 @@ export const FactureInvoiceCard: React.FC<FactureInvoiceCardProps> = ({
     // Position stamp to the right of the footer text
     doc.addImage(stampImg, "PNG", rightMargin - 40, finalY + 20, 40, 40);
 
-    doc.save(`Proforma_Invoice_${facture.clientName}.pdf`);
-
     doc.save(`facture-${facture.clientName}.pdf`);
   };
 
   return (
-    <div className="relative p-6 border rounded-lg shadow-md bg-white">
-      <div className="absolute top-4 right-4">
-        <Button
-          variant="outline"
-          size="icon"
-          onClick={handleExport}
-          className="cursor-pointer"
-        >
-          <Download className="h-4 w-4 " />
-        </Button>
-      </div>
-      <div className="text-center mb-6">
-        <h2 className="text-xl font-bold text-gray-800">
-          FACTURE N° {facture.factureNumber}
-        </h2>
-        <p className="text-sm text-gray-500">
-          Date: {format(new Date(facture.date), "dd MMMM yyyy")}
-        </p>
-      </div>
+    <Card className="w-full mx-auto shadow-lg border border-gray-200 p-6">
+      <CardHeader className="flex flex-row justify-between items-start p-0 mb-4">
+        <div className="flex flex-col text-sm">
+          <CardTitle className="flex items-start gap-2 flex-col">
+            <p>EASYFIX TECH</p>
+            <p>NYARUNGENGE</p>
+            <p>KIGALI-RWANDA</p>
+            <p>PHONE: 0783805516</p>
+            <p>Email: baganinezajb@gmail.com</p>
+            <p>TIN: 128218272</p>
+            <p>Equity bank: 4002201284211</p>
+            <p>Equity USD: 4002201284215</p>
+          </CardTitle>
+        </div>
+        <div className="flex flex-col text-sm text-right">
+          <CardTitle className="text-base font-bold mb-1">
+            FACTURE N° {facture.factureNumber}
+          </CardTitle>
+          <p>Client: {facture.clientName}</p>
+          {facture.phone && <p>TEL: {facture.phone}</p>}
+          {/* {facture.clientTIN && <p>TIN: {facture.clientTIN}</p>} */}
+          <p>Date: {format(new Date(facture.date), "dd MMMM yyyy")}</p>
+        </div>
+      </CardHeader>
 
-      <div className="mb-4">
-        <p className="text-md font-semibold">Client: {facture.clientName}</p>
-      </div>
-
-      <div className="overflow-x-auto mb-6">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-blue-500 text-white">
-            <tr>
-              <th className="px-4 py-2 text-left text-xs font-medium uppercase tracking-wider">
-                Quantité
-              </th>
-              <th className="px-4 py-2 text-left text-xs font-medium uppercase tracking-wider">
-                Libellé
-              </th>
-              <th className="px-4 py-2 text-left text-xs font-medium uppercase tracking-wider">
-                Prix unitaire
-              </th>
-              <th className="px-4 py-2 text-left text-xs font-medium uppercase tracking-wider">
-                Prix total
-              </th>
-            </tr>
-          </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
-            {facture.items.map((item, index) => (
-              <tr key={index}>
-                <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-900">
-                  {item.quantity}
+      <CardContent className="space-y-4 p-0">
+        {/* Items Table */}
+        <div className="overflow-x-auto mb-4">
+          <table className="w-full border-collapse border border-gray-300">
+            <thead>
+              <tr className="bg-blue-500 text-white text-left text-sm">
+                <th className="px-4 py-2 border border-gray-300 w-1/12">Quantité</th>
+                <th className="px-4 py-2 border border-gray-300 w-6/12">
+                  Libellé
+                </th>
+                <th className="px-4 py-2 border border-gray-300 w-2/12">
+                  Prix unitaire
+                </th>
+                <th className="px-4 py-2 border border-gray-300 w-3/12">
+                  Prix total
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {facture.items.map((item, idx) => (
+                <tr key={idx} className="hover:bg-gray-50 text-sm">
+                  <td className="px-4 py-2 border border-gray-300">
+                    {item.quantity}
+                  </td>
+                  <td className="px-4 py-2 border border-gray-300">
+                    {item.description}
+                  </td>
+                  <td className="px-4 py-2 border border-gray-300">
+                    {item.unitPrice.toFixed(2)}
+                  </td>
+                  <td className="px-4 py-2 border border-gray-300">
+                    {item.totalPrice.toFixed(2)}
+                  </td>
+                </tr>
+              ))}
+              <tr className="font-bold text-sm">
+                <td
+                  colSpan={3}
+                  className="px-4 py-2 border border-gray-300 text-right"
+                >
+                  TOTAL
                 </td>
-                <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-900">
-                  {item.description}
-                </td>
-                <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-900">
-                  {item.unitPrice.toFixed(2)}
-                </td>
-                <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-900">
-                  {item.totalPrice.toFixed(2)}
+                <td className="px-4 py-2 border border-gray-300">
+                  {facture.items
+                    .reduce((sum, item) => sum + item.totalPrice, 0)
+                    .toFixed(2)}
                 </td>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+            </tbody>
+          </table>
+        </div>
 
-      <div className="text-right text-lg font-bold text-gray-800 mb-6">
-        Total:{" "}
-        {facture.items
-          .reduce((sum, item) => sum + item.totalPrice, 0)
-          .toFixed(2)}{" "}
-        Rwf
-      </div>
-
-      <div className="flex justify-between items-end mt-8">
+        {/* Footer */}
         <div className="flex flex-col items-center mt-8 text-sm">
           <p className="font-bold mb-1">EASYFIX TECH LIMITED</p>
           <p>Managing Director : Baganineza Jean Bosco</p>
@@ -239,7 +294,14 @@ export const FactureInvoiceCard: React.FC<FactureInvoiceCardProps> = ({
             />
           </div>
         </div>
-      </div>
-    </div>
+
+        <div className="w-full flex justify-end">
+          <InvoiceActions
+            facture={facture}
+            handleExport={() => handleExport()}
+          />
+        </div>
+      </CardContent>
+    </Card>
   );
 };

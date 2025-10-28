@@ -1,7 +1,7 @@
 "use client";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { InvoiceActions } from "./InvoiceActions";
+import { PoformaActions } from "./PoformaActions";
 import Image from "next/image";
 import { Doc } from "@/convex/_generated/dataModel";
 import jsPDF from "jspdf";
@@ -114,7 +114,7 @@ export function ProformaInvoiceCard({ invoice }: { invoice: Doc<"invoice"> }) {
       tableWidth: "auto",
     });
 
-    // Total amount with better alignment
+    //@ts-ignore
     const finalY = pdf.lastAutoTable.finalY ?? y + 20;
     pdf.setFont("helvetica", "bold");
     pdf.text(
@@ -281,7 +281,7 @@ export function ProformaInvoiceCard({ invoice }: { invoice: Doc<"invoice"> }) {
         </div>
 
         <div className="w-full flex justify-end">
-          <InvoiceActions
+          <PoformaActions
             invoice={invoice}
             handleExport={() => handleExport(invoice)}
           />

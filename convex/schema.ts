@@ -77,5 +77,7 @@ export default defineSchema({
     status: v.union(v.literal("draft"), v.literal("sent"), v.literal("paid")),
     totalAmount: v.number(),
     date: v.number(),
+    phone: v.optional(v.number()),
+
   }),
 });

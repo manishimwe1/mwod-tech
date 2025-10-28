@@ -19,6 +19,7 @@ export const createFacture = mutation({
     totalAmount: v.number(),
     updatedAt: v.optional(v.number()),
     date: v.number(),
+    phone: v.number(),
   },
   handler: async (ctx, args) => {
     return await ctx.db.insert("facture", args);
@@ -64,6 +65,7 @@ export const updateFacture = mutation({
       totalAmount: v.optional(v.number()),
       updatedAt: v.optional(v.number()),
       date: v.optional(v.number()),
+      phone: v.optional(v.number()),
     }),
   },
   handler: async (ctx, args) => {
@@ -80,7 +82,7 @@ export const updateFacture = mutation({
 // DELETE INVOICE
 export const deleteInvoice = mutation({
   args: {
-    id: v.id("invoice"),
+    id: v.id("facture"),
   },
   handler: async (ctx, args) => {
     return await ctx.db.delete(args.id);

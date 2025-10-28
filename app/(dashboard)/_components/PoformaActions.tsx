@@ -32,32 +32,31 @@ import { useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { toast } from "sonner";
 import { ProformaInvoiceForm } from "./PoformaForm";
-import { FactureInvoiceForm } from "./FactureInvoiceForm";
 
-export function InvoiceActions({
+export function PoformaActions({
   handleExport,
-  facture,
+  invoice,
 }: {
-  handleExport: (facture: Doc<"facture">) => void;
-  facture: Doc<"facture">;
+  handleExport: (invoice: Doc<"invoice">) => void;
+  invoice: Doc<"invoice">;
 }) {
   const [isConfirming, setIsConfirming] = React.useState(false);
   const [openDelete, setOpenDelete] = React.useState(false);
   const [openEdit, setopenEdit] = React.useState(false);
 
-  const deleteFacture = useMutation(api.facture.deleteInvoice);
+  const deleteInvoice = useMutation(api.invoice.deleteInvoice);
 
   const handleDelete = async () => {
     try {
-      await deleteFacture({
-        id: facture._id,
+      await deleteInvoice({
+        id: invoice._id,
       });
       setOpenDelete(false);
-      toast.success("Facture deleted successfully", { richColors: true });
-      // Refresh facture list or show success message
+      toast.success("Invoice deleted successfully", { richColors: true });
+      // Refresh invoice list or show success message
     } catch (error) {
-      toast.error("Error deleting facture", { richColors: true });
-      console.error("Error deleting facture:", error);
+      toast.error("Error deleting invoice", { richColors: true });
+      console.error("Error deleting invoice:", error);
       // Show error message
     }
   };
@@ -71,7 +70,7 @@ export function InvoiceActions({
       </DropdownMenuTrigger>
 
       <DropdownMenuContent align="end" className="w-44">
-        <DropdownMenuItem onClick={() => handleExport(facture)}>
+        <DropdownMenuItem onClick={() => handleExport(invoice)}>
           <Save className="w-4 h-4 mr-2" /> Export
         </DropdownMenuItem>
         <DropdownMenuItem onClick={() => setopenEdit(true)}>
@@ -93,7 +92,7 @@ export function InvoiceActions({
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
           <div className="bg-white rounded-lg p-6 max-w-sm w-full space-y-4">
             <h3 className="text-lg font-bold">Confirm Approval</h3>
-            <p>Are you sure you want to mark this facture as approved?</p>
+            <p>Are you sure you want to mark this invoice as approved?</p>
             <div className="flex justify-end space-x-2">
               <Button variant="outline" onClick={() => setIsConfirming(false)}>
                 Cancel
@@ -118,8 +117,8 @@ export function InvoiceActions({
             <AlertDialogHeader>
               <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
               <AlertDialogDescription>
-                Are you sure you want to delete this facture? Once deleted, you
-                won&apos;t be able to recover the facture details and all
+                Are you sure you want to delete this invoice? Once deleted, you
+                won&apos;t be able to recover the invoice details and all
                 associated data will be permanently removed.
               </AlertDialogDescription>
             </AlertDialogHeader>
@@ -138,13 +137,13 @@ export function InvoiceActions({
       {openEdit && (
         <Dialog open={openEdit} onOpenChange={setopenEdit}>
           <DialogTrigger asChild>
-            <Button>Add facture</Button>
+            <Button>Add poforma</Button>
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>
               <DialogTitle></DialogTitle>
             </DialogHeader>
-            <FactureInvoiceForm onClose={setopenEdit} facture={facture} />
+            <ProformaInvoiceForm onClose={setopenEdit} invoice={invoice} />
           </DialogContent>
         </Dialog>
       )}
