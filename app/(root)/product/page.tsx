@@ -1,7 +1,7 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { Suspense, useEffect } from "react";
 import { useQuery } from 'convex/react'
 import { api } from '@/convex/_generated/api'
 import { Loader2 } from "lucide-react";
@@ -17,32 +17,17 @@ import ProductCard from "@/components/ProductCard";
 import { useProductStore } from "@/lib/store";
 import { Doc } from "@/convex/_generated/dataModel";
 
-const ProductPage = () => {
-  const [isClient, setIsClient] = useState(false);
+const ProductPageContent = () => {
   const searchParams = useSearchParams();
   const category = searchParams.get("category");
   const { products: fetchedProducts, setProducts } = useProductStore();
   const productsInDB = useQuery(api.product.getProductsWithImage);
-
-  // Ensure we're on the client
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
 
   useEffect(() => {
     if (productsInDB) setProducts(productsInDB as Doc<"products">[]);
   }, [productsInDB, setProducts]);
 
   console.log({ fetchedProducts });
-
-  if (!isClient) {
-    return (
-      <div className="flex items-center justify-center flex-col h-screen w-full">
-        <Loader2 className="animate-spin h-10 w-10 text-primary" />
-        <span className="mt-2 text-lg text-gray-600">Loading...</span>
-      </div>
-    );
-  }
 
   if (!fetchedProducts) {
     return (
@@ -268,6 +253,21 @@ const ProductPage = () => {
         </main>
       </div>
     </div>
+  );
+};
+
+const ProductPage = () => {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex items-center justify-center flex-col h-screen w-full">
+          <Loader2 className="animate-spin h-10 w-10 text-primary" />
+          <span className="mt-2 text-lg text-gray-600">Loading Products...</span>
+        </div>
+      }
+    >
+      <ProductPageContent />
+    </Suspense>
   );
 };
 
