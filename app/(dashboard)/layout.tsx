@@ -1,8 +1,6 @@
+import ClientLayout from "@/components/ClientWrapper";
 import type { Metadata } from "next";
 import "../globals.css";
-import ClientLayout from "@/components/ClientWrapper";
-import { auth } from "@clerk/nextjs/server";
-import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
   title: "EasyFix - Electronics Repair & Shop",
@@ -15,11 +13,7 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const {isAuthenticated} = await auth()
 
-  if(!isAuthenticated){
-    redirect('/sign-in')
-  }
   return (
     <main suppressHydrationWarning={true}>
       <ClientLayout>{children}</ClientLayout>
