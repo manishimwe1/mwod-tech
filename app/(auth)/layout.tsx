@@ -1,16 +1,21 @@
+import { Metadata } from "next";
 
-import { auth } from "@clerk/nextjs/server";
-import React from "react";
+// export const metadata: Metadata = {
+//   title: "Canteen Management System",
+//   description: "a stock managing and financial app",
+//   icons: {
+//     icon: "/convex.svg",
+//   },
+// };
 
-export default async function AuthLayout({
+export default function RootLayout({
   children,
-}: {
+}: Readonly<{
   children: React.ReactNode;
-}) {
-  const {isAuthenticated} =await auth()
-
-  console.log({isAuthenticated});
-  
-  
-  return <main>{children}</main>;
+}>) {
+  return (
+    <main className="flex items-center  justify-center w-full min-h-screen">
+      {children}
+    </main>
+  );
 }

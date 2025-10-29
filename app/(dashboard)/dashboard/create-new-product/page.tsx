@@ -23,12 +23,14 @@ import { Textarea } from "@/components/ui/textarea";
 import { brands, categories } from "@/constants";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
-import { useStoreUserEffect } from "@/lib/hooks/useStoreUserEffect";
+// import { useStoreUserEffect } from "@/lib/hooks/useStoreUserEffect";
 import { productSchema } from "@/lib/validation";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "convex/react";
+import { useMutation, useQuery } from "convex/react";
 import { Loader, Upload, X } from "lucide-react";
+import { useSession } from "next-auth/react";
 import Image from "next/image";
+import { redirect } from "next/navigation";
 import React from "react";
 import { useDropzone } from "react-dropzone";
 import { useForm } from "react-hook-form";
@@ -58,11 +60,18 @@ export default function CreateProductPage() {
 
   const createProduct = useMutation(api.product.createProduct);
   const generateUploadUrl = useMutation(api.product.generateUploadUrl);
-  const { userId } = useStoreUserEffect();
+  const {data: session} = useSession();
   const [loading, setLoading] = React.useState(false);
   const [uploadedFiles, setUploadedFiles] = React.useState<File[]>([]);
   const [imagePreviews, setImagePreviews] = React.useState<string[]>([]);
 
+  const user = useQuery(api.users.getUserByEmail,session ? {
+    email: session?.user?.email || "",
+  }:'skip')
+
+  if(!user?._id){
+    return redirect('/login')
+  }
   // Image handling
   const onDrop = React.useCallback(
     (acceptedFiles: File[]) => {
@@ -115,7 +124,7 @@ export default function CreateProductPage() {
       return;
     }
 
-    if (!userId) {
+    if (!user?._id) {
       toast.error("You must be logged in to create a product", {
         richColors: true,
       });
@@ -168,7 +177,7 @@ export default function CreateProductPage() {
         images: imageUrls, // Use storage IDs instead of file names
         status: data.status,
         updatedAt: new Date().toISOString(),
-        createdBy: userId,
+        createdBy: user._id,
         warranty: data.warranty,
         condition: data.condition,
         badge: data.badge,

@@ -152,12 +152,7 @@ const data = {
 };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  // const { user } = useUser();
-  // const userData = {
-  //   name: user?.fullName ?? "",
-  //   email: user?.emailAddresses[0].emailAddress ?? "",
-  //   avatar: user?.imageUrl ?? "",
-  // };
+
   return (
     <Sidebar collapsible="offcanvas" {...props}>
       <SidebarHeader>

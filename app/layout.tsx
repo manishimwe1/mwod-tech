@@ -1,12 +1,11 @@
-import ConvexClientProvider from "@/components/ConvexClientProvider";
 import { Toaster } from "@/components/ui/sonner";
-import { ClerkProvider } from "@clerk/nextjs";
 import NextTopLoader from "nextjs-toploader";
-
+import { SessionProvider } from "next-auth/react";
 import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
-import "./globals.css";
 import Script from "next/script";
+import "./globals.css";
+import { ConvexClientProvider } from "@/components/ConvexClientProvider";
 
 const poppins = Poppins({
   variable: "--font-poppins",
@@ -68,39 +67,35 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider
-      publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}
-      afterSignInUrl="/dashboard"
-      afterSignUpUrl="/dashboard"
-    >
-      <html lang="en" suppressHydrationWarning>
-        <head>
-          {/* Google Analytics scripts */}
-          <Script
-            async
-            src="https://www.googletagmanager.com/gtag/js?id=G-310YYST3HF"
-          ></Script>
-          <Script id="google-analytics">
-            {`
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        {/* Google Analytics scripts */}
+        <Script
+          async
+          src="https://www.googletagmanager.com/gtag/js?id=G-310YYST3HF"
+        ></Script>
+        <Script id="google-analytics">
+          {`
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
             gtag('js', new Date());
             gtag('config', 'G-310YYST3HF');
           `}
-          </Script>
-          {/* ... existing head content ... */}
-        </head>
-        <body
-          suppressHydrationWarning
-          className={`${poppins.variable} antialiased`}
-        >
+        </Script>
+        {/* ... existing head content ... */}
+      </head>
+      <body
+        suppressHydrationWarning
+        className={`${poppins.variable} antialiased`}
+      >
+        <SessionProvider>
           <ConvexClientProvider>
             <NextTopLoader />
             {children}
             <Toaster />
           </ConvexClientProvider>
-        </body>
-      </html>
-    </ClerkProvider>
+        </SessionProvider>
+      </body>
+    </html>
   );
 }

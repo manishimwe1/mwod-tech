@@ -9,6 +9,7 @@
  */
 
 import type * as facture from "../facture.js";
+import type * as http from "../http.js";
 import type * as invoice from "../invoice.js";
 import type * as product from "../product.js";
 import type * as users from "../users.js";
@@ -29,6 +30,7 @@ import type {
  */
 declare const fullApi: ApiFromModules<{
   facture: typeof facture;
+  http: typeof http;
   invoice: typeof invoice;
   product: typeof product;
   users: typeof users;

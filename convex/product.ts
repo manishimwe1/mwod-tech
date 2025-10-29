@@ -25,7 +25,7 @@ export const createProduct = mutation({
      v.literal("draft")
     ),
     updatedAt:v.string(),
-    createdBy:v.id('users'),
+    createdBy:v.id('user'),
     condition:v.union(
       v.literal("Like New"),
       v.literal("New"),
@@ -76,10 +76,11 @@ export const getProduct = query({
     
     // Get the user who created the product
     const user = await ctx.db.get(product.createdBy);
+    if (!user) return null;
     
     return {
       ...product,
-      createdByName: user?.name ?? 'Unknown User',
+      createdByName: user?.fullname ?? 'Unknown User',
       ...(Array.isArray(product.images) && product.images.length > 0
         ? {
             imageUrls: await Promise.all(
