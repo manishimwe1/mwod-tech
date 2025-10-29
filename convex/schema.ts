@@ -18,15 +18,18 @@ export default defineSchema({
     date: v.number(),
   }),
 
-  users: defineTable({
-    name: v.string(),
-    tokenIdentifier: v.string(),
-    pictureUrl: v.string(),
+  // 👤 Users
+  user: defineTable({
+    fullname: v.string(),
+    username: v.string(),
     email: v.string(),
-    emailVerified: v.boolean(),
-    updatedAt: v.string(),
-  }).index("by_token", ["tokenIdentifier"]),
-
+    password: v.optional(v.string()),
+    image: v.optional(v.string()),
+    role: v.optional(v.union(v.literal("admin"), v.literal("client"))),
+    resetToken: v.optional(v.string()),
+    resetTokenExpiry: v.optional(v.number()),
+  }).index("by_email", ["email"]),
+  
   products: defineTable({
     name: v.string(),
     description: v.string(),
@@ -44,19 +47,23 @@ export default defineSchema({
       v.literal("draft")
     ),
     updatedAt: v.string(),
-    createdBy: v.id("users"),
-    condition:v.optional(v.union(
-      v.literal("Like New"),
-      v.literal("New"),
-      v.literal("Good"),
-      v.literal("Used")
-    )),
-    badge:v.optional(v.union(
-      v.literal("NEW"),
-      v.literal("HOT"),
-      v.literal("SALE"),
-      v.literal("Deals")
-    )),
+    createdBy: v.id("user"),
+    condition: v.optional(
+      v.union(
+        v.literal("Like New"),
+        v.literal("New"),
+        v.literal("Good"),
+        v.literal("Used")
+      )
+    ),
+    badge: v.optional(
+      v.union(
+        v.literal("NEW"),
+        v.literal("HOT"),
+        v.literal("SALE"),
+        v.literal("Deals")
+      )
+    ),
     views: v.optional(v.number()),
     likes: v.optional(v.number()),
     rating: v.optional(v.number()),
@@ -79,6 +86,5 @@ export default defineSchema({
     totalAmount: v.number(),
     date: v.number(),
     phone: v.optional(v.number()),
-
   }),
 });
