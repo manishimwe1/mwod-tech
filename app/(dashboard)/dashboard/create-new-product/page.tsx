@@ -51,6 +51,8 @@ export default function CreateProductPage() {
       images: [],
       status: "draft",
       warranty: 0,
+      condition: "Like New",
+      badge: "NEW",
     },
   });
 
@@ -159,7 +161,7 @@ export default function CreateProductPage() {
         category: data.category,
         name: data.name,
         description: data.description,
-        discountPrice: data.discountPrice,
+        price: data.discountPrice,
         originalPrice: data.originalPrice,
         stock: data.stock,
         serialNumber: data.serialNumber,
@@ -168,7 +170,8 @@ export default function CreateProductPage() {
         updatedAt: new Date().toISOString(),
         createdBy: userId,
         warranty: data.warranty,
-
+        condition: data.condition,
+        badge: data.badge,
       });
 
       toast.success("Product created successfully!", { richColors: true });
@@ -308,6 +311,34 @@ export default function CreateProductPage() {
                   )}
                 />
               </div>
+
+              {/* Condition */}
+              <FormField
+                control={form.control}
+                name="condition"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Condition *</FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      value={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select condition" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="Like New">Like New</SelectItem>
+                        <SelectItem value="New">New</SelectItem>
+                        <SelectItem value="Good">Good</SelectItem>
+                        <SelectItem value="Used">Used</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
               {/* Pricing */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -470,6 +501,32 @@ export default function CreateProductPage() {
                 />
 
                 {/* Status */}
+                <FormField
+                  control={form.control}
+                  name="badge"
+                  render={({ field }) => (
+                    <FormItem className="w-[100px]">
+                      <FormLabel>Badge</FormLabel>
+                      <Select
+                        onValueChange={field.onChange}
+                        value={field.value}
+                      >
+                        <FormControl>
+                          <SelectTrigger className="w-full">
+                            <SelectValue />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value="NEW">NEW</SelectItem>
+                          <SelectItem value="HOT">HOT</SelectItem>
+                          <SelectItem value="SALE">SALE</SelectItem>
+                          <SelectItem value="Deals">Deals</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
                 <FormField
                   control={form.control}
                   name="status"

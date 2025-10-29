@@ -32,7 +32,7 @@ export default defineSchema({
     description: v.string(),
     brand: v.string(),
     category: v.string(),
-    discountPrice: v.number(),
+    price: v.number(),
     originalPrice: v.optional(v.number()),
     stock: v.number(),
     serialNumber: v.string(),
@@ -45,6 +45,21 @@ export default defineSchema({
     ),
     updatedAt: v.string(),
     createdBy: v.id("users"),
+    condition:v.optional(v.union(
+      v.literal("Like New"),
+      v.literal("New"),
+      v.literal("Good"),
+      v.literal("Used")
+    )),
+    badge:v.optional(v.union(
+      v.literal("NEW"),
+      v.literal("HOT"),
+      v.literal("SALE"),
+      v.literal("Deals")
+    )),
+    views: v.optional(v.number()),
+    likes: v.optional(v.number()),
+    rating: v.optional(v.number()),
   })
     .index("by_category", ["category"])
     .index("by_status", ["status"]),

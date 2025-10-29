@@ -1,101 +1,81 @@
-"use client";
+import { ArrowRight, ChevronRight, Phone, Sparkles } from 'lucide-react'
+import React from 'react'
 
-import Image from "next/image";
-import HeroCarrousel from "./HeroCarrousel";
-import { Button } from "./ui/button";
-
-export default function TechEditorsBento() {
+const HeroSection = () => {
   return (
-    <section className="bg-gray-50 py-10 px-4">
-      <div className="max-w-7xl mx-auto">
-        {/* Bento Grid Container */}
-        <div className="grid grid-cols-12 gap-6 auto-rows-[180px] md:auto-rows-[280px]">
-          {/* Main Hero Card - Tech editors' top picks */}
-          <div className="col-span-12 lg:col-span-6 row-span-2 bg-gradient-to-br from-gray-100 to-gray-200 rounded-2xl p-6 lg:p-10 flex flex-col justify-between relative overflow-hidden hover:shadow-lg transition-shadow">
-            {/* Text Content */}
-            <div className="relative z-20 max-w-md flex flex-col gap-4">
-              <p className="text-blue-800 text-sm font-medium mb-2">
-                Computers, Phones, Beats & more
+    <section className="bg-gradient-to-br from-blue-50 via-white to-purple-50 py-16 lg:py-24">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            <div>
+              <div className="inline-flex items-center gap-2 bg-blue-100 text-blue-700 px-4 py-2 rounded-full text-sm font-medium mb-6">
+                <Sparkles className="w-4 h-4" />
+                Rwanda's #1 Electronics Marketplace
+              </div>
+              <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6 leading-tight">
+                Buy & Sell <span className="text-blue-600">Electronics</span> with Confidence
+              </h2>
+              <p className="text-xl text-gray-600 mb-8">
+                Shop 14,000+ verified phones, laptops & accessories. Secure payments, fast delivery in Kigali.
               </p>
-              <h1 className="sm:text-3xl md:text-4xl font-bold text-blue-900 mb-6 leading-tight">
-                Tech editors top picks
-              </h1>
               
+              {/* Trust Signals */}
+              <div className="grid grid-cols-3 gap-4 mb-8">
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-gray-900">14,861</div>
+                  <div className="text-sm text-gray-600">Active Listings</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-gray-900">10K+</div>
+                  <div className="text-sm text-gray-600">Happy Customers</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-gray-900">4.8★</div>
+                  <div className="text-sm text-gray-600">Average Rating</div>
+                </div>
+              </div>
+
+              <div className="flex flex-col sm:flex-row gap-4">
+                <button className="bg-blue-600 text-white px-8 py-4 rounded-lg font-semibold hover:bg-blue-700 transition flex items-center justify-center gap-2 shadow-lg shadow-blue-600/30">
+                  Browse Products
+                  <ChevronRight className="w-5 h-5" />
+                </button>
+                <button className="border-2 border-gray-300 text-gray-700 px-8 py-4 rounded-lg font-semibold hover:border-gray-400 transition flex items-center justify-center gap-2">
+                  Sell Your Device
+                  <ArrowRight className="w-5 h-5" />
+                </button>
+              </div>
             </div>
 
-            {/* Carousel */}
-            <div className="absolute mx-auto bottom-4 md:-bottom-8 w-[90%] bg-white h-[66%] md:h-[60%] lg:w-[600px] lg:h-[400px] z-10 rounded-xl overflow-hidden">
-              <HeroCarrousel />
-            </div>
-            <div className="absolute left-1/2 bottom-0 transform -translate-x-1/2 -translate-y-1/2 z-20">
-              <Button className="bg-gradient-to-t from-blue-950  to-blue-800 border border-blue-500 px-6 py-3 rounded-full text-white font-bold hover:bg-blue-500 cursor-pointer transition-all">
-                Shop now
-              </Button>
-            </div>
-          </div>
-
-          {/* Portable Beats Card */}
-          <div className="col-span-12 lg:col-span-6 bg-gradient-to-r from-blue-900 to-blue-800 rounded-2xl p-8 text-white relative overflow-hidden flex flex-col justify-between hover:shadow-lg transition-shadow">
-            <div className="relative z-10 max-w-sm">
-              <p className="text-blue-200 text-sm mb-1">Get it in as fast as 1 hour*</p>
-              <h2 className="text-2xl lg:text-3xl font-bold mb-2">Portable Beats</h2>
-              <h3 className="text-lg font-semibold mb-6">speakers & more</h3>
-              <button className="text-blue-200 underline hover:text-white transition-colors">
-                Shop now
-              </button>
-            </div>
-
-            {/* Speaker Image */}
-            <div className="absolute bottom-6 right-6 w-[220px] h-[120px] lg:w-[300px] lg:h-[150px]">
-              <Image
-                src="/jbl2.png"
-                alt="Featured electronics and tech deals"
-                fill
-                className="object-cover"
-                priority
-              />
-            </div>
-          </div>
-
-          {/* Smart Watches Card */}
-          <div className="col-span-12 md:col-span-6 lg:col-span-3 bg-blue-50 rounded-2xl p-6 relative overflow-hidden hover:shadow-lg transition-shadow">
-            <div className="relative z-10">
-              <h3 className="text-xl font-bold text-blue-900 mb-1">Smart Watches</h3>
-              <p className="text-blue-800 mb-4">Track your life</p>
-              <button className="text-blue-700 underline text-sm hover:text-blue-900 transition-colors">
-                Shop now
-              </button>
-            </div>
-            <div className="absolute bottom-0 right-0 w-[150px] h-[150px] lg:w-[220px] lg:h-[220px]">
-              <Image
-                src="/watch.png"
-                alt="Smart watches"
-                fill
-                className="object-contain"
-                priority
-              />
-            </div>
-          </div>
-
-          {/* Smart Home Tech Card */}
-          <div className=" hidden md:block col-span-6 md:col-span-6 lg:col-span-3 bg-white rounded-2xl p-6 relative overflow-hidden shadow-sm hover:shadow-lg transition-shadow">
-            <div className="relative z-10">
-              <h3 className="text-xl font-bold text-gray-900 mb-1">Smart Home</h3>
-              <p className="text-gray-700 mb-4">Tech</p>
-              <button className="text-gray-700 underline text-sm hover:text-gray-900 transition-colors">
-                Shop now
-              </button>
-            </div>
-            <div className="absolute bottom-6 right-6">
-              <div className="w-20 h-20 bg-gradient-to-br from-orange-400 to-orange-600 rounded-full shadow-xl border-4 border-orange-300 flex items-center justify-center relative">
-                <div className="absolute inset-0 bg-gradient-to-br from-orange-300 to-orange-500 rounded-full"></div>
-                <div className="relative z-10 text-white font-bold text-xl">70</div>
-                <div className="absolute inset-2 border-2 border-orange-200 rounded-full opacity-30"></div>
+            {/* Hero Image/Illustration */}
+            <div className="relative hidden lg:block">
+              <div className="bg-gradient-to-br from-blue-100 to-purple-100 rounded-3xl p-8 relative overflow-hidden">
+                <div className="absolute top-4 right-4 bg-green-500 text-white px-4 py-2 rounded-full text-sm font-semibold animate-pulse">
+                  🔥 Hot Deals Today
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="bg-white rounded-2xl p-6 shadow-xl transform hover:scale-105 transition">
+                    <div className="w-full h-32 relative bg-gray-100 rounded-lg mb-3 flex items-center justify-center">
+                      <Phone className="w-16 h-16 text-blue-600" />
+                    </div>
+                    <div className="text-sm font-semibold text-gray-900">iPhone 15 Pro</div>
+                    <div className="text-xs text-gray-600">From 850K RWF</div>
+                  </div>
+                  <div className="bg-white rounded-2xl p-6 shadow-xl transform hover:scale-105 transition mt-8">
+                    <div className="w-full h-32 bg-gray-100 rounded-lg mb-3 flex items-center justify-center">
+                      <svg className="w-16 h-16 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                      </svg>
+                    </div>
+                    <div className="text-sm font-semibold text-gray-900">MacBook Pro</div>
+                    <div className="text-xs text-gray-600">From 440K RWF</div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-    </section>
-  );
+      </section>
+  )
 }
+
+export default HeroSection

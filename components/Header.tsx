@@ -1,146 +1,188 @@
-"use client";
+'use client'
 
-import { SignInButton } from "@clerk/nextjs";
-import { Search, User, ShoppingBag, Menu } from "lucide-react";
+import { Menu, Search, ShoppingBag, ShoppingBasket, ShoppingCart, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
 
-export default function Header() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+import React, { useEffect, useState } from "react";
+import { Button } from "./ui/button";
+import { Input } from "./ui/input";
+
+const Header = () => {
+  const [showMobileMenu, setShowMobileMenu] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+   useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 50);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   return (
-    <header className="bg-white border-b border-gray-200 sticky top-0 z-50">
+    <nav
+      className={`sticky top-0 z-50 transition-all duration-300 backdrop-blur-lg ${
+        scrolled
+          ? "bg-white/30 shadow-lg border-b border-white/20"
+          : "bg-white/10 border-b border-white/10"
+      }`}
+    >
       <div className="max-w-7xl mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <div className="flex items-center justify-center relative gap-2 h-14 w-14">
-            <Link href="/" className="text-2xl font-bold text-green-600">
-              <Image src="/logo.png" alt="logo" fill priority />
-            </Link>
+          <div className="flex items-center gap-2">
+            <div className="flex items-center justify-center relative gap-2 h-14 w-14">
+              <Link href="/" className="text-2xl font-bold text-green-600">
+                <Image src="/logo.png" alt="logo" fill priority />
+              </Link>
+            </div>
+            {/* <span className="font-bold text-xl text-gray-900 hidden sm:inline">
+              EasyFix
+            </span> */}
           </div>
 
-          {/* Navigation */}
-          <nav className="hidden md:flex items-center space-x-8">
+          {/* Desktop Navigation */}
+          <div className="hidden lg:flex items-center gap-6">
             <Link
-              href="/"
-              className="text-gray-700 hover:text-green-600 font-medium"
+              prefetch
+              href="/browse"
+              className="text-gray-700 hover:text-blue-600 transition"
             >
               Browse
             </Link>
             <Link
+              prefetch
               href="/sell"
-              className="text-gray-700 hover:text-green-600 font-medium"
+              className="text-gray-700 hover:text-blue-600 transition"
             >
               Sell
             </Link>
-            {/* <Link
-              href="/#"
-              className="text-gray-700 hover:text-green-600 font-medium"
-            >
-              News
-            </Link> */}
             <Link
-              href="/"
-              className="text-gray-700 hover:text-green-600 font-medium"
+              prefetch
+              href="/about"
+              className="text-gray-700 hover:text-blue-600 transition"
             >
               About
             </Link>
-            <SignInButton forceRedirectUrl={"/dashboard"}>
-              <Link
-                href="/dashboard"
-                className="text-gray-700 hover:text-green-600 font-medium"
-              >
-                Dashboard
-              </Link>
-            </SignInButton>
-          </nav>
+            <Link
+              href="/dashboard"
+              className="text-gray-700 hover:text-blue-600 transition"
+            >
+              Dashboard
+            </Link>
+          </div>
 
-          {/* Search */}
-          <div className="hidden md:flex flex-1 max-w-lg mx-8">
+          {/* Search Bar - Desktop */}
+          <div className="hidden md:flex flex-1 max-w-xl mx-6">
             <div className="relative w-full">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
               <input
-                type="text"
-                placeholder="Search for electronics..."
-                className="w-full px-4 py-2 pl-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-600 focus:border-transparent"
-              />
-              <Search
-                className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
-                size={20}
+                type="search"
+                placeholder="Search for phones, laptops, accessories..."
+                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
+                aria-label="Search products"
               />
             </div>
           </div>
 
-          {/* User Actions */}
-          <div className="flex items-center space-x-4">
-            <button className="p-2 text-gray-700 hover:text-green-600">
-              <User size={24} />
-            </button>
-            <button className="p-2 text-gray-700 hover:text-green-600">
-              <ShoppingBag size={24} />
-            </button>
-            <button
-              className="md:hidden p-2 text-gray-700 cursor-pointer"
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
+          {/* Action Buttons */}
+          <div className="flex items-center gap-3">
+            <Button
+              variant={'secondary'}
+              className="p-2 hover:bg-gray-100 cursor-pointer rounded-lg transition"
+              aria-label="Account"
             >
-              <Menu size={24} />
-            </button>
+              <svg
+                className="w-6 h-6 text-gray-700"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                />
+              </svg>
+            </Button>
+            <Button
+              className="relative p-2 hover:bg-gray-100 cursor-pointer rounded-lg transition"
+              aria-label="Shopping cart"
+              variant={'secondary'}
+            >
+              <ShoppingCart className="w-6 h-6 text-gray-700" />
+              <span className="absolute -top-1 -right-1 bg-blue-600 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">
+                3
+              </span>
+            </Button>
+            <Button
+              variant={'secondary'}
+              className="lg:hidden p-2 hover:bg-gray-100 rounded-lg transition"
+              onClick={() => setShowMobileMenu(!showMobileMenu)}
+              aria-label="Menu"
+            >
+              {showMobileMenu ? (
+                <X className="w-6 h-6" />
+              ) : (
+                <Menu className="w-6 h-6" />
+              )}
+            </Button>
           </div>
         </div>
 
-        {/* Mobile Menu */}
-        {isMenuOpen && (
-          <div className="md:hidden border-t border-gray-200 py-4">
-            <div className="space-y-4">
-              <div className="relative">
-                <input
-                  type="text"
-                  placeholder="Search for electronics..."
-                  className="w-full px-4 py-2 pl-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-600"
-                />
-                <Search
-                  className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
-                  size={20}
-                />
-              </div>
-              <nav className="space-y-2">
-                <Link
-                  href="/"
-                  className="block py-2 text-gray-700 hover:text-green-600"
-                >
-                  Browse
-                </Link>
-                <Link
-                  href="#"
-                  className="block py-2 text-gray-700 hover:text-green-600"
-                >
-                  Sell
-                </Link>
-                <a
-                  href="#"
-                  className="block py-2 text-gray-700 hover:text-green-600"
-                >
-                  News
-                </a>
-                <a
-                  href="#"
-                  className="block py-2 text-gray-700 hover:text-green-600"
-                >
-                  About
-                </a>
-                <SignInButton >
-                  <a
-                    href="/dashboard"
-                    className="block py-2 text-gray-700 hover:text-green-600"
-                  >
-                    Dashboard
-                  </a>
-                </SignInButton>
-              </nav>
-            </div>
+        {/* Mobile Search */}
+        <div className="pb-3 md:hidden">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+            <Input
+              type="search"
+              placeholder="Search electronics..."
+              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+              aria-label="Search products"
+            />
           </div>
-        )}
+        </div>
       </div>
-    </header>
+
+      {/* Mobile Menu */}
+      {showMobileMenu && (
+        <div className="lg:hidden border-t bg-white">
+          <div className="px-4 py-4 space-y-3">
+            <Link
+              prefetch
+              href="/browse"
+              className="block py-2 text-gray-700 hover:text-blue-600"
+            >
+              Browse
+            </Link>
+            <Link
+              prefetch
+              href="/sell"
+              className="block py-2 text-gray-700 hover:text-blue-600"
+            >
+              Sell
+            </Link>
+            <Link
+              prefetch
+              href="/about"
+              className="block py-2 text-gray-700 hover:text-blue-600"
+            >
+              About
+            </Link>
+            <Link
+              prefetch
+              href="/dashboard"
+              className="block py-2 text-gray-700 hover:text-blue-600"
+            >
+              Dashboard
+            </Link>
+          </div>
+        </div>
+      )}
+    </nav>
   );
-}
+};
+
+export default Header;

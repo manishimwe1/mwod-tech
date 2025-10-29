@@ -19,10 +19,11 @@ export const productSchema = z.object({
     .array(z.string())
     .min(1, "At least one image is required"),
   warranty: z.coerce.number().min(1, "Warranty in months is required"),
-
   status: z.enum(["active", "inactive", "draft"]).default("draft"),
+  condition: z.enum(["Like New", "New", "Good", "Used"]).default("Like New"),
+  badge: z.enum(["NEW", "HOT", "SALE",'Deals']).default("NEW"),
 });
-
+                
 export const formSchema = z.object({
   clientName: z.string().min(2, {
     message: "Client name must be at least 2 characters.",

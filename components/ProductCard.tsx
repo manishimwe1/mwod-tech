@@ -2,24 +2,18 @@
 
 import { Doc } from "@/convex/_generated/dataModel";
 import Autoplay from "embla-carousel-autoplay";
-import { ShoppingCart } from "lucide-react";
+import { Award, Eye, Flame, HeartIcon, ShoppingCart, Star } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRef } from "react";
 import { Button } from "./ui/button";
 import { Carousel, CarouselContent, CarouselItem } from "./ui/carousel";
 
-const ProductCard = ({ product,index }: { product: Doc<"products">,index:number }) => {
+const ProductCard = ({ product }: { product: Doc<"products"> }) => {
   const randomDelay = Math.floor(Math.random() * (15000 - 5000 + 1)) + 5000; // Random delay between 5 and 15 seconds
-  const plugin = useRef(Autoplay({ delay: randomDelay , stopOnInteraction: true }));
-
- 
-  const isNew =
-    product._creationTime &&
-    product._creationTime * 1000 > Date.now() - 7 * 24 * 60 * 60 * 1000;
-
-  const hasDiscount =
-    product.originalPrice && product.discountPrice < product.originalPrice;
+  const plugin = useRef(
+    Autoplay({ delay: randomDelay, stopOnInteraction: true })
+  );
 
   return (
     <Link
@@ -63,64 +57,99 @@ const ProductCard = ({ product,index }: { product: Doc<"products">,index:number 
           </CarouselContent>
         </Carousel>
 
-        {isNew && (
-          <span className="absolute top-3 left-3 bg-blue-600 text-white text-xs font-semibold px-3 py-1 rounded-full shadow z-10">
-            NEW
-          </span>
-        )}
+        {/* Badge */}
+        <div
+          className={`absolute top-3 left-3 z-10 ${
+            product.badge === "HOT" ? "bg-orange-500" : "bg-blue-600"
+          } text-white px-3 py-1 rounded-full text-xs font-bold`}
+        >
+          {product.badge}
+        </div>
 
-        {/* {hasDiscount && (
-          <span className="absolute top-3 right-3 bg-red-500 text-white text-xs font-semibold px-3 py-1 rounded-full shadow z-10">
-            -{Math.round(
-              (1 - product.discountPrice / product.originalPrice) * 100
-            )}
-            %
-          </span>
-        )} */}
+        {/* Wishlist Button */}
+        <button
+          className="absolute cursor-pointer top-3 right-3 z-10 bg-white bg-opacity-90 hover:bg-opacity-100 p-2 rounded-full shadow-md transition"
+          aria-label="Add to wishlist"
+        >
+          <HeartIcon className="w-4 h-4 text-gray-700 hover:text-red-500 hover:fill-red-500 transition" />
+        </button>
+
+        {/* Views Badge */}
+        {product?.views && product.views && (
+          <div className="absolute bottom-3 left-3 bg-orange-500 text-white px-2 py-1 rounded text-xs font-semibold flex items-center gap-1">
+            <Flame className="w-3 h-3" />
+            {product.views} viewing
+          </div>
+        )}
       </div>
 
       {/* Info Section */}
-      <div className="p-4 flex flex-col flex-grow">
-        <h3 className="font-semibold text-gray-900 text-lg line-clamp-2 group-hover:text-blue-600 transition-colors duration-200">
-          {product.name.charAt(0).toUpperCase() + product.name.slice(1)}
+      <div className="p-5">
+        {/* Rating */}
+        <div className="flex items-center gap-2 mb-3">
+          <div className="flex">
+            {[...Array(5)].map((_, i) => (
+              <Star
+                key={i}
+                className={`w-4 h-4 ${
+                  i < Math.floor(product.rating || 0)
+                    ? "fill-yellow-400 text-yellow-400"
+                    : "text-gray-300"
+                }`}
+              />
+            ))}
+          </div>
+          <span className="text-sm text-gray-600">({product.likes || 0})</span>
+        </div>
+
+        {/* Title */}
+        <h3 className="font-semibold text-base text-gray-900 mb-2 line-clamp-2 group-hover:text-blue-600 transition min-h-[3rem]">
+          {product.name}
         </h3>
 
-        <p className="text-sm text-gray-500 line-clamp-2 mt-1">
-          {product.description}
-        </p>
-
-        {/* Ratings */}
-        {/* {product.rating && (
-          <div className="mt-2">{renderStars(product.rating, product.reviewCount || 0)}</div>
-        )} */}
-
-        {/* Price Section */}
-        <div className="mt-3 flex items-center justify-between">
-          <div className="flex flex-col">
-            <span className="text-xl font-bold text-gray-900">
-              {product.discountPrice.toLocaleString()} RWF
-            </span>
-            {hasDiscount && (
-              <span className="text-sm text-gray-400 line-through">
-                {product.originalPrice?.toLocaleString()} RWF
-              </span>
-            )}
-          </div>
-
-          <Button
-            size="icon"
-            className="rounded-full bg-blue-600 hover:bg-blue-700 text-white transition-transform hover:scale-105"
-          >
-            <ShoppingCart className="h-5 w-5" />
-          </Button>
+        {/* Condition */}
+        <div className="mb-3">
+          <span className="inline-flex items-center gap-1 bg-green-50 text-green-700 px-2 py-1 rounded text-xs font-medium">
+            <Award className="w-3 h-3" />
+            {product.condition}
+          </span>
         </div>
-      </div>
 
-      {/* Bottom CTA */}
-      <div className="border-t px-4 py-3 bg-gray-50 text-center">
-        <Button className="w-full bg-blue-600 hover:bg-blue-700 rounded-full font-semibold py-2 transition-transform hover:scale-[1.02]">
-          Shop Now
-        </Button>
+        {/* Price */}
+        <div className="flex items-baseline gap-2 mb-4">
+          <span className="text-2xl font-bold text-gray-900">
+            {product.price.toLocaleString()}
+            <span className="text-sm font-normal text-gray-600"> RWF</span>
+          </span>
+          {product.originalPrice && (
+            <span className="text-sm text-gray-500 line-through">
+              {product.originalPrice.toLocaleString()}
+            </span>
+          )}
+        </div>
+
+        {product.originalPrice && (
+          <div className="bg-green-50 rounded-lg p-2 mb-4">
+            <p className="text-xs text-green-800 text-center font-semibold">
+              💰 Save {(product.originalPrice - product.price).toLocaleString()}{" "}
+              RWF
+            </p>
+          </div>
+        )}
+
+        {/* Actions */}
+        <div className="flex gap-2">
+          <button className="flex-1 bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition flex items-center justify-center gap-2 text-sm">
+            <ShoppingCart className="w-4 h-4" />
+            Add to Cart
+          </button>
+          <button
+            className="bg-gray-100 hover:bg-gray-200 p-3 rounded-lg transition"
+            aria-label="Quick view"
+          >
+            <Eye className="w-5 h-5 text-gray-700" />
+          </button>
+        </div>
       </div>
     </Link>
   );
