@@ -1,240 +1,210 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader2, Eye, EyeOff } from "lucide-react";
-import { useSession } from "next-auth/react";
-import Link from "next/link";
-import { redirect, useRouter, useSearchParams } from "next/navigation";
-import { useState, useEffect } from "react";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { Suspense } from "react";
-import { handleSignIn } from "@/lib/actions/signinActions";
+import { Loader2, Eye, EyeOff, Mail, Lock, ArrowRight } from "lucide-react";
+import Image from "next/image";
 import SignInButton from "@/components/SignInButton";
-// Move schema outside component to prevent recreating on each render
-const formSchema = z.object({
-  identifier: z.string().min(2, "Enter your email or username"),
-  password: z.string().min(8, "Password must be at least 8 characters"),
-});
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
-type FormValues = z.infer<typeof formSchema>;
-
-function LoginPage() {
-  const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [redirecting, setRedirecting] = useState(false);
-  const { data: session, status } = useSession();
-  const searchParams = useSearchParams();
-  const message = searchParams.get("message");
+export default function ConvexLoginPage() {
   const [showPassword, setShowPassword] = useState(false);
-  // WORK IN PROGRESS SHYIRAHO UBURYO UWO TWOHEREJE LINK USERNAME NA PASSWORD BYI POPLING
-  const form = useForm<FormValues>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      identifier: "",
-      password: "",
-    },
+  const [loading, setLoading] = useState(false);
+  const { data: session, status } = useSession();
+  const [formData, setFormData] = useState({
+    identifier: "",
+    password: "",
   });
+  const [error, setError] = useState("");
 
-  console.log({ session, status });
+  const router = useRouter()
 
-  useEffect(() => {
+    useEffect(() => {
     if (status === "authenticated" && session?.user) {
       // Redirect based on user role
-      if (session.user.role === "client") {
-        redirect("/");
+      if (session.user.role === "admin") {
+        console.log(('Happen HERE'));
+        
+        router.push("/dashboard");
       } else {
-        redirect("/dashboard"); // Admin or other roles
+        router.push("/"); // Admin or other roles
       }
     }
-  }, [status, session]);
-
-  async function onSubmit(values: FormValues) {
-    try {
-      setLoading(true);
-      setError(null);
-
-      // Pass identifier (email or username) to the sign-in handler
-      const response = await handleSignIn(values.identifier, values.password);
-
-      if (response.success) {
-        // Success case - form will be reset and redirection handled by useEffect
-        form.reset();
-        // You can customize the redirect target as needed
-        return;
-      }
-
-      // Error case
-      setError(response.error || "Failed to sign in");
-      form.reset({ identifier: values.identifier, password: "" }); // Keep identifier, clear password
-    } catch (err) {
-      console.error("Login error:", err);
-      setError("An unexpected error occurred");
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  if (redirecting) {
-    return (
-      <section className="flex items-center justify-center w-full h-screen">
-        <span className="flex items-center gap-2 justify-center">
-          <Loader2 className="animate-spin h-5 w-5" />
-          Login successful! Redirecting...
-        </span>
-      </section>
-    );
-  }
+  }, [status, session, router]);
+  if(status === "loading") return null;
 
   return (
-    <section className="flex items-center justify-center w-full h-screen">
-      <div className="bg-[url('/images/bgimage.jpeg')] bg-cover bg-center bg-no-repeat h-full w-full -bg-conic-0z-50 relative ">
-        <div className="bg-[url('/images/office.jpg')] absolute bg-cover bg-center bg-no-repeat h-full w-full opacity-40" />
-        <div className="h-full w-full bg-indigo-900/10 rounded-md bg-clip-padding backdrop-filter backdrop-blur-md bg-opacity-10 z-50 absolute" />
+    <div className="min-h-screen w-full bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 flex items-center justify-center p-4 relative overflow-hidden">
+      {/* Animated background elements */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-0 -left-4 w-72 h-72 bg-purple-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse"></div>
+        <div className="absolute top-0 -right-4 w-72 h-72 bg-yellow-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse" style={{ animationDelay: '2s' }}></div>
+        <div className="absolute -bottom-8 left-20 w-72 h-72 bg-pink-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse" style={{ animationDelay: '4s' }}></div>
+      </div>
 
-        <div className="flex absolute py-4 lg:p-10 bg-indigo-50 h-fit w-full md:w-[600px] mx-auto inset-0 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 rounded-xl shadow shadow-black/40 z-50">
-          <div className="w-full h-full flex items-center flex-col space-y-4 justify-center px-2 py-4 lg:px-10 z-50">
-            <div className="w-full px-4 md:px-0 flex flex-col items-center justify-center">
-              {message ? (
-                <div className="flex gap-2 flex-col pb-8">
-                  <span className="text-pretty text-base text-green-700">
-                    {message}
-                  </span>
-                </div>
-              ) : (
-                <h2 className="text-balance text-xl md:text-3xl font-bold tracking-tighter text-indigo-950  mb-6">
-                  Welcome back 🤝
-                </h2>
-              )}
+      {/* Main content */}
+      <div className="w-full max-w-md relative z-10">
+        {/* Logo/Brand */}
+        <div className="text-center mb-8">
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-indigo-100 to-purple-100 rounded-2xl mb-4 shadow-lg">
+            <Image src="/logo.png" alt="Mozze" width={40} height={40} />
+          </div>
+          <h1 className="text-3xl font-bold text-slate-900 mb-2">Welcome back</h1>
+          <p className="text-slate-600">Sign in to continue to your account</p>
+        </div>
 
-              <Form {...form}>
-                <form
-                  onSubmit={form.handleSubmit(onSubmit)}
-                  className="space-y-8 w-full"
+        {/* Login card */}
+        <div className="bg-white/80 backdrop-blur-xl rounded-3xl shadow-2xl shadow-indigo-500/10 p-8 border border-white/20">
+          <div className="space-y-6">
+            {/* Email/Username field */}
+            {/* <div className="space-y-2">
+              <label className="text-sm font-medium text-slate-700">
+                Email or Username
+              </label>
+              <div className="relative">
+                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+                <Input
+                  type="text"
+                  placeholder="Enter your email or username"
+                  value={formData.identifier}
+                  onChange={(e) =>
+                    setFormData({ ...formData, identifier: e.target.value })
+                  }
+                  className="pl-11 h-12 bg-slate-50/50 border-slate-200 focus:border-indigo-500 focus:ring-indigo-500 rounded-xl transition-all"
+                />
+              </div>
+            </div> */}
+
+            {/* Password field */}
+            {/* <div className="space-y-2">
+              <label className="text-sm font-medium text-slate-700">
+                Password
+              </label>
+              <div className="relative">
+                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+                <Input
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Enter your password"
+                  value={formData.password}
+                  onChange={(e) =>
+                    setFormData({ ...formData, password: e.target.value })
+                  }
+                  className="pl-11 pr-11 h-12 bg-slate-50/50 border-slate-200 focus:border-indigo-500 focus:ring-indigo-500 rounded-xl transition-all"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors"
                 >
-                  <FormField
-                    control={form.control}
-                    name="identifier"
-                    render={({ field }) => (
-                      <FormItem className="w-full">
-                        <FormLabel className="text-indigo-950">
-                          Email or Username
-                        </FormLabel>
-                        <FormControl>
-                          <Input
-                            className="text-indigo-950 border-indigo-200 border-2"
-                            type="text"
-                            placeholder="Enter your email or username"
-                            autoComplete="username"
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name="password"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="text-indigo-950">
-                          Password
-                        </FormLabel>
-                        <FormControl className=" relative">
-                          <div className="h-fit w-full">
-                            <Input
-                              className="text-indigo-950 border-indigo-200 border-2"
-                              type={showPassword ? "text" : "password"}
-                              autoComplete="current-password"
-                              {...field}
-                            />
-                            {showPassword ? (
-                              <EyeOff
-                                className="absolute top-1/2 -translate-y-1/2 right-2 cursor-pointer text-indigo-500 transition-all duration-1000 ease-in-out"
-                                onClick={() => setShowPassword(false)}
-                              />
-                            ) : (
-                              <Eye
-                                className="absolute top-1/2 -translate-y-1/2 right-2 cursor-pointer text-indigo-500"
-                                onClick={() => setShowPassword(true)}
-                              />
-                            )}
-                          </div>
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  {error && (
-                    <div className="text-red-500 text-sm text-center">
-                      {error}
-                    </div>
+                  {showPassword ? (
+                    <EyeOff className="w-5 h-5" />
+                  ) : (
+                    <Eye className="w-5 h-5" />
                   )}
+                </button>
+              </div>
+            </div> */}
 
-                  <Button
-                    disabled={loading}
-                    className="w-full bg-indigo-600 disabled:bg-stone-700 disabled:cursor-wait hover:bg-indigo-700 shadow-lg shadow-black/50 cursor-pointer"
-                    type="submit"
-                  >
-                    {loading ? (
-                      <span className="flex items-center gap-2 justify-center">
-                        <Loader2 className="animate-spin h-4 w-4" />
-                        Signing in...
-                      </span>
-                    ) : (
-                      "Sign in"
-                    )}
-                  </Button>
+            {/* Remember me & Forgot password */}
+            {/* <div className="flex items-center justify-between text-sm">
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="checkbox"
+                  className="w-4 h-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
+                />
+                <span className="text-slate-600">Remember me</span>
+              </label>
+              <a
+                href="#"
+                className="text-indigo-600 hover:text-indigo-700 font-medium transition-colors"
+              >
+                Forgot password?
+              </a>
+            </div> */}
 
-                  <div className="flex items-center justify-between gap-4 w-full">
-                    <Link
-                      href="/forgot-password"
-                      className="text-indigo-700 underline text-sm ml-4 underline-offset-4"
-                    >
-                      Forgot password?
-                    </Link>
-                    <div className="flex items-center gap-1">
-                      <p className="flex items-end gap-1 justify-end text-indigo-950  font-thin text-sm">
-                        Dont have an account?{" "}
-                      </p>
-                      <Link
-                        href="/register"
-                        className="underline underline-offset-4 hover:text-blue-300 transition-colors !text-stone-950 cursor-pointer"
-                      >
-                        Register
-                      </Link>
-                    </div>
-                  </div>
-                </form>
-              </Form>
+            {/* Error message */}
+            {error && (
+              <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl text-sm">
+                {error}
+              </div>
+            )}
+
+            {/* Submit button */}
+            {/* <Button
+              onClick={handleSubmit}
+              disabled={loading}
+              className="w-full h-12 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-medium rounded-xl shadow-lg shadow-indigo-500/30 transition-all duration-200 hover:shadow-xl hover:shadow-indigo-500/40 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {loading ? (
+                <span className="flex items-center gap-2">
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                  Signing in...
+                </span>
+              ) : (
+                <span className="flex items-center gap-2">
+                  Sign in
+                  <ArrowRight className="w-5 h-5" />
+                </span>
+              )}
+            </Button> */}
+
+            {/* OAuth buttons */}
+            <div className="relative">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-slate-200"></div>
+              </div>
+              <div className="relative flex justify-center text-sm">
+                <span className="px-4 bg-white text-slate-500">
+                  Or continue with
+                </span>
+              </div>
             </div>
 
-            <SignInButton />
+            <div className="grid grid-cols-2 gap-3">
+              <SignInButton/>
+              <Button
+                type="button"
+                variant="outline"
+                className="h-12 relative rounded-xl border-slate-200 hover:bg-slate-50 transition-colors"
+              >
+                <svg
+                  className="w-5 h-5 mr-2"
+                  fill="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
+                </svg>
+                GitHub
+                <span className="absolute top-0 bg-gray-200 right-0 px-2 rounded-md">Soon</span>
+              </Button>
+            </div>
           </div>
+
+          {/* Sign up link */}
+          {/* <div className="mt-6 text-center text-sm">
+            <span className="text-slate-600">Don't have an account? </span>
+            <a
+              href="#"
+              className="text-indigo-600 hover:text-indigo-700 font-medium transition-colors"
+            >
+              Sign up for free
+            </a>
+          </div> */}
+        </div>
+
+        {/* Footer links */}
+        <div className="mt-8 text-center text-sm text-slate-500">
+          <a href="#" className="hover:text-slate-700 transition-colors">
+            Privacy Policy
+          </a>
+          <span className="mx-2">•</span>
+          <a href="#" className="hover:text-slate-700 transition-colors">
+            Terms of Service
+          </a>
         </div>
       </div>
-      {/* <div className="bg-indigo-950/40 h-full w-12 blur-3xl -z-50 hidden md:flex"/> */}
-    </section>
-  );
-}
-
-export default function LoginPageWrapper() {
-  return (
-    <Suspense fallback={<div>Loading login...</div>}>
-      <LoginPage />
-    </Suspense>
+    </div>
   );
 }

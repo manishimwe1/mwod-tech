@@ -58,3 +58,7 @@ export async function handleSignIn(email: string, password: string) {
 export async function handleSignInWithGoogle() {
   await signIn("google");
 }
+
+export async function handleSignInWithGithub() {
+  await signIn("github");
+}

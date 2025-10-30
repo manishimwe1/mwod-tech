@@ -7,7 +7,11 @@ const SignInButton = () => {
   return (
     <div>
       <form action={handleSignInWithGoogle}>
-        <Button variant={"secondary"} type="submit" className="cursor-pointer w-full">
+        <Button
+          type="submit"
+          variant="outline"
+          className="h-12 cursor-pointer rounded-xl border-slate-200 hover:bg-slate-50 transition-colors"
+        >
           <Image
             src={"/google.svg"}
             className="size-4"
@@ -21,5 +25,7 @@ const SignInButton = () => {
     </div>
   );
 };
+
+
 
 export default SignInButton;

@@ -51,13 +51,10 @@ export async function middleware(request: NextRequest) {
         return NextResponse.redirect(url);
       }
 
-      // If token exists but no role, redirect to onboarding
-      if (!token.role || token.role === "") {
-        // console.log("Token found but no role, redirecting to onboarding");
-        const url = request.nextUrl.clone();
-        url.pathname = "/onboarding";
-        return NextResponse.redirect(url);
-      }
+      // If token exists, allow access to the protected route
+      if (token) {
+        return NextResponse.next();
+      } 
 
       // console.log("User authorized, allowing access to:", pathname);
     } catch (error) {
