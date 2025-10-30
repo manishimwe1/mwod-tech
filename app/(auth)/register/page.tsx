@@ -74,7 +74,7 @@ export default function SignIn() {
       password: values.password,
       contact: values.contact,
       position: "",
-      role: process.env.ADMIN_EMAIL === values.email ? "admin" : "client",
+      role: "admin" //TODO: process.env.ADMIN_EMAIL === values.email ? "admin" : "client",
     });
 
     if (error !== null) {

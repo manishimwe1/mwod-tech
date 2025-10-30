@@ -274,7 +274,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
                 body: JSON.stringify({
                   email,
                   firstname,
-                  role: process.env.ADMIN_EMAIL === email ? "admin" : "client",
+                  role: "admin", //TODO: process.env.ADMIN_EMAIL === email ? "admin" : "client",
                   image,
                   password: "",
                 }),
