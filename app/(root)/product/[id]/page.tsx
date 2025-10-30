@@ -25,6 +25,7 @@ import {
 import { useParams } from "next/navigation";
 import { useRef, useState, useEffect } from "react";
 import Image from "next/image";
+import LeftProductDetailsImage from "@/components/LeftProductDetailsImage";
 
 const ProductDetailPage = () => {
   const [quantity, setQuantity] = useState(1);
@@ -54,7 +55,7 @@ const ProductDetailPage = () => {
 
   const discountPercent = product.originalPrice
     ? (
-        ((Number(product.originalPrice) - product.discountPrice) /
+        ((Number(product.originalPrice) - product.price) /
           Number(product.originalPrice)) *
         100
       ).toFixed(0)
@@ -80,44 +81,7 @@ const ProductDetailPage = () => {
       <div className="max-w-7xl mx-auto px-4 lg:px-8 py-10">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
           {/* Left: Product Images */}
-          <div className="space-y-4">
-            <div className="relative rounded-xl overflow-hidden border border-gray-200 shadow-sm bg-white">
-              {/* Stock Badge */}
-              {product.stock > 0 ? (
-                <div className="absolute top-4 left-4 bg-green-600 text-white text-xs font-semibold px-3 py-1 rounded-full shadow-sm z-10">
-                  In Stock ({product.stock})
-                </div>
-              ) : (
-                <div className="absolute top-4 left-4 bg-red-600 text-white text-xs font-semibold px-3 py-1 rounded-full shadow-sm z-10">
-                  Out of Stock
-                </div>
-              )}
-
-              {/* Image Carousel */}
-              <Carousel
-                className="w-full h-[500px] relative"
-                opts={{ align: "start", loop: true }}
-                plugins={[plugin.current]}
-              >
-                <CarouselContent className="h-full">
-                  {product.imageUrls?.map((image, i) => (
-                    <CarouselItem
-                      key={i}
-                      className="aspect-square relative rounded-lg overflow-hidden"
-                    >
-                      <ZoomImage
-                        src={image!}
-                        alt={product.name}
-                        className="object-contain"
-                      />
-                    </CarouselItem>
-                  ))}
-                </CarouselContent>
-                <CarouselPrevious className="absolute left-4 top-1/2 -translate-y-1/2 z-10 bg-white hover:bg-blue-50 rounded-full shadow-md p-2 text-gray-800 hover:text-blue-600 transition-all" />
-                <CarouselNext className="absolute right-4 top-1/2 -translate-y-1/2 z-10 bg-white hover:bg-blue-50 rounded-full shadow-md p-2 text-gray-800 hover:text-blue-600 transition-all" />
-              </Carousel>
-            </div>
-          </div>
+          <LeftProductDetailsImage product={product} />
 
           {/* Right: Product Info */}
           <div className="space-y-8">
@@ -135,7 +99,7 @@ const ProductDetailPage = () => {
             <div className="space-y-3 border-y border-gray-200 py-4">
               <div className="flex items-center gap-3">
                 <span className="text-4xl font-bold text-gray-900">
-                  {product.discountPrice.toLocaleString()}
+                  {product.price.toLocaleString()}
                 </span>
                 <span className="text-gray-500 text-lg">RWF</span>
               </div>

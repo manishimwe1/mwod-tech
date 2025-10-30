@@ -29,6 +29,7 @@ export const brands = [
   "Apple",
   "HP",
   "Dell",
+  'Google',
   "Lenovo",
   "Asus",
   "Acer",

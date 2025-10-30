@@ -32,15 +32,15 @@ const ProductCard = ({ product }: { product: Doc<"products"> }) => {
             {product.imageUrls?.map((image: string, index: number) => (
               <CarouselItem
                 key={index}
-                className="relative w-full h-full flex items-center justify-center"
+                className="relative w-full h-full flex items-center justify-center "
               >
-                <div className="relative w-full h-[300px]">
+                <div className="relative w-full h-[300px] rounded-md">
                   {/* Blurred background image */}
                   <Image
                     src={image}
                     alt={product.name}
                     fill
-                    className="object-cover scale-110 blur-lg"
+                    className="object-cover scale-110 blur-lg  "
                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                   />
                   {/* Foreground product image */}
@@ -48,7 +48,7 @@ const ProductCard = ({ product }: { product: Doc<"products"> }) => {
                     src={image}
                     alt={product.name}
                     fill
-                    className="object-contain p-4 group-hover:scale-105 transition-transform duration-300"
+                    className="object-contain p-4 group-hover:scale-105 transition-transform duration-300 rounder-lg "
                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                   />
                 </div>
@@ -116,14 +116,14 @@ const ProductCard = ({ product }: { product: Doc<"products"> }) => {
         </div>
 
         {/* Price */}
-        <div className="flex items-baseline gap-2 mb-4">
-          <span className="text-2xl font-bold text-gray-900">
+        <div className="flex items-start justify-end  h-12 gap-2 mb-4">
+          <span className="text-2xl font-bold text-gray-900 ">
             {product.price.toLocaleString()}
             <span className="text-sm font-normal text-gray-600"> RWF</span>
           </span>
           {product.originalPrice && (
-            <span className="text-sm text-gray-500 line-through">
-              {product.originalPrice.toLocaleString()}
+            <span className=" items-end flex  h-full text-blue-400 line-through">
+              {product.originalPrice.toLocaleString()} Rfw
             </span>
           )}
         </div>
@@ -143,12 +143,12 @@ const ProductCard = ({ product }: { product: Doc<"products"> }) => {
             <ShoppingCart className="w-4 h-4" />
             Add to Cart
           </button>
-          <button
+          {/* <button
             className="bg-gray-100 hover:bg-gray-200 p-3 rounded-lg transition"
             aria-label="Quick view"
           >
             <Eye className="w-5 h-5 text-gray-700" />
-          </button>
+          </button> */}
         </div>
       </div>
     </Link>

@@ -46,12 +46,12 @@ export default function CreateProductPage() {
       description: "",
       brand: "",
       category: "",
-      discountPrice: 0,
+      price: 0,
       originalPrice: 0,
       stock: 0,
       serialNumber: "",
       images: [],
-      status: "draft",
+      status: "active",
       warranty: 0,
       condition: "Like New",
       badge: "NEW",
@@ -69,9 +69,9 @@ export default function CreateProductPage() {
     email: session?.user?.email || "",
   }:'skip')
 
-  if(!user?._id){
-    return redirect('/login')
-  }
+  // if(!user?._id){
+  //   return redirect('/login')
+  // }
   // Image handling
   const onDrop = React.useCallback(
     (acceptedFiles: File[]) => {
@@ -170,7 +170,7 @@ export default function CreateProductPage() {
         category: data.category,
         name: data.name,
         description: data.description,
-        price: data.discountPrice,
+        price: data.price,
         originalPrice: data.originalPrice,
         stock: data.stock,
         serialNumber: data.serialNumber,
@@ -321,34 +321,6 @@ export default function CreateProductPage() {
                 />
               </div>
 
-              {/* Condition */}
-              <FormField
-                control={form.control}
-                name="condition"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Condition *</FormLabel>
-                    <Select
-                      onValueChange={field.onChange}
-                      value={field.value}
-                    >
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select condition" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        <SelectItem value="Like New">Like New</SelectItem>
-                        <SelectItem value="New">New</SelectItem>
-                        <SelectItem value="Good">Good</SelectItem>
-                        <SelectItem value="Used">Used</SelectItem>
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
               {/* Pricing */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 {/* Original Price */}
@@ -377,10 +349,10 @@ export default function CreateProductPage() {
                 {/* discount Price */}
                 <FormField
                   control={form.control}
-                  name="discountPrice"
+                  name="price"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Discount Price</FormLabel>
+                      <FormLabel>Price</FormLabel>
                       <FormControl>
                         <Input
                           type="number"
@@ -488,11 +460,38 @@ export default function CreateProductPage() {
 
               {/* Status + Flags */}
               <div className="flex items-center justify-end w-full gap-4">
+                {/* Condition */}
+              <FormField
+                control={form.control}
+                name="condition"
+                render={({ field }) => (
+                  <FormItem className="w-full">
+                    <FormLabel>Condition *</FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      value={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger className="w-full">
+                          <SelectValue placeholder="Select condition" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="Like New">Like New</SelectItem>
+                        <SelectItem value="New">New</SelectItem>
+                        <SelectItem value="Good">Good</SelectItem>
+                        <SelectItem value="Used">Used</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
                 <FormField
                   control={form.control}
                   name="warranty"
                   render={({ field }) => (
-                    <FormItem>
+                    <FormItem className="w-full">
                       <FormLabel>Warranty in month</FormLabel>
                       <FormControl>
                         <Input
@@ -514,7 +513,7 @@ export default function CreateProductPage() {
                   control={form.control}
                   name="badge"
                   render={({ field }) => (
-                    <FormItem className="w-[100px]">
+                    <FormItem className="w-full">
                       <FormLabel>Badge</FormLabel>
                       <Select
                         onValueChange={field.onChange}
@@ -540,7 +539,7 @@ export default function CreateProductPage() {
                   control={form.control}
                   name="status"
                   render={({ field }) => (
-                    <FormItem className="w-[100px]">
+                    <FormItem className="w-full">
                       <FormLabel>Status</FormLabel>
                       <Select
                         onValueChange={field.onChange}

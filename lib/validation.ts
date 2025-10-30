@@ -11,7 +11,7 @@ export const productSchema = z.object({
     .max(1000, "Description must be less than 1000 characters"),
   brand: z.string().min(1, "Brand is required"),
   category: z.string().min(1, "Category is required"),
-  discountPrice: z.coerce.number().min(0.01, "Price must be greater than 0"),
+  price: z.coerce.number().min(0.01, "Price must be greater than 0"),
   originalPrice: z.coerce.number().optional(),
   stock: z.coerce.number().min(1, "Stock cannot be negative").int(),
   serialNumber: z.string().min(1, "SKU is required"),

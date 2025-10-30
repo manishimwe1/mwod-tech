@@ -50,7 +50,7 @@ export const createProduct = mutation({
 export const getProductsWithImage = query({
   args: {},
   handler: async (ctx) => {
-    const products = await ctx.db.query("products").collect();
+    const products = await ctx.db.query("products").order('desc').collect();
     return Promise.all(
       products.map(async (product) => ({
         ...product,
