@@ -16,7 +16,7 @@ const TrendingProducts = () => {
   const { setProducts, products } = useProductStore();
 
   useEffect(() => {
-    if (productsInDB) setProducts(productsInDB as Doc<"products">[]);
+    if (products.length === 0 && productsInDB) setProducts(productsInDB as Doc<"products">[]);
   }, [productsInDB, setProducts]);
 
   if (!productsInDB) {

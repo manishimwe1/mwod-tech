@@ -66,6 +66,49 @@ export const getProductsWithImage = query({
   },
 });
 
+export const getDealsProducts = query({
+  args: {},
+  handler: async (ctx) => {
+    const products = await ctx.db.query("products")
+      .filter(q => q.eq(q.field("badge"), "Deals"))
+      .order('desc')
+      .collect();
+    return Promise.all(
+      products.map(async (product) => ({
+        ...product,
+        ...(Array.isArray(product.images) && product.images.length > 0
+          ? {
+              imageUrls: await Promise.all(
+                product.images.map((imageId) => ctx.storage.getUrl(imageId))
+              ),
+            }
+          : {}),
+      }))
+    );
+  },
+});
+export const getHotProducts = query({
+  args: {},
+  handler: async (ctx) => {
+    const products = await ctx.db.query("products")
+      .filter(q => q.eq(q.field("badge"), "HOT"))
+      .order('desc')
+      .collect();
+    return Promise.all(
+      products.map(async (product) => ({
+        ...product,
+        ...(Array.isArray(product.images) && product.images.length > 0
+          ? {
+              imageUrls: await Promise.all(
+                product.images.map((imageId) => ctx.storage.getUrl(imageId))
+              ),
+            }
+          : {}),
+      }))
+    );
+  },
+});
+
 export const getProduct = query({
   args: {
     id: v.id('products')

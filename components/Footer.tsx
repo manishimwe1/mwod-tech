@@ -1,56 +1,66 @@
 // components/Footer.jsx
-import { NavLinks } from "@/constants";
-import Link from "next/link";
-import React from "react";
-import { Facebook, Instagram, Twitter } from "lucide-react";
+import Image from "next/image";
 
 export default function Footer() {
   return (
-    <footer className="bg-gray-800 text-gray-300 py-10 px-4 sm:px-6 lg:px-8">
-      <div className="container mx-auto grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-8 text-center md:text-left">
-        <div className="col-span-1">
-          <h3 className="text-xl font-bold text-white mb-4">ElectroX</h3>
-          <p className="text-sm leading-relaxed">Your ultimate destination for high-quality electronics and unbeatable deals. Discover innovation, reliability, and exceptional customer service.</p>
-        </div>
-        <div className="col-span-1">
-          <h3 className="text-xl font-bold text-white mb-4">Quick Links</h3>
-          <ul className="space-y-2">
-            {NavLinks.map((link) => (
-              <li key={link.label}>
-                <Link
-                  href={link.link}
-                  className="text-gray-300 hover:text-blue-400 transition-colors duration-200"
-                >
-                  {link.label}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
-        <div>
-          <h3 className="text-xl font-bold text-white mb-4">Follow Us</h3>
-          <div className="flex justify-center md:justify-start space-x-4">
-            <a href="#" aria-label="Facebook" className="text-gray-300 hover:text-blue-400 transition-colors duration-200">
-              <Facebook size={24} />
-            </a>
-            <a href="#" aria-label="Twitter" className="text-gray-300 hover:text-blue-400 transition-colors duration-200">
-              <Twitter size={24} />
-            </a>
-            <a href="#" aria-label="Instagram" className="text-gray-300 hover:text-blue-400 transition-colors duration-200">
-              <Instagram size={24} />
-            </a>
+      <footer className="bg-gray-900 text-white py-12 px-4">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+            {/* Company Info */}
+            <div>
+              <div className="flex items-center gap-2 mb-4">
+                <div className="w-10 relative h-10 bg-white rounded-lg flex items-center justify-center">
+                  <Image src="/logo.png" alt="easyFix" fill />
+                </div>
+                <span className="font-bold text-xl">Easy Fix</span>
+              </div>
+              <p className="text-gray-400 text-sm mb-4">
+                Your ultimate destination for high-quality electronics and unbeatable deals. Discover innovation, reliability, and exceptional customer service.
+              </p>
+            </div>
+
+            {/* Quick Links */}
+            <div>
+              <h4 className="font-bold text-lg mb-4">Shop</h4>
+              <ul className="space-y-2 text-gray-400 text-sm">
+                <li><a href="/products" className="hover:text-white transition">Products</a></li>
+                <li><a href="/deals" className="hover:text-white transition">Deals</a></li>
+                <li><a href="/contact" className="hover:text-white transition">Contact</a></li>
+              </ul>
+            </div>
+
+            {/* Resources */}
+            <div>
+              <h4 className="font-bold text-lg mb-4">Resources</h4>
+              <ul className="space-y-2 text-gray-400 text-sm">
+                <li><a href="/how-to-sell" className="hover:text-white transition">How to Sell</a></li>
+                <li><a href="/buying-guide" className="hover:text-white transition">Buying Guide</a></li>
+                <li><a href="/warranty-info" className="hover:text-white transition">Warranty Info</a></li>
+              </ul>
+            </div>
+
+            {/* Contact */}
+            <div>
+              <h4 className="font-bold text-lg mb-4">Contact Us</h4>
+              <ul className="space-y-3 text-gray-400 text-sm">
+                <li>Email: baganinezjb@gmail.com</li>
+                <li>Phone: +250783805516</li>
+                <li>Address: 123 Tech Lane, Innovation City, TX 78701</li>
+              </ul>
+            </div>
+          </div>
+
+          <div className="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+            <p className="text-gray-400 text-sm">
+              © {new Date().getFullYear()}. All rights reserved.
+            </p>
+            <div className="flex gap-6">
+              <a href="#" className="text-gray-400 hover:text-white transition">Privacy</a>
+              <a href="#" className="text-gray-400 hover:text-white transition">Terms</a>
+              <a href="#" className="text-gray-400 hover:text-white transition">Cookies</a>
+            </div>
           </div>
         </div>
-        <div className="col-span-1">
-          <h3 className="text-xl font-bold text-white mb-4">Contact Us</h3>
-          <p className="text-sm">Email: info@electrox.com</p>
-          <p className="text-sm">Phone: +1 (555) 123-4567</p>
-          <p className="text-sm">Address: 123 Tech Lane, Innovation City, TX 78701</p>
-        </div>
-      </div>
-      <div className="text-center border-t border-gray-700 pt-6 mt-8 text-sm text-gray-400">
-        &copy; {new Date().getFullYear()}. All rights reserved.
-      </div>
-    </footer>
+      </footer>
   );
 }

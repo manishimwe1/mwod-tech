@@ -17,18 +17,12 @@
 
 'use client'
 
-import React, { useState, useEffect } from 'react';
-import { ShoppingCart, Heart, Star, Package, Truck, RotateCcw, Lock, ShieldCheck, TrendingUp, Eye, ChevronRight, ArrowRight, Check, Phone, MessageCircle, Search, Menu, X, Flame, Sparkles, Zap, Award } from 'lucide-react';
 import HeroSection from '@/components/Hero';
-import TrendingProducts from '@/components/TrendingProducts';
 import SocialProof from '@/components/SocialProof';
+import TrendingProducts from '@/components/TrendingProducts';
 import { Button } from '@/components/ui/button';
-
-// Metadata configuration (add this to your actual page.tsx)
-const pageMetadata = {
-  title: 'ElectroX Rwanda | Buy & Sell Phones, Laptops & Electronics Online',
-  description: "Rwanda's #1 marketplace for verified electronics. Shop 14,000+ phones, MacBooks, laptops & accessories. Secure payments. Fast delivery in Kigali.",
-};
+import { Lock, MessageCircle, Phone, RotateCcw, ShieldCheck, Sparkles, Truck, X } from 'lucide-react';
+import { useEffect, useState } from 'react';
 
 export default function EnhancedHomePage() {
   
@@ -88,6 +82,7 @@ export default function EnhancedHomePage() {
           </div>
         </div>
       </section>
+
 
       {/* Trending Products */}
       <section className="py-16 lg:py-20 px-4 bg-gray-50">
@@ -183,67 +178,6 @@ export default function EnhancedHomePage() {
           WhatsApp
         </a>
       </div>
-
-      {/* Footer */}
-      <footer className="bg-gray-900 text-white py-12 px-4">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
-            {/* Company Info */}
-            <div>
-              <div className="flex items-center gap-2 mb-4">
-                <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
-                  <Zap className="w-6 h-6 text-white" />
-                </div>
-                <span className="font-bold text-xl">ElectroX</span>
-              </div>
-              <p className="text-gray-400 text-sm mb-4">
-                Your ultimate destination for high-quality electronics and unbeatable deals. Discover innovation, reliability, and exceptional customer service.
-              </p>
-            </div>
-
-            {/* Quick Links */}
-            <div>
-              <h4 className="font-bold text-lg mb-4">Shop</h4>
-              <ul className="space-y-2 text-gray-400 text-sm">
-                <li><a href="/products" className="hover:text-white transition">Products</a></li>
-                <li><a href="/deals" className="hover:text-white transition">Deals</a></li>
-                <li><a href="/contact" className="hover:text-white transition">Contact</a></li>
-              </ul>
-            </div>
-
-            {/* Resources */}
-            <div>
-              <h4 className="font-bold text-lg mb-4">Resources</h4>
-              <ul className="space-y-2 text-gray-400 text-sm">
-                <li><a href="/how-to-sell" className="hover:text-white transition">How to Sell</a></li>
-                <li><a href="/buying-guide" className="hover:text-white transition">Buying Guide</a></li>
-                <li><a href="/warranty-info" className="hover:text-white transition">Warranty Info</a></li>
-              </ul>
-            </div>
-
-            {/* Contact */}
-            <div>
-              <h4 className="font-bold text-lg mb-4">Contact Us</h4>
-              <ul className="space-y-3 text-gray-400 text-sm">
-                <li>Email: info@electrox.com</li>
-                <li>Phone: +1 (555) 123-4567</li>
-                <li>Address: 123 Tech Lane, Innovation City, TX 78701</li>
-              </ul>
-            </div>
-          </div>
-
-          <div className="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
-            <p className="text-gray-400 text-sm">
-              © 2025. All rights reserved.
-            </p>
-            <div className="flex gap-6">
-              <a href="#" className="text-gray-400 hover:text-white transition">Privacy</a>
-              <a href="#" className="text-gray-400 hover:text-white transition">Terms</a>
-              <a href="#" className="text-gray-400 hover:text-white transition">Cookies</a>
-            </div>
-          </div>
-        </div>
-      </footer>
     </div>
   );
 }

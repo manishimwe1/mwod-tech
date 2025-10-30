@@ -3,6 +3,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import { compare } from "bcryptjs";
 import Google from "next-auth/providers/google";
 import NextAuth, { CredentialsSignin, DefaultSession } from "next-auth";
+import Github from "next-auth/providers/github";
 
 // Extend the default session types
 
@@ -107,6 +108,10 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           scope: "openid profile email", // Explicit scopes
         },
       },
+    }),
+    Github({
+      clientId: process.env.AUTH_GITHUB_ID,
+      clientSecret: process.env.AUTH_GITHUB_SECRET,
     }),
 
     // Credentials Provider with Enhanced Security
@@ -232,11 +237,11 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     // Enhanced sign-in callback with user creation for OAuth
     async signIn({ user, account }) {
       try {
-        if (account?.provider === "google") {
+        if (account?.provider === "google" || account?.provider === "github") {
           const { email, name: firstname, image, } = user;
 
           if (!email) {
-            logger.error("SignIn", "No email provided by Google");
+            logger.error("SignIn", "No email provided by Google or Github");
             return false;
           }
 
@@ -246,7 +251,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             existingUser = await safeFetch(
               `${process.env.CONVEX_SITE_URL}/getUserByEmail?email=${encodeURIComponent(email)}`,
               {},
-              "Google User Lookup",
+              "Google/Github User Lookup",
             );
           } catch (lookupError) {
             // If the error is a 404 (user not found), set existingUser to null
@@ -274,12 +279,12 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
                 body: JSON.stringify({
                   email,
                   firstname,
-                  role: "admin", //TODO: process.env.ADMIN_EMAIL === email ? "admin" : "client",
+                  role: process.env.ADMIN_EMAIL === email ? "admin" : "client",
                   image,
                   password: "",
                 }),
               },
-              "Create Google User",
+              "Create Google/Github User",
             );
 
             logger.info("SignIn", `Created new user: ${email}`);
