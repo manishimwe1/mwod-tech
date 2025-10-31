@@ -66,37 +66,43 @@ const HeroSection = () => {
                 🔥 Hot Deals Today
               </div>
               <div className="grid grid-cols-2 gap-4">
-                <div className="bg-white rounded-2xl p-6 shadow-xl transform hover:scale-105 transition">
-                  <div className="w-full h-32 relative bg-gray-100 rounded-lg mb-3 overflow-hidden flex items-center justify-center">
-                    <Image
-                      src={hotFirstImage}
-                      alt={dealsProducts[0].name}
-                      className="w-16 h-16 object-cover "
-                      fill
-                    />
+                {hotProducts.length > 0 ? (
+                  <div className="bg-white rounded-2xl p-6 shadow-xl transform hover:scale-105 transition">
+                    <div className="w-full h-32 relative bg-gray-100 rounded-lg mb-3 overflow-hidden flex items-center justify-center">
+                      <Image
+                        src={hotFirstImage}
+                        alt={hotProducts[0].name}
+                        className="w-16 h-16 object-cover "
+                        fill
+                      />
+                    </div>
+                    <div className="text-sm font-semibold text-gray-900 truncate">
+                      {hotProducts[0].name}
+                    </div>
+                    <div className="text-xs text-gray-600 flex w-full justify-end">
+                      From {hotProducts[0].price.toLocaleString()} RWF
+                    </div>
                   </div>
-                  <div className="text-sm font-semibold text-gray-900 truncate">
-                    {hotProducts[0].name}
-                  </div>
-                  <div className="text-xs text-gray-600 flex w-full justify-end">
-                    From {hotProducts[0].price.toLocaleString()} RWF
-                  </div>
-                </div>
+                ) : null}
 
-                <div className="bg-white rounded-2xl p-6 shadow-xl transform hover:scale-105 transition mt-8">
-                  <div className="w-full relative overflow-hidden h-32 bg-gray-100 rounded-lg mb-3 flex items-center justify-center">
-                    <Image
-                      src={dealFirstImage}
-                      alt={hotProducts[0].name}
-                      className="w-16 h-16 object-cover "
-                      fill
-                    />
+                {dealsProducts.length > 0 ? (
+                  <div className="bg-white rounded-2xl p-6 shadow-xl transform hover:scale-105 transition mt-8">
+                    <div className="w-full relative overflow-hidden h-32 bg-gray-100 rounded-lg mb-3 flex items-center justify-center">
+                      <Image
+                        src={dealFirstImage}
+                        alt={dealsProducts[0].name}
+                        className="w-16 h-16 object-cover "
+                        fill
+                      />
+                    </div>
+                    <div className="text-sm font-semibold text-gray-900 truncate">
+                      {dealsProducts[0].name}
+                    </div>
+                    <div className="text-xs text-gray-600">
+                      From {dealsProducts[0].price.toLocaleString()} RWF
+                    </div>
                   </div>
-                  <div className="text-sm font-semibold text-gray-900 truncate">
-                    {dealsProducts[0].name}
-                  </div>
-                  <div className="text-xs text-gray-600">From {dealsProducts[0].price.toLocaleString()} RWF</div>
-                </div>
+                ) : null}
               </div>
             </div>
           </div>
