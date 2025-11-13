@@ -18,10 +18,27 @@ const ProductCard = ({ product }: { product: Doc<"products"> }) => {
   return (
     <Link
       href={`/product/${product._id}`}
-      className="group relative flex flex-col bg-white rounded-2xl shadow-md hover:shadow-lg transition-all duration-300 overflow-hidden border border-gray-100"
+      className="
+    group relative flex flex-col
+    bg-white rounded-3xl 
+    shadow-[0px_4px_20px_rgba(0,0,0,0.06)]
+    hover:shadow-[0px_12px_30px_rgba(0,0,0,0.12)]
+    transition-all duration-500 ease-out 
+    overflow-hidden border border-white/40
+    hover:-translate-y-2 hover:scale-[1.02]
+    backdrop-blur-xl
+  "
     >
       {/* Image Carousel - Fixed aspect ratio container */}
-      <div className="relative w-full  aspect-square  overflow-hidden">
+      <div
+        className="
+    relative w-full aspect-square overflow-hidden 
+    bg-gradient-to-b from-gray-50 to-white
+    rounded-t-3xl
+    border-b border-gray-100
+    shadow-inner
+  "
+      >
         <Carousel
           className="w-full h-full"
           opts={{ loop: true }}
@@ -59,9 +76,12 @@ const ProductCard = ({ product }: { product: Doc<"products"> }) => {
 
         {/* Badge */}
         <div
-          className={`absolute top-3 left-3 z-10 ${
-            product.badge === "HOT" ? "bg-orange-500" : "bg-blue-600"
-          } text-white px-3 py-1 rounded-full text-xs font-bold`}
+          className={`
+    absolute top-3 left-3 z-20
+    px-3 py-1 rounded-full text-xs font-bold shadow-md
+    backdrop-blur-md bg-white/60 border border-white/40
+    ${product.badge === "HOT" ? "text-orange-600" : "text-blue-600"}
+  `}
         >
           {product.badge}
         </div>

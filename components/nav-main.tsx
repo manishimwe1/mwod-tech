@@ -1,6 +1,6 @@
-"use client"
+"use client";
 
-import { type Icon } from "@tabler/icons-react"
+import { type Icon } from "@tabler/icons-react";
 
 import {
   SidebarGroup,
@@ -8,25 +8,25 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from "@/components/ui/sidebar"
-import Link from "next/link"
-import { usePathname } from "next/navigation" // Import usePathname
+} from "@/components/ui/sidebar";
+import Link from "next/link";
+import { usePathname } from "next/navigation"; // Import usePathname
+import { SidebarClose } from "lucide-react";
 
 export function NavMain({
   items,
 }: {
   items: {
-    title: string
-    url: string
-    icon?: Icon
-  }[]
+    title: string;
+    url: string;
+    icon?: Icon;
+  }[];
 }) {
   const pathname = usePathname(); // Get the current pathname
 
   return (
     <SidebarGroup>
       <SidebarGroupContent className="flex flex-col gap-2">
-       
         <SidebarMenu>
           {items.map((item) => (
             <SidebarMenuItem key={item.title}>
@@ -38,15 +38,15 @@ export function NavMain({
                     : "" // No special class if not active
                 }
               >
-                {item.icon && <item.icon />}
-                <Link href={item.url} >
-                <span>{item.title}</span>
-                </Link>
+                  {item.icon && <item.icon />}
+                  <Link href={item.url}>
+                    <span>{item.title}</span>
+                  </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
           ))}
         </SidebarMenu>
       </SidebarGroupContent>
     </SidebarGroup>
-  )
+  );
 }

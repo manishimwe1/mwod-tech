@@ -64,10 +64,10 @@ const Header = () => {
     backdrop-blur-xl 
     bg-white/50 
     shadow-[0_4px_20px_rgba(0,0,0,0.07)]
-    ${scrolled ? "border-b border-white/30" : "border-b border-transparent"}
+    border-b border-blue-600/10
   `}
     >
-      <nav className="bg-blue-400/10">
+      <nav className="bg-blue-400/10 rounded-b-lg">
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex items-center justify-between h-12 lg:h-16">
             {/* Logo */}
@@ -213,17 +213,17 @@ const Header = () => {
 
       {/* Mobile Menu */}
       {showMobileMenu && (
-        <div className="lg:hidden border-t bg-white">
-          <div className="px-4 py-4 space-y-3">
+        <div className="lg:hidden border-t bg-white ">
+          <div className="px-4 py-4 space-y-3 flex flex-col items-center">
             {["Browse", "Sell", "About", "Dashboard"].map((item, i) => (
-                <Link
-                  key={i}
-                  href={item === "Browse" ? "/" : `/${item.toLowerCase()}`}
-                  className="text-gray-800 font-medium hover:text-blue-600 transition-all hover:scale-[1.03]"
-                >
-                  {item}
-                </Link>
-              ))}
+              <Link
+                key={i}
+                href={item === "Browse" ? "/" : `/${item.toLowerCase()}`}
+                className="text-gray-800 py-2 w-[200px] font-medium hover:text-blue-600 transition-all hover:scale-[1.03]"
+              >
+                {item}
+              </Link>
+            ))}
           </div>
         </div>
       )}

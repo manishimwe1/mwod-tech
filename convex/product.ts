@@ -113,7 +113,11 @@ export const getAllProducts = query({
 export const getProductsWithImage = query({
   args: {},
   handler: async (ctx) => {
-    const products = await ctx.db.query("products").order("desc").collect();
+    const products = await ctx.db
+      .query("products")
+      .withIndex("by_status", (q) => q.eq(("status"), "active"))
+      .order("desc")
+      .collect();
     return Promise.all(
       products.map(async (product) => ({
         ...product,
