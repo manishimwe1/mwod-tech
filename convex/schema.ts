@@ -1,6 +1,11 @@
 import { defineSchema, defineTable } from "convex/server";
 import { v } from "convex/values";
 export default defineSchema({
+  ledgerIncome: defineTable({
+    totalAmount: v.number(),
+    date: v.number(),
+    invoiceId: v.union(v.id("invoice"), v.id("product"), v.id("facture")),
+  }).index("by_invoiceId", ["invoiceId"]),
   invoice: defineTable({
     clientName: v.string(),
     clientPhone: v.optional(v.string()),

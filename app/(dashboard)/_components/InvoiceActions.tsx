@@ -33,6 +33,7 @@ import { api } from "@/convex/_generated/api";
 import { toast } from "sonner";
 import { ProformaInvoiceForm } from "./PoformaForm";
 import { FactureInvoiceForm } from "./FactureInvoiceForm";
+import ApproveModal from "./ApproveModal";
 
 export function InvoiceActions({
   handleExport,
@@ -44,6 +45,7 @@ export function InvoiceActions({
   const [isConfirming, setIsConfirming] = React.useState(false);
   const [openDelete, setOpenDelete] = React.useState(false);
   const [openEdit, setopenEdit] = React.useState(false);
+  const [openApproveModel, setopenApproveModel] = React.useState(false)
 
   const deleteFacture = useMutation(api.facture.deleteInvoice);
 
@@ -78,7 +80,7 @@ export function InvoiceActions({
           <Edit className="w-4 h-4 mr-2" /> Edit
         </DropdownMenuItem>
 
-        <DropdownMenuItem className="text-green-600">
+        <DropdownMenuItem className="text-green-600" onClick={() => setopenApproveModel(true)}>
           <CheckCircle className="w-4 h-4 mr-2" /> Approve
         </DropdownMenuItem>
         <DropdownMenuItem
@@ -88,6 +90,16 @@ export function InvoiceActions({
           <Trash2 className="w-4 h-4 mr-2" /> Delete
         </DropdownMenuItem>
       </DropdownMenuContent>
+
+      {
+        openApproveModel && (
+          <ApproveModal 
+            openApproveModel={openApproveModel}
+            setOpenApproveModel={setopenApproveModel}
+            facture={facture}
+          />
+        )
+      }
 
       {isConfirming && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">

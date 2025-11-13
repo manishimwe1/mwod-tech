@@ -173,7 +173,7 @@ export function ProformaInvoiceCard({ invoice }: { invoice: Doc<"invoice"> }) {
   };
 
   return (
-    <Card className="w-full mx-auto shadow-lg border border-gray-200 p-6">
+    <Card className="w-full mx-auto shadow-lg border border-gray-200 dark:border-gray-700 p-6 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100">
       <CardHeader className="flex flex-row justify-between items-start p-0 mb-4">
         <div className="flex flex-col text-sm">
           <CardTitle className="flex items-start gap-2 flex-col">
@@ -195,7 +195,7 @@ export function ProformaInvoiceCard({ invoice }: { invoice: Doc<"invoice"> }) {
           {invoice.clientPhone && <p>TEL: {invoice.clientPhone}</p>}
           {invoice.clientTIN && <p>TIN: {invoice.clientTIN}</p>}
           <p>Balance due</p>
-          <p className="font-bold text-blue-500">
+          <p className="font-bold text-blue-500 dark:text-blue-400">
             {invoice.totalAmount?.toLocaleString() ?? 0} Rwf
           </p>
           <p>Date: {new Date(invoice.date).toLocaleDateString()}</p>
@@ -205,47 +205,46 @@ export function ProformaInvoiceCard({ invoice }: { invoice: Doc<"invoice"> }) {
       <CardContent className="space-y-4 p-0">
         {/* Items Table */}
         <div className="overflow-x-auto mb-4">
-          <table className="w-full border-collapse border border-gray-300">
+          <table className="w-full border-collapse border border-gray-300 dark:border-gray-600">
             <thead>
-              <tr className="bg-gray-100 text-left text-sm">
-                <th className="px-4 py-2 border border-gray-300 w-1/12">Qty</th>
-                <th className="px-4 py-2 border border-gray-300 w-6/12">
+              <tr className="bg-gray-100 dark:bg-gray-700 text-left text-sm text-gray-900 dark:text-gray-100">
+                <th className="px-4 py-2 border border-gray-300 dark:border-gray-600 w-1/12">Qty</th>
+                <th className="px-4 py-2 border border-gray-300 dark:border-gray-600 w-6/12">
                   Details
                 </th>
-                <th className="px-4 py-2 border border-gray-300 w-2/12">
+                <th className="px-4 py-2 border border-gray-300 dark:border-gray-600 w-2/12">
                   U.Price
                 </th>
-                <th className="px-4 py-2 border border-gray-300 w-3/12">
+                <th className="px-4 py-2 border border-gray-300 dark:border-gray-600 w-3/12">
                   T.Price
                 </th>
               </tr>
             </thead>
             <tbody>
               {(invoice.items ?? []).map((item, idx) => (
-                <tr key={idx} className="hover:bg-gray-50 text-sm">
-                  <td className="px-4 py-2 border border-gray-300">
+                <tr key={idx} className="hover:bg-gray-50 dark:hover:bg-gray-700 text-sm">
+                  <td className="px-4 py-2 border border-gray-300 dark:border-gray-600">
                     {item.quantity}
                   </td>
-                  <td className="px-4 py-2 border border-gray-300">
+                  <td className="px-4 py-2 border border-gray-300 dark:border-gray-600">
                     {item.description}
                   </td>
-                  <td className="px-4 py-2 border border-gray-300">
+                  <td className="px-4 py-2 border border-gray-300 dark:border-gray-600">
                     {item.unitPrice?.toLocaleString() ?? 0}
                   </td>
-                  <td className="px-4 py-2 border border-gray-300">
-                    {((item.quantity ?? 0) * (item.unitPrice ?? 0)).toLocaleString()
-                      }
+                  <td className="px-4 py-2 border border-gray-300 dark:border-gray-600">
+                    {((item.quantity ?? 0) * (item.unitPrice ?? 0)).toLocaleString()}
                   </td>
                 </tr>
               ))}
               <tr className="font-bold text-sm">
                 <td
                   colSpan={3}
-                  className="px-4 py-2 border border-gray-300 text-right"
+                  className="px-4 py-2 border border-gray-300 dark:border-gray-600 text-right"
                 >
                   TOTAL
                 </td>
-                <td className="px-4 py-2 border border-gray-300">
+                <td className="px-4 py-2 border border-gray-300 dark:border-gray-600">
                   {invoice.totalAmount?.toLocaleString() ?? 0}
                 </td>
               </tr>

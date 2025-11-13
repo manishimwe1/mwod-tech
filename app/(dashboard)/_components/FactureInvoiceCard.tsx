@@ -10,6 +10,7 @@ import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { InvoiceActions } from "./InvoiceActions";
+import { Badge } from "@/components/ui/badge";
 
 interface FactureInvoiceCardProps {
   facture: Doc<"facture">;
@@ -191,7 +192,7 @@ export const FactureInvoiceCard: React.FC<FactureInvoiceCardProps> = ({
   };
 
   return (
-    <Card className="w-full mx-auto shadow-lg border border-gray-200 p-6">
+    <Card className="w-full mx-auto shadow-lg border border-gray-200 dark:border-gray-700 p-6 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 flex flex-col h-full">
       <CardHeader className="flex flex-row justify-between items-start p-0 mb-4">
         <div className="flex flex-col text-sm">
           <CardTitle className="flex items-start gap-2 flex-col">
@@ -216,37 +217,37 @@ export const FactureInvoiceCard: React.FC<FactureInvoiceCardProps> = ({
         </div>
       </CardHeader>
 
-      <CardContent className="space-y-4 p-0">
+      <CardContent className="space-y-4 p-0 flex-grow">
         {/* Items Table */}
         <div className="overflow-x-auto mb-4">
-          <table className="w-full border-collapse border border-gray-300">
+          <table className="w-full border-collapse border border-gray-300 dark:border-gray-600">
             <thead>
               <tr className="bg-blue-500 text-white text-left text-sm">
-                <th className="px-4 py-2 border border-gray-300 w-1/12">Quantité</th>
-                <th className="px-4 py-2 border border-gray-300 w-6/12">
+                <th className="px-4 py-2 border border-gray-300 dark:border-gray-600 w-1/12">Quantité</th>
+                <th className="px-4 py-2 border border-gray-300 dark:border-gray-600 w-6/12">
                   Libellé
                 </th>
-                <th className="px-4 py-2 border border-gray-300 w-2/12">
+                <th className="px-4 py-2 border border-gray-300 dark:border-gray-600 w-2/12">
                   Prix unitaire
                 </th>
-                <th className="px-4 py-2 border border-gray-300 w-3/12">
+                <th className="px-4 py-2 border border-gray-300 dark:border-gray-600 w-3/12">
                   Prix total
                 </th>
               </tr>
             </thead>
             <tbody>
               {facture.items.map((item, idx) => (
-                <tr key={idx} className="hover:bg-gray-50 text-sm">
-                  <td className="px-4 py-2 border border-gray-300">
+                <tr key={idx} className="hover:bg-gray-50 dark:hover:bg-gray-700 text-sm">
+                  <td className="px-4 py-2 border border-gray-300 dark:border-gray-600">
                     {item.quantity}
                   </td>
-                  <td className="px-4 py-2 border border-gray-300">
+                  <td className="px-4 py-2 border border-gray-300 dark:border-gray-600">
                     {item.description}
                   </td>
-                  <td className="px-4 py-2 border border-gray-300">
+                  <td className="px-4 py-2 border border-gray-300 dark:border-gray-600">
                     {item.unitPrice.toLocaleString()}
                   </td>
-                  <td className="px-4 py-2 border border-gray-300">
+                  <td className="px-4 py-2 border border-gray-300 dark:border-gray-600">
                     {item.totalPrice.toLocaleString()} Rfw
                   </td>
                 </tr>
@@ -254,11 +255,11 @@ export const FactureInvoiceCard: React.FC<FactureInvoiceCardProps> = ({
               <tr className="font-bold text-sm">
                 <td
                   colSpan={3}
-                  className="px-4 py-2 border border-gray-300 text-right"
+                  className="px-4 py-2 border border-gray-300 dark:border-gray-600 text-right"
                 >
                   TOTAL
                 </td>
-                <td className="px-4 py-2 border border-gray-300">
+                <td className="px-4 py-2 border border-gray-300 dark:border-gray-600">
                   {facture.items
                     .reduce((sum, item) => sum + item.totalPrice, 0)
                     .toLocaleString()} Rfw
@@ -295,7 +296,18 @@ export const FactureInvoiceCard: React.FC<FactureInvoiceCardProps> = ({
           </div>
         </div>
 
-        <div className="w-full flex justify-end">
+        <div className="w-full flex justify-between mt-auto">
+          <Badge
+            className={`w-fit px-10 ${
+              facture.status === "paid"
+                ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200"
+                : "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200"
+            }`}
+          >
+            {facture.status === "paid"
+              ? "Payment confirmed – thank you!"
+              : "Awaiting payment"}
+          </Badge>
           <InvoiceActions
             facture={facture}
             handleExport={() => handleExport()}
