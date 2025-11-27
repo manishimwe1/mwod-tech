@@ -103,7 +103,7 @@ const ProductCard = ({ product }: { product: Doc<"products"> }) => {
             {product.imageUrls?.map((image: string, index: number) => (
               <CarouselItem
                 key={index}
-                className="relative w-full h-full flex items-center justify-center bg-red-400 "
+                className="relative w-full h-full flex items-center justify-center "
               >
                 <Link
                   href={`/product/${product._id}`}

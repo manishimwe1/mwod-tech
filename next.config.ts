@@ -11,7 +11,7 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: "healthy-tapir-682.convex.cloud",
+        hostname:  "qualified-rook-575.convex.cloud"
       },
     ],
   },
