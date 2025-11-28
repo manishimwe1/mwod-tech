@@ -9,22 +9,29 @@ import { useEffect } from "react";
 import { Suspense } from "react";
 import SignInButton from "@/components/SignInButton";
 import Image from "next/image"; // Added import for Image component
+import { useMutation, useQuery } from "convex/react";
+import { api } from "@/convex/_generated/api";
+
 
 function LoginPage() {
   const { data: session, status } = useSession();
   const searchParams = useSearchParams();
   const message = searchParams.get("message");
   const router = useRouter();
+  const user = useQuery(
+      api.users.getUserByEmail,
+      session?.user?.email ? { email: session.user.email } : "skip"
+    );
 
   useEffect(() => {
-    if (status === "authenticated" && session?.user) {
-      if (session.user.role === "admin") {
+    if (status === "authenticated" && session?.user && user) {
+      if (user?.role === "admin") {
         router.push("/dashboard");
       } else {
         router.push("/");
       }
     }
-  }, [status, session, router]);
+  }, [status, session, router,user]);
 
   if (status === "loading") {
     return (
