@@ -23,7 +23,7 @@ const UserButton = () => {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         {username ? (
-          <div className="h-8 w-8 rounded-full bg-indigo-400 flex items-center justify-center shadow hover:bg-gradient-to-bl from-indigo-500 via-35% to-indigo-400 cursor-pointer">
+          <div className="h-8 w-8 rounded-full bg-indigo-400 flex items-center justify-center shadow hover:bg-linear-to-bl from-indigo-500 via-35% to-indigo-400 cursor-pointer">
             <p className="text-white">
               {username.fullname.charAt(0).toUpperCase()}
             </p>
@@ -49,7 +49,7 @@ const UserButton = () => {
         <DropdownMenuItem
           onClick={() =>
             signOut({
-              redirectTo: "/login",
+              redirectTo: "/",
             })
           }
           className="text-red-600 cursor-pointer"

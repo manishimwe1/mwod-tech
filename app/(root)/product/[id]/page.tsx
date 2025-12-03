@@ -2,29 +2,40 @@
 
 import Loading from "@/components/Loading";
 import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel";
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import { Badge } from "@/components/ui/badge";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import ZoomImage from "@/components/ZoomImage";
+import { Separator } from "@/components/ui/separator";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import { useQuery } from "convex/react";
-import Autoplay from "embla-carousel-autoplay";
+import { motion } from "motion/react";
 import {
+  Check,
   Heart,
-  Package,
+  Minus,
+  Plus,
   ShieldCheck,
-  Truck,
+  Star,
   Store,
-  CheckCircle2,
+  Truck,
+  MessageCircle,
 } from "lucide-react";
 import { useParams } from "next/navigation";
-import { useRef, useState, useEffect } from "react";
-import Image from "next/image";
+import { useEffect, useState } from "react";
 import LeftProductDetailsImage from "@/components/LeftProductDetailsImage";
 
 const ProductDetailPage = () => {
@@ -36,8 +47,6 @@ const ProductDetailPage = () => {
     setIsClient(true);
   }, []);
 
-  const plugin = useRef(Autoplay({ delay: 600000, stopOnInteraction: false }));
-
   const product = useQuery(
     api.product.getProduct,
     isClient && params.id ? { id: params.id as Id<"products"> } : "skip"
@@ -48,7 +57,7 @@ const ProductDetailPage = () => {
     return <Loading title="Fetching product details..." />;
   if (product === null)
     return (
-      <div className="p-10 text-center text-gray-600">
+      <div className="min-h-[50vh] flex items-center justify-center text-muted-foreground">
         Product not found or removed.
       </div>
     );
@@ -61,144 +70,250 @@ const ProductDetailPage = () => {
       ).toFixed(0)
     : null;
 
+  const handleQuantityChange = (type: "increment" | "decrement") => {
+    if (type === "increment" && quantity < product.stock) {
+      setQuantity((prev) => prev + 1);
+    } else if (type === "decrement" && quantity > 1) {
+      setQuantity((prev) => prev - 1);
+    }
+  };
+
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
-      {/* Announcement Bar */}
-      <div className="bg-gradient-to-r from-blue-50 to-indigo-50 px-4 py-2 text-center border-b border-blue-100">
-        <span className="text-gray-700 text-sm">
-          🎉 Save up to{" "}
-          <span className="text-blue-600 font-bold text-base">
-            {discountPercent ?? "10"}%
-          </span>{" "}
-          on selected items —{" "}
-          <a href="#" className="text-blue-500 underline hover:text-blue-700">
-            View offers
-          </a>
-        </span>
+    <div className="min-h-screen bg-background pb-20">
+      {/* Breadcrumb Navigation */}
+      <div className="container mx-auto px-4 py-6">
+        <Breadcrumb>
+          <BreadcrumbList>
+            <BreadcrumbItem>
+              <BreadcrumbLink href="/">Home</BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbLink href="/products">Products</BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbPage>{product.name}</BreadcrumbPage>
+            </BreadcrumbItem>
+          </BreadcrumbList>
+        </Breadcrumb>
       </div>
 
-      {/* Product Section */}
-      <div className="max-w-7xl mx-auto px-4 lg:px-8 py-10">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
-          {/* Left: Product Images */}
-          <LeftProductDetailsImage product={product} />
+      <main className="container mx-auto px-4">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16">
+          {/* Left Column: Images */}
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            <LeftProductDetailsImage product={product} />
+          </motion.div>
 
-          {/* Right: Product Info */}
-          <div className="space-y-8">
-            {/* Header */}
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900 tracking-tight">
+          {/* Right Column: Product Details */}
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            className="flex flex-col space-y-8"
+          >
+            {/* Title & Seller */}
+            <div className="space-y-4">
+              <div className="flex items-center gap-2">
+                <Badge variant="secondary" className="bg-blue-100 text-blue-700 hover:bg-blue-200">
+                  New Arrival
+                </Badge>
+                {product.stock > 0 ? (
+                  <Badge variant="outline" className="text-green-600 border-green-200 bg-green-50">
+                    In Stock
+                  </Badge>
+                ) : (
+                  <Badge variant="destructive">Out of Stock</Badge>
+                )}
+              </div>
+              
+              <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-foreground">
                 {product.name}
               </h1>
-              <p className="text-gray-600 mt-3 leading-relaxed">
-                {product.description}
+
+              <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                <div className="flex items-center gap-1 text-yellow-500">
+                  <Star className="fill-current w-4 h-4" />
+                  <Star className="fill-current w-4 h-4" />
+                  <Star className="fill-current w-4 h-4" />
+                  <Star className="fill-current w-4 h-4" />
+                  <Star className="w-4 h-4" />
+                  <span className="text-foreground font-medium ml-1">4.8</span>
+                </div>
+                <Separator orientation="vertical" className="h-4" />
+                <div className="flex items-center gap-2">
+                  <Store className="w-4 h-4" />
+                  <span className="font-medium hover:underline cursor-pointer underline-offset-4">
+                    {product.createdByName}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <Separator />
+
+            {/* Price */}
+            <div className="space-y-2">
+              <div className="flex items-baseline gap-3">
+                <span className="text-4xl font-bold text-primary">
+                  {product.price.toLocaleString()} <span className="text-2xl text-muted-foreground font-normal">RWF</span>
+                </span>
+                {product.originalPrice && (
+                  <>
+                    <span className="text-lg text-muted-foreground line-through decoration-destructive/50">
+                      {product.originalPrice.toLocaleString()}
+                    </span>
+                    <Badge variant="destructive" className="ml-2">
+                      -{discountPercent}% OFF
+                    </Badge>
+                  </>
+                )}
+              </div>
+              <p className="text-sm text-muted-foreground">
+                Includes all taxes and fees.
               </p>
             </div>
 
-            {/* Price Section */}
-            <div className="space-y-3 border-y border-gray-200 py-4">
-              <div className="flex items-center gap-3">
-                <span className="text-4xl font-bold text-gray-900">
-                  {product.price.toLocaleString()}
-                </span>
-                <span className="text-gray-500 text-lg">RWF</span>
-              </div>
-              {product.originalPrice && (
-                <div className="flex items-center gap-3">
-                  <span className="text-gray-400 line-through text-lg">
-                    {product.originalPrice.toLocaleString()} RWF
-                  </span>
-                  <span className="bg-red-100 text-red-600 px-2 py-1 text-sm font-medium rounded-full">
-                    -{discountPercent}%
-                  </span>
+            {/* Description Short */}
+            <p className="text-muted-foreground leading-relaxed">
+              {product.description}
+            </p>
+
+            {/* Actions */}
+            <div className="space-y-6 pt-4">
+              {/* Quantity Selector */}
+              <div className="flex items-center gap-4">
+                <span className="font-medium min-w-16">Quantity</span>
+                <div className="flex items-center border rounded-md">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-10 w-10 rounded-none"
+                    onClick={() => handleQuantityChange("decrement")}
+                    disabled={quantity <= 1}
+                  >
+                    <Minus className="w-4 h-4" />
+                  </Button>
+                  <div className="h-10 w-12 flex items-center justify-center border-x font-medium">
+                    {quantity}
+                  </div>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-10 w-10 rounded-none"
+                    onClick={() => handleQuantityChange("increment")}
+                    disabled={quantity >= product.stock}
+                  >
+                    <Plus className="w-4 h-4" />
+                  </Button>
                 </div>
-              )}
-            </div>
-
-            {/* Quantity Input */}
-            <div className="flex items-center gap-4">
-              <label className="text-gray-700 font-semibold">Quantity:</label>
-              <Input
-                type="number"
-                min="1"
-                max={product.stock}
-                value={quantity}
-                onChange={(e) =>
-                  setQuantity(Math.max(1, parseInt(e.target.value) || 1))
-                }
-                className="w-24 text-center text-lg border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
-              />
-              <span className="text-sm text-gray-500">
-                ({product.stock} available)
-              </span>
-            </div>
-
-            {/* Seller Info */}
-            <div className="flex items-center gap-4 border-t border-gray-200 pt-6">
-              <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center text-blue-700 font-bold">
-                {product.createdByName
-                  ?.split(" ")
-                  .filter((_, i, arr) => i === 0 || i === arr.length - 1)
-                  .map((n) => n.charAt(0))
-                  .join("")}
+                <span className="text-sm text-muted-foreground">
+                  {product.stock} items available
+                </span>
               </div>
-              <div>
-                <div className="flex items-center gap-2">
-                  <span className="font-semibold text-gray-800 text-lg">
-                    {product.createdByName}
-                  </span>
-                  <Store className="w-4 h-4 text-gray-500" />
+
+              {/* Buttons */}
+              <div className="flex flex-col sm:flex-row gap-3">
+                <Button size="lg" className="flex-1 text-base h-12">
+                  Add to Cart
+                </Button>
+                <Button
+                  size="lg"
+                  variant="secondary"
+                  className="flex-1 text-base h-12 bg-green-600 text-white hover:bg-green-700"
+                  onClick={() => {
+                    const message = `Hello, I am interested in buying ${product.name} for ${product.price.toLocaleString()} RWF.`;
+                    const whatsappUrl = `https://wa.me/250783805516?text=${encodeURIComponent(message)}`;
+                    window.open(whatsappUrl, '_blank');
+                  }}
+                >
+                  <MessageCircle className="w-5 h-5 mr-2" />
+                  Buy on WhatsApp
+                </Button>
+                <Button size="lg" variant="outline" className="h-12 w-12 p-0">
+                  <Heart className="w-5 h-5" />
+                </Button>
+              </div>
+            </div>
+
+            {/* Information Accordion */}
+            <div className="pt-6">
+              <Accordion type="single" collapsible className="w-full">
+                <AccordionItem value="details">
+                  <AccordionTrigger>Product Details</AccordionTrigger>
+                  <AccordionContent>
+                    <div className="space-y-2 text-sm text-muted-foreground">
+                      <p>{product.description}</p>
+                      {/* Placeholder for more detailed specs if available */}
+                      <ul className="list-disc pl-4 mt-2 space-y-1">
+                        <li>Premium quality materials</li>
+                        <li>Verified authentic product</li>
+                        <li>Direct from manufacturer</li>
+                      </ul>
+                    </div>
+                  </AccordionContent>
+                </AccordionItem>
+                <AccordionItem value="shipping">
+                  <AccordionTrigger>
+                    <div className="flex items-center gap-2">
+                      <Truck className="w-4 h-4" />
+                      <span>Shipping & Delivery</span>
+                    </div>
+                  </AccordionTrigger>
+                  <AccordionContent>
+                    <div className="text-sm text-muted-foreground space-y-2">
+                      <p>Free standard shipping on orders over 50,000 RWF.</p>
+                      <p>Estimated delivery: 3-5 business days.</p>
+                    </div>
+                  </AccordionContent>
+                </AccordionItem>
+                <AccordionItem value="warranty">
+                  <AccordionTrigger>
+                    <div className="flex items-center gap-2">
+                      <ShieldCheck className="w-4 h-4" />
+                      <span>Warranty & Returns</span>
+                    </div>
+                  </AccordionTrigger>
+                  <AccordionContent>
+                    <div className="text-sm text-muted-foreground space-y-2">
+                      <p>30-day money-back guarantee if the product doesn't match the description.</p>
+                      <p>1 year standard manufacturer warranty included.</p>
+                    </div>
+                  </AccordionContent>
+                </AccordionItem>
+              </Accordion>
+            </div>
+
+            {/* Trust Badges */}
+            <div className="grid grid-cols-2 gap-4 pt-6">
+              <div className="flex items-center gap-3 p-3 bg-secondary/30 rounded-lg">
+                <div className="p-2 bg-background rounded-full shadow-sm">
+                  <ShieldCheck className="w-5 h-5 text-blue-600" />
                 </div>
-                <p className="text-sm text-gray-500 flex items-center gap-1">
-                  <CheckCircle2 className="w-4 h-4 text-green-500" />
-                  Verified Seller • 99% Positive Rating
-                </p>
+                <div className="text-xs">
+                  <p className="font-semibold">Secure Payment</p>
+                  <p className="text-muted-foreground">100% Protected</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-3 p-3 bg-secondary/30 rounded-lg">
+                <div className="p-2 bg-background rounded-full shadow-sm">
+                  <Check className="w-5 h-5 text-green-600" />
+                </div>
+                <div className="text-xs">
+                  <p className="font-semibold">Quality Checked</p>
+                  <p className="text-muted-foreground">Original Product</p>
+                </div>
               </div>
             </div>
 
-            {/* Action Buttons */}
-            <div className="flex flex-col sm:flex-row gap-4">
-              <button className="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-3 px-6 rounded-md text-lg font-semibold shadow-md transition-transform hover:scale-[1.02]">
-                🛒 Add to Cart
-              </button>
-              <button className="flex-1 bg-green-600 hover:bg-green-700 text-white py-3 px-6 rounded-md text-lg font-semibold shadow-md transition-transform hover:scale-[1.02]">
-                💳 Buy Now
-              </button>
-              <button className="p-3 rounded-md border hover:bg-gray-50 text-gray-600 transition">
-                <Heart className="w-5 h-5" />
-              </button>
-            </div>
-
-            {/* Shipping & Guarantee */}
-            <div className="border-t border-gray-200 pt-5 space-y-3 text-sm text-gray-700">
-              <div className="flex items-center gap-3">
-                <Truck className="w-5 h-5 text-blue-500" />
-                <span>
-                  Free shipping — expected delivery by{" "}
-                  <span className="font-semibold">
-                    {new Date(
-                      Date.now() + 5 * 24 * 60 * 60 * 1000
-                    ).toLocaleDateString()}
-                  </span>
-                </span>
-              </div>
-              <div className="flex items-center gap-3">
-                <Package className="w-5 h-5 text-blue-500" />
-                <span>
-                  Carefully packaged and dispatched within 24 hours.
-                </span>
-              </div>
-              <div className="flex items-center gap-3">
-                <ShieldCheck className="w-5 h-5 text-blue-500" />
-                <span>
-                  <span className="font-semibold">Buyer Protection:</span> Full
-                  refund if product doesn’t match description.
-                </span>
-              </div>
-            </div>
-          </div>
+          </motion.div>
         </div>
-      </div>
+      </main>
     </div>
   );
 };
