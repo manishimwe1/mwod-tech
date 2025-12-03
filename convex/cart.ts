@@ -77,7 +77,20 @@ export const get = query({
     const productsInCart = await Promise.all(
       cartItems.map(async (item) => {
         const product = await ctx.db.get(item.productId);
-        return product ? { ...product, quantity: item.quantity, cartId: item._id } : null;
+        if (!product) return null;
+
+        return {
+          ...product,
+          quantity: item.quantity,
+          cartId: item._id,
+          ...(Array.isArray(product.images) && product.images.length > 0
+            ? {
+                imageUrls: await Promise.all(
+                  product.images.map((imageId) => ctx.storage.getUrl(imageId))
+                ),
+              }
+            : {}),
+        };
       })
     );
 
