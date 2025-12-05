@@ -219,13 +219,13 @@ const ProductDetailPage = () => {
 
               {/* Buttons */}
               <div className="flex flex-col sm:flex-row gap-3">
-                <Button size="lg" className="flex-1 text-base h-12">
+                <Button className="flex-1 text-base">
                   Add to Cart
                 </Button>
                 <Button
-                  size="lg"
+                  
                   variant="secondary"
-                  className="flex-1 text-base h-12 bg-green-600 text-white hover:bg-green-700"
+                  className="flex-1 text-base bg-green-600 text-white hover:bg-green-700"
                   onClick={() => {
                     const message = `Hello, I am interested in buying ${product.name} for ${product.price.toLocaleString()} RWF.`;
                     const whatsappUrl = `https://wa.me/250783805516?text=${encodeURIComponent(message)}`;
