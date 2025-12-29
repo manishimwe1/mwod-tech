@@ -150,7 +150,7 @@ const Header = () => {
                 </Button>
               </Link>
               {
-                session ? <UserButton/> : <Button
+                user ? <UserButton/> : <Button
                   className="relative p-2 hover:bg-gray-100 cursor-pointer rounded-lg transition"
                   aria-label="Shopping cart"
                   variant={"secondary"}
