@@ -112,7 +112,7 @@ const ProductDetailPage = () => {
           </motion.div>
 
           {/* Right Column: Product Details */}
-          <ScrollArea className="lg:sticky h-screen pb-10 border px-2">
+          <ScrollArea className="lg:sticky h-screen pb-10 px-2">
             <motion.div
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
