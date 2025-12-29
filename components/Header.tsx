@@ -10,16 +10,31 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-
+import { api } from "@/convex/_generated/api";
 import React, { useEffect, useState } from "react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
+import  UserButton  from "./userButton";
+import { useSession } from "next-auth/react";
+import { useMutation, useQuery } from "convex/react";
+
 
 const Header = () => {
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [showSearch, setshowSearch] = useState(false);
   const [searchValue, setsearchValue] = useState("");
+
+  const session = useSession();
+
+    const user = useQuery(
+    api.users.getUserByEmail,
+    session.data ? { email: session.data.user.email ?? "" } : "skip"
+  );
+  const cartItems = useQuery(
+    api.cart.get,
+    user?._id ? { userId: user._id as any } : "skip"
+  );
 
   useEffect(() => {
     const handleScroll = () => {
@@ -121,26 +136,6 @@ const Header = () => {
                   <Search className="w-6 h-6 text-gray-700" />
                 </Button>
               </div>
-              {/* <Button
-              className="p-2 hover:bg-gray-100 cursor-pointer rounded-lg transition"
-              aria-label="Account"
-              variant={'secondary'}
-              size={'sm'}
-            >
-              <svg
-                className="w-6 h-6 text-gray-700"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                />
-              </svg>
-            </Button> */}
               <Link href={"/cart"} prefetch>
                 <Button
                   className="relative p-2 hover:bg-gray-100 cursor-pointer rounded-lg transition"
@@ -150,10 +145,18 @@ const Header = () => {
                 >
                   <ShoppingCart className="w-6 h-6 text-gray-700" />
                   <span className="absolute -top-1 -right-1 bg-blue-600 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">
-                    3
+                    {cartItems?.length ?? 0}
                   </span>
                 </Button>
               </Link>
+              {
+                session ? <UserButton/> : <Button
+                  className="relative p-2 hover:bg-gray-100 cursor-pointer rounded-lg transition"
+                  aria-label="Shopping cart"
+                  variant={"secondary"}
+                  size={"sm"}
+                >Sign in</Button>
+              }
               <Button
                 variant={"secondary"}
                 className="lg:hidden p-2 hover:bg-gray-100 rounded-lg transition"

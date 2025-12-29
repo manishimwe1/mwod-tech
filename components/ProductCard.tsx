@@ -13,7 +13,7 @@ import { useMutation, useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { useSession } from "next-auth/react";
 
-const ProductCard = ({ product }: { product: Doc<"products"> }) => {
+const ProductCard = ({ product,isSelled }: { product: Doc<"products"> | Doc<"selledProducts"> & { imageUrls?: (string | null)[] },isSelled?:boolean }) => {
   const randomDelay = Math.floor(Math.random() * (15000 - 5000 + 1)) + 5000; // Random delay between 5 and 15 seconds
   const plugin = useRef(
     Autoplay({ delay: randomDelay, stopOnInteraction: true })
@@ -168,9 +168,9 @@ const ProductCard = ({ product }: { product: Doc<"products"> }) => {
       </div>
 
       {/* Info Section */}
-      <Link href={`/product/${product._id}`} className="p-5">
+      <Link href={`/product/${product._id}`} className="p-3">
         {/* Rating */}
-        <div className="flex items-center gap-2 mb-3">
+        <div className="flex items-center gap-2 mb-2">
           <div className="flex">
             {[...Array(5)].map((_, i) => (
               <Star
@@ -192,7 +192,7 @@ const ProductCard = ({ product }: { product: Doc<"products"> }) => {
         </h3>
 
         {/* Condition */}
-        <div className="mb-3">
+        <div className="mb-2">
           <span className="inline-flex items-center gap-1 bg-green-50 text-green-700 px-2 py-1 rounded text-xs font-medium">
             <Award className="w-3 h-3" />
             {product.condition}
@@ -200,7 +200,7 @@ const ProductCard = ({ product }: { product: Doc<"products"> }) => {
         </div>
 
         {/* Price */}
-        <div className="flex items-start justify-end  h-12 gap-2 mb-4">
+        <div className="flex items-start justify-end  h-12 gap-2 mb-2">
           <span className="text-2xl font-bold text-gray-900 ">
             {product.price.toLocaleString()}
             <span className="text-sm font-normal text-gray-600"> RWF</span>
@@ -213,7 +213,7 @@ const ProductCard = ({ product }: { product: Doc<"products"> }) => {
         </div>
 
         {product.originalPrice && (
-          <div className="bg-green-50 rounded-lg p-2 mb-4">
+          <div className="bg-green-50 rounded-lg p-2 mb-2">
             <p className="text-xs text-green-800 text-center font-semibold">
               💰 Save {(product.originalPrice - product.price).toLocaleString()}{" "}
               RWF
@@ -223,9 +223,9 @@ const ProductCard = ({ product }: { product: Doc<"products"> }) => {
 
         {/* Actions */}
       </Link>
-      <div className="flex gap-2">
+      { !isSelled && <div className="flex gap-2">
         <button
-          className="flex-1 bg-blue-600 cursor-pointer text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition flex items-center justify-center gap-2 text-sm"
+          className="shopping-btn"
           onClick={()=>handleAddToCart(product._id)}
         >
           <ShoppingCart className="w-4 h-4" />
@@ -237,7 +237,7 @@ const ProductCard = ({ product }: { product: Doc<"products"> }) => {
           >
           <Eye className="w-5 h-5 text-gray-700" />
           </button> */}
-      </div>
+      </div>}
     </div>
   );
 };

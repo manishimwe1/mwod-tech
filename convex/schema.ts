@@ -141,7 +141,7 @@ export default defineSchema({
 
   wishlist: defineTable({
     userId: v.id("user"),
-    productId: v.id("products"),
+    productId: v.union(v.id("products"), v.id("selledProducts")),
   })
     .index("by_userId", ["userId"])
     .index("by_productId", ["productId"])

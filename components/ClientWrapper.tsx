@@ -21,17 +21,13 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
     // Handle loading states for both NextAuth session and Convex user data
     if (session.status === "loading" ) {
       return; // Do nothing while loading
-    }
+    }``
 
     // If not authenticated via NextAuth, redirect to login
     if (session.status === "unauthenticated") {
       router.push('/login');
       return;
     }
-
-    // If authenticated via NextAuth but no user found in Convex (e.g., user not yet created in Convex)
-    // This might need more specific handling depending on your user creation flow.
-    // For now, as a fallback, redirect to login.
     if (session.status === "authenticated" && !user) {
       router.push('/login');
       return;
@@ -39,10 +35,14 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
 
     // Authorization check: if user is not an admin, redirect to home page
     if (user?.role === 'admin') {
-      router.push('/dashboard');
+      if (!router.pathname.startsWith('/dashboard')) {
+        router.push('/dashboard');
+      }
       return;
-    }else{
-      router.push('/')
+    } else {
+      if (router.pathname !== '/') {
+        router.push('/');
+      }
     }
   }, [session, user, router]);
 

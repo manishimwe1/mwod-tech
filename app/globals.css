@@ -119,5 +119,8 @@
   body {
     @apply bg-background text-foreground;
   }
+  .shopping-btn {
+    @apply flex-1 bg-blue-600 cursor-pointer text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition flex items-center justify-center gap-2 text-sm;
+  }
 }
 

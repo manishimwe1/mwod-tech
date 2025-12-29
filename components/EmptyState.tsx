@@ -18,11 +18,11 @@ const EmptyState = () => {
         <EmptyMedia variant="icon">
           <PackageCheck />
         </EmptyMedia>
-        <EmptyTitle>No data</EmptyTitle>
-        <EmptyDescription>No data found</EmptyDescription>
+        <EmptyTitle>Add new product</EmptyTitle>
+        <EmptyDescription>No product found</EmptyDescription>
       </EmptyHeader>
       <EmptyContent>
-        <Button>Add data</Button>
+        {/* <Button>Add data</Button> */}
       </EmptyContent>
     </Empty>
     </div>

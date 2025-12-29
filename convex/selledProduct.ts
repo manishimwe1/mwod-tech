@@ -110,7 +110,6 @@ export const getSelledProducts = query({
   handler: async (ctx) => {
     const products = await ctx.db
       .query("selledProducts")
-      .withIndex("by_status", (q) => q.eq(("status"), "active"))
       .order("desc")
       .collect();
     return Promise.all(

@@ -44,7 +44,7 @@ const CartPage = () => {
     await updateCartItemQuantity({ cartId, quantity });
   };
 
-  if (!user) {
+  if (!session) {
     return (
       <div className="min-h-[70vh] flex items-center justify-center px-4">
         <div className="text-center max-w-md">
@@ -98,7 +98,7 @@ const CartPage = () => {
           <Link href="/">
             <Button
               size="lg"
-              className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+              className="shopping-btn"
             >
               Start Shopping
               <ArrowRight className="ml-2 w-4 h-4" />
@@ -173,7 +173,7 @@ const CartPage = () => {
                             className="h-8 w-8 rounded-md hover:bg-white"
                             onClick={() =>
                               handleUpdateQuantity(
-                                item?._id as any,
+                                item.cartId as Id<"cart">,
                                 (item?.quantity ?? 0) - 1
                               )
                             }
@@ -189,7 +189,7 @@ const CartPage = () => {
                             className="h-8 w-8 rounded-md hover:bg-white"
                             onClick={() =>
                               handleUpdateQuantity(
-                                item?._id as any,
+                                item.cartId as Id<"cart">,
                                 (item?.quantity ?? 0) + 1
                               )
                             }
@@ -224,8 +224,8 @@ const CartPage = () => {
           <div className="lg:col-span-1">
             <div className="sticky top-8">
               <Card className="border-0 shadow-xl bg-white/80 backdrop-blur-sm overflow-hidden">
-                <div className="bg-gradient-to-r from-blue-600 to-purple-600 p-6">
-                  <CardTitle className="text-white text-2xl">
+                <div className="p-6">
+                  <CardTitle className=" text-2xl">
                     Order Summary
                   </CardTitle>
                 </div>

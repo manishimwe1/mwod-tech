@@ -67,7 +67,7 @@ export const get = query({
 
 export const isProductInWishlist = query({
   args: {
-    productId: v.id("products"),
+    productId: v.union(v.id("products"), v.id("selledProducts")),
     userId: v.id("user"),
   },
   handler: async (ctx, args) => {
@@ -77,7 +77,6 @@ export const isProductInWishlist = query({
         q.eq("userId", args.userId).eq("productId", args.productId)
       )
       .first();
-
     return !!existingWishlistItem;
   },
 });
