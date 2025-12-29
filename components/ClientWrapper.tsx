@@ -6,52 +6,66 @@ import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
 import { api } from "@/convex/_generated/api";
 import { useQuery } from "convex/react";
 import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useRouter, usePathname } from "next/navigation";
+import { useEffect, useRef } from "react";
 
 export default function ClientLayout({ children }: { children: React.ReactNode }) {
   const session = useSession();
   const router = useRouter();
+  const pathname = usePathname();
+  const hasRedirected = useRef(false);
 
-  const  user  = useQuery(api.users.getUserByEmail, session.data?.user ? {
+  const user = useQuery(api.users.getUserByEmail, session.data?.user ? {
     email: session?.data?.user?.email || '',
-  } :'skip');
+  } : 'skip');
 
   useEffect(() => {
-    // Handle loading states for both NextAuth session and Convex user data
-    if (session.status === "loading" ) {
-      return; // Do nothing while loading
-    }``
+    // Prevent multiple redirects
+    if (hasRedirected.current) return;
+
+    // Handle loading states
+    if (session.status === "loading") {
+      return;
+    }
 
     // If not authenticated via NextAuth, redirect to login
     if (session.status === "unauthenticated") {
-      router.push('/login');
-      return;
-    }
-    if (session.status === "authenticated" && !user) {
+      hasRedirected.current = true;
       router.push('/login');
       return;
     }
 
-    // Authorization check: if user is not an admin, redirect to home page
+    // Wait for user data to load before making authorization decisions
+    if (session.status === "authenticated" && user === undefined) {
+      return; // Still loading user data
+    }
+
+    // If authenticated but no user found in database
+    if (session.status === "authenticated" && user === null) {
+      hasRedirected.current = true;
+      router.push('/login');
+      return;
+    }
+
+    // Authorization check: redirect based on role
     if (user?.role === 'admin') {
-      if (!router.pathname.startsWith('/dashboard')) {
+      if (!pathname.startsWith('/dashboard')) {
+        hasRedirected.current = true;
         router.push('/dashboard');
       }
-      return;
-    } else {
-      if (router.pathname !== '/') {
+    } else if (user) {
+      if (pathname !== '/') {
+        hasRedirected.current = true;
         router.push('/');
       }
     }
-  }, [session, user, router]);
+  }, [session.status, user, router, pathname]);
 
-  // Render nothing while loading to prevent content flickering before redirects
-  if (session.status === "loading" ) {
+  // Render nothing while loading
+  if (session.status === "loading" || (session.status === "authenticated" && user === undefined)) {
     return null;
   }
 
-  // If all conditions pass, render the dashboard layout
   return (
     <SidebarProvider
       style={{
@@ -62,7 +76,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
       <AppSidebar variant="inset" />
       <SidebarInset>
         <SiteHeader />
-        <main className="min-h-screen  justify-start py-10 items-start w-full">
+        <main className="min-h-screen justify-start py-10 items-start w-full">
           {children}
         </main>
       </SidebarInset>
