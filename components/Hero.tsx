@@ -1,112 +1,150 @@
+'use client'
+
 import { api } from "@/convex/_generated/api";
-import { useQuery } from "convex/react";
+import { usePreloadedQuery } from "convex/react";
 import { ArrowRight, ChevronRight, Phone, Sparkles } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 
-const HeroSection = () => {
-  const dealsProducts = useQuery(api.product.getDealsProducts);
-  const hotProducts = useQuery(api.product.getHotProducts);
+const HeroSection = ({ hotProducts, dealsProducts }: any) => {
+   const hot = usePreloadedQuery(
+    hotProducts
+  );
 
-  if (!dealsProducts || !hotProducts) {
-    return null;
-  }
-  const hotFirstImage = hotProducts?.[0]?.imageUrls?.[0] ?? "";
-  const dealFirstImage = dealsProducts?.[0]?.imageUrls?.[0] ?? "";
+  const deals = usePreloadedQuery(
+    dealsProducts
+  );
+  console.log({hot, deals},hot?.[0]?.imageUrls?.[0]);
+  
+  if (!hot || !deals) return null;
+
+  const  dealFirstImage = deals?.[0]?.imageUrls?.[0] ?? "";
+  const hotFirstImage = hot?.[0]?.imageUrls?.[0] ?? "";
+
   return (
-    <section className="hidden md:inline-block bg-gradient-to-br from-blue-50 via-white to-purple-50 py-16 lg:py-24">
-      <div className="max-w-7xl mx-auto px-4">
+    <section className="hidden md:block bg-gradient-to-br from-blue-50 via-white to-purple-50 py-16 lg:py-24 ">
+      <div className="container mx-auto px-4 py-8">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
+
+          {/* TEXT CONTENT */}
           <div>
+            {/* Local SEO badge */}
             <div className="inline-flex items-center gap-2 bg-blue-100 text-blue-700 px-4 py-2 rounded-full text-sm font-medium mb-6">
               <Sparkles className="w-4 h-4" />
-              Rwanda's #1 Electronics Marketplace
+              Buy Laptops in Rwanda 🇷🇼
             </div>
-            <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6 leading-tight">
-              Buy & Sell <span className="text-blue-600">Electronics</span> with
-              Confidence
-            </h2>
-            <p className="text-xl text-gray-600 mb-8">
-              Shop 14,000+ verified phones, laptops & accessories. Secure
-              payments, fast delivery in Kigali.
+
+            {/* ✅ MAIN SEO H1 */}
+            <h1 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6 leading-tight">
+              Buy New & Used <span className="text-blue-600">Laptops in Rwanda</span>
+            </h1>
+
+            {/* ✅ SEO paragraph (VERY IMPORTANT) */}
+            <p className="text-lg text-gray-700 mb-8 leading-relaxed">
+              EasyFix Tech offers affordable laptops in Rwanda including HP,
+              Dell, Lenovo, and Apple. Perfect for students, office work,
+              programming, and business. Enjoy warranty, pay on delivery,
+              and fast delivery in Kigali and across Rwanda.
             </p>
 
-            {/* Trust Signals */}
+            {/* ✅ REAL TRUST (LOCAL & SPECIFIC) */}
             <div className="grid grid-cols-3 gap-4 mb-8">
               <div className="text-center">
-                <div className="text-2xl font-bold text-gray-900">14,861</div>
-                <div className="text-sm text-gray-600">Active Listings</div>
+                <div className="text-xl font-bold text-gray-900">
+                  Warranty
+                </div>
+                <div className="text-sm text-gray-600">
+                  Up to 3 Months
+                </div>
               </div>
               <div className="text-center">
-                <div className="text-2xl font-bold text-gray-900">10K+</div>
-                <div className="text-sm text-gray-600">Happy Customers</div>
+                <div className="text-xl font-bold text-gray-900">
+                  Delivery
+                </div>
+                <div className="text-sm text-gray-600">
+                  Same Day in Kigali
+                </div>
               </div>
               <div className="text-center">
-                <div className="text-2xl font-bold text-gray-900">4.8★</div>
-                <div className="text-sm text-gray-600">Average Rating</div>
+                <div className="text-xl font-bold text-gray-900">
+                  Payment
+                </div>
+                <div className="text-sm text-gray-600">
+                  Pay on Delivery
+                </div>
               </div>
             </div>
 
+            {/* CTA */}
             <div className="flex flex-col sm:flex-row gap-4">
-              <button className="bg-blue-600 text-white px-8 py-4 rounded-lg font-semibold hover:bg-blue-700 transition flex items-center justify-center gap-2 shadow-lg shadow-blue-600/30">
-                Browse Products
+              <Link
+                href="/buy-laptops-in-rwanda"
+                className="bg-blue-600 text-white px-8 py-4 rounded-lg font-semibold hover:bg-blue-700 transition flex items-center justify-center gap-2 shadow-lg shadow-blue-600/30"
+              >
+                Browse Laptops
                 <ChevronRight className="w-5 h-5" />
-              </button>
-              <Link href='/sell' className="border-2 cursor-pointer border-gray-300 text-gray-700 px-8 py-4 rounded-lg font-semibold hover:border-gray-400 transition flex items-center justify-center gap-2">
-                Sell Your Device
+              </Link>
+
+              <Link
+                href="/sell"
+                className="border-2 border-gray-300 text-gray-700 px-8 py-4 rounded-lg font-semibold hover:border-gray-400 transition flex items-center justify-center gap-2"
+              >
+                Sell Your Laptop
                 <ArrowRight className="w-5 h-5" />
               </Link>
             </div>
           </div>
 
-          {/* Hero Image/Illustration */}
+          {/* IMAGES (UNCHANGED STRUCTURE, SEO SAFE) */}
           <div className="relative hidden lg:block">
             <div className="bg-gradient-to-br from-blue-100 to-purple-100 rounded-3xl p-8 relative overflow-hidden">
               <div className="absolute top-4 right-4 bg-green-500 text-white px-4 py-2 rounded-full text-sm font-semibold animate-pulse">
-                🔥 Hot Deals Today
+                🔥 Laptop Deals Today
               </div>
+
               <div className="grid grid-cols-2 gap-4">
-                {hotProducts.length > 0 ? (
-                  <div className="bg-white rounded-2xl p-6 shadow-xl transform hover:scale-105 transition">
-                    <div className="w-full h-32 relative bg-gray-100 rounded-lg mb-3 overflow-hidden flex items-center justify-center">
+                {hot.length > 0 && (
+                  <div className="bg-white rounded-2xl p-6 shadow-xl">
+                    <div className="relative h-32 mb-3 overflow-hidden">
                       <Image
-                        src={hotFirstImage}
-                        alt={hotProducts[0].name}
-                        className="w-16 h-16 object-cover "
+                        src={hot?.[0]?.imageUrls?.[0]}
+                        alt={`${hot[0].name} price in Rwanda`}
                         fill
+                        className="object-cover"
                       />
                     </div>
-                    <div className="text-sm font-semibold text-gray-900 truncate">
-                      {hotProducts[0].name}
+                    <div className="text-sm font-semibold truncate">
+                      {hot[0].name}
                     </div>
-                    <div className="text-xs text-gray-600 flex w-full justify-end">
-                      From {hotProducts[0].price.toLocaleString()} RWF
+                    <div className="text-xs text-gray-600 text-right">
+                      From {hot[0].price.toLocaleString()} RWF
                     </div>
                   </div>
-                ) : null}
+                )}
 
-                {dealsProducts.length > 0 ? (
-                  <div className="bg-white rounded-2xl p-6 shadow-xl transform hover:scale-105 transition mt-8">
-                    <div className="w-full relative overflow-hidden h-32 bg-gray-100 rounded-lg mb-3 flex items-center justify-center">
+                {deals.length > 0 && (
+                  <div className="bg-white rounded-2xl p-6 shadow-xl mt-8">
+                    <div className="relative h-32 mb-3 overflow-hidden">
                       <Image
                         src={dealFirstImage}
-                        alt={dealsProducts[0].name}
-                        className="w-16 h-16 object-cover "
+                        alt={`${deals[0].name} laptop Rwanda`}
                         fill
+                        className="object-cover"
                       />
                     </div>
-                    <div className="text-sm font-semibold text-gray-900 truncate">
-                      {dealsProducts[0].name}
+                    <div className="text-sm font-semibold truncate">
+                      {deals[0].name}
                     </div>
                     <div className="text-xs text-gray-600">
-                      From {dealsProducts[0].price.toLocaleString()} RWF
+                      From {deals[0].price.toLocaleString()} RWF
                     </div>
                   </div>
-                ) : null}
+                )}
               </div>
             </div>
           </div>
+
         </div>
       </div>
     </section>
@@ -114,3 +152,4 @@ const HeroSection = () => {
 };
 
 export default HeroSection;
+

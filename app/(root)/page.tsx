@@ -1,64 +1,61 @@
-// 'use client'
-
-// import CategoryGrid from "@/components/CategoryGrid";
-// import TrendingProducts from "@/components/TrendingProducts";
-
-// export default function Home() {
-
-//   return (
-//     <main className="min-h-screen bg-white">
-//       {/* <Hero /> */}
-//       {/* <FeaturedProducts products={[]} /> */}
-//       <CategoryGrid />
-//       <TrendingProducts />
-//     </main>
-//   );
-// }
-
-'use client'
 
 import HeroSection from '@/components/Hero';
 import SocialProof from '@/components/SocialProof';
 import TrendingProducts from '@/components/TrendingProducts';
 import TrustBadges from '@/components/TrustBadges';
 import { Button } from '@/components/ui/button';
-import { Lock, MessageCircle, Phone, RotateCcw, ShieldCheck, Sparkles, Truck, X } from 'lucide-react';
-import { useEffect, useState } from 'react';
+// import { Lock, MessageCircle, Phone, RotateCcw, ShieldCheck, Sparkles, Truck, X } from 'lucide-react';
+// import { useEffect, useState } from 'react';
+import { preloadQuery } from "convex/nextjs";
+import { api } from "@/convex/_generated/api";
 
-export default function EnhancedHomePage() {
+export default async function EnhancedHomePage() {
+
+   const hotProducts = await preloadQuery(
+      api.product.getHotProducts,
+      {}
+    );
   
-  const [showExitIntent, setShowExitIntent] = useState(false);
-  const [email, setEmail] = useState('');
+    const dealProducts = await preloadQuery(
+      api.product.getDealsProducts,
+      {}
+    );
+  
+  // const [showExitIntent, setShowExitIntent] = useState(false);
+  // const [email, setEmail] = useState('');
 
   // Scroll detection for sticky header
  
 
   // Exit intent detection
-  useEffect(() => {
-    let hasShownPopup = false;
-    const handleMouseLeave = (e: MouseEvent) => {
-      if (e.clientY < 10 && !hasShownPopup) {
-        hasShownPopup = true;
-        setShowExitIntent(true);
-      }
-    };
-    document.addEventListener('mouseleave', handleMouseLeave);
-    return () => document.removeEventListener('mouseleave', handleMouseLeave);
-  }, []);
+  // useEffect(() => {
+  //   let hasShownPopup = false;
+  //   const handleMouseLeave = (e: MouseEvent) => {
+  //     if (e.clientY < 10 && !hasShownPopup) {
+  //       hasShownPopup = true;
+  //       setShowExitIntent(true);
+  //     }
+  //   };
+  //   document.addEventListener('mouseleave', handleMouseLeave);
+  //   return () => document.removeEventListener('mouseleave', handleMouseLeave);
+  // }, []);
 
-  const handleEmailSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    alert(`Welcome discount sent to ${email}!`);
-    setShowExitIntent(false);
-    setEmail('');
-  };
+  // const handleEmailSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  //   e.preventDefault();
+  //   alert(`Welcome discount sent to ${email}!`);
+  //   setShowExitIntent(false);
+  //   setEmail('');
+  // };
 
   return (
     <div className="min-h-screen bg-white">
       {/* SEO - Hidden H1 */}
-      <h1 className="sr-only">ElectroX - Buy and Sell Electronics in Rwanda - Phones, Laptops & More</h1>
+      <h1 className="sr-only">Easyfix - Buy and Sell Electronics in Rwanda - Phones, Laptops & More</h1>
       {/* Hero Section */}
-      <HeroSection/>
+      <HeroSection
+        hotProducts={hotProducts}
+        dealsProducts={dealProducts}
+      />
 
       {/* Trust Badges */}
       <div className='hidden md:block'>
@@ -101,7 +98,7 @@ export default function EnhancedHomePage() {
       </div>
 
       {/* Exit Intent Popup */}
-      {showExitIntent && (
+      {/* {showExitIntent && (
         <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
           <div className="bg-white rounded-2xl max-w-md w-full p-8 relative">
             <button
@@ -145,7 +142,7 @@ export default function EnhancedHomePage() {
             </form>
           </div>
         </div>
-      )}
+      )} */}
 
       {/* Mobile Contact Buttons */}
       {/* <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t p-4 flex gap-2 z-40 shadow-lg">

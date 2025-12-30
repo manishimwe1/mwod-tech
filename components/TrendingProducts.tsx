@@ -9,6 +9,7 @@ import { useProductStore } from "@/lib/store";
 import { useEffect } from "react";
 import { Doc } from "@/convex/_generated/dataModel";
 import { ChevronRightIcon, FlameIcon } from "lucide-react";
+import ProductCardSkeleton from "./ProductCardSkeleton";
 
 const TrendingProducts = () => {
   const productsInDB = useQuery(api.product.getProductsWithImage);
@@ -16,11 +17,18 @@ const TrendingProducts = () => {
   const { setProducts, products } = useProductStore();
 
   useEffect(() => {
-    if (products.length === 0 && productsInDB) setProducts(productsInDB as Doc<"products">[]);
+    if (products.length === 0 && productsInDB)
+      setProducts(productsInDB as Doc<"products">[]);
   }, [productsInDB, setProducts]);
 
   if (!productsInDB) {
-    return <Loading title="Please wait, we are loading the products" />;
+    return (
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 space-x-4 space-y-8">
+        {Array.from({ length: 4 }).map((_, i) => (
+          <ProductCardSkeleton key={i} />
+        ))}
+      </div>
+    );
   }
 
   return (
