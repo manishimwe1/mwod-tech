@@ -23,7 +23,7 @@ const HeroSection = ({ hotProducts, dealsProducts }: any) => {
   const hotFirstImage = hot?.[0]?.imageUrls?.[0] ?? "";
 
   return (
-    <section className="hidden md:block bg-gradient-to-br from-blue-50 via-white to-purple-50 py-16 lg:py-24 ">
+    <section className="hidden lg:block bg-gradient-to-br from-blue-50 via-white to-purple-50 py-16 lg:py-24 ">
       <div className="container mx-auto px-4 py-8">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
 

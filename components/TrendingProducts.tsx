@@ -1,33 +1,33 @@
 "use client";
 
-import { useQuery } from "convex/react";
-import ProductCard from "./ProductCard";
-import { Button } from "./ui/button";
-import { api } from "@/convex/_generated/api";
-import Loading from "./Loading";
-import { useProductStore } from "@/lib/store";
 import { useEffect } from "react";
+import ProductCard from "./ProductCard";
+import { useProductStore } from "@/lib/store";
 import { Doc } from "@/convex/_generated/dataModel";
 import { ChevronRightIcon, FlameIcon } from "lucide-react";
 import ProductCardSkeleton from "./ProductCardSkeleton";
 
-const TrendingProducts = () => {
-  const productsInDB = useQuery(api.product.getProductsWithImage);
+type Props = {
+  initialProducts: Doc<"products">[];
+};
 
-  const { setProducts, products } = useProductStore();
+const TrendingProductsClient = ({ initialProducts }: Props) => {
+  const { products, setProducts } = useProductStore();
 
+  // Hydrate Zustand ONCE from server data
   useEffect(() => {
-    if (products.length === 0 && productsInDB)
-      setProducts(productsInDB as Doc<"products">[]);
-  }, [productsInDB, setProducts]);
+    if (products.length === 0) {
+      setProducts(initialProducts);
+    }
+  }, [initialProducts, products.length, setProducts]);
 
-  if (!productsInDB) {
+  if (products.length === 0) {
     return (
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 space-x-4 space-y-8">
-        {Array.from({ length: 4 }).map((_, i) => (
-          <ProductCardSkeleton key={i} />
-        ))}
-      </div>
+<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+  {Array.from({ length: 4 }).map((_, index) => (
+    <ProductCardSkeleton key={index} />
+  ))}
+</div>
     );
   }
 
@@ -37,16 +37,23 @@ const TrendingProducts = () => {
         <div>
           <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-2">
             <FlameIcon className="w-8 h-8 inline text-orange-500 mr-2" />
-            Trending This Week
+            Trending Laptops in Rwanda
           </h2>
-          <p className="text-gray-600">Hot deals everyone's talking about</p>
+          <p className="text-gray-600">
+            Best selling laptops & electronics this week
+          </p>
         </div>
-        <button className="hidden sm:flex items-center gap-2 text-blue-600 font-semibold hover:gap-3 transition-all">
+
+        <a
+          href="/products"
+          className="hidden sm:flex items-center gap-2 text-blue-600 font-semibold hover:gap-3 transition-all"
+        >
           View All
           <ChevronRightIcon className="w-5 h-5" />
-        </button>
+        </a>
       </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 space-x-4 space-y-8">
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {products.map((product) => (
           <ProductCard key={product._id} product={product} />
         ))}
@@ -55,4 +62,4 @@ const TrendingProducts = () => {
   );
 };
 
-export default TrendingProducts;
+export default TrendingProductsClient;

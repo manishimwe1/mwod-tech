@@ -6,7 +6,7 @@ import TrustBadges from '@/components/TrustBadges';
 import { Button } from '@/components/ui/button';
 // import { Lock, MessageCircle, Phone, RotateCcw, ShieldCheck, Sparkles, Truck, X } from 'lucide-react';
 // import { useEffect, useState } from 'react';
-import { preloadQuery } from "convex/nextjs";
+import { fetchQuery, preloadQuery } from "convex/nextjs";
 import { api } from "@/convex/_generated/api";
 
 export default async function EnhancedHomePage() {
@@ -20,32 +20,10 @@ export default async function EnhancedHomePage() {
       api.product.getDealsProducts,
       {}
     );
-  
-  // const [showExitIntent, setShowExitIntent] = useState(false);
-  // const [email, setEmail] = useState('');
-
-  // Scroll detection for sticky header
- 
-
-  // Exit intent detection
-  // useEffect(() => {
-  //   let hasShownPopup = false;
-  //   const handleMouseLeave = (e: MouseEvent) => {
-  //     if (e.clientY < 10 && !hasShownPopup) {
-  //       hasShownPopup = true;
-  //       setShowExitIntent(true);
-  //     }
-  //   };
-  //   document.addEventListener('mouseleave', handleMouseLeave);
-  //   return () => document.removeEventListener('mouseleave', handleMouseLeave);
-  // }, []);
-
-  // const handleEmailSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-  //   e.preventDefault();
-  //   alert(`Welcome discount sent to ${email}!`);
-  //   setShowExitIntent(false);
-  //   setEmail('');
-  // };
+    const products = await fetchQuery(
+    api.product.getProductsWithImage,
+    {}
+  );
 
   return (
     <div className="min-h-screen bg-white">
@@ -65,7 +43,7 @@ export default async function EnhancedHomePage() {
 
       {/* Trending Products */}
       <section className="py-4 lg:py-20 px-4 bg-gray-50">
-        <TrendingProducts/>
+        <TrendingProducts initialProducts={products} />
         <div className="max-w-7xl mx-auto">
           
         </div>
