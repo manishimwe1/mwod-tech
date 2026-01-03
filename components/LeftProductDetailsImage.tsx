@@ -13,12 +13,12 @@ import { EmblaCarouselType } from "embla-carousel";
 import Image from "next/image";
 
 
-const LeftProductDetailsImage = ({ product }: { product: Doc<"products"> }) => {
+const LeftProductDetailsImage = ({ product }: { product: Doc<"products">   }) => {
      const plugin = useRef(Autoplay({ delay: 600000, stopOnInteraction: false }));
      const [selectedIndex, setSelectedIndex] = useState(0);
      const [mainCarouselApi, setMainCarouselApi] = useState<EmblaCarouselType>();
      const [thumbnailCarouselApi, setThumbnailCarouselApi] = useState<EmblaCarouselType>();
-
+     console.log(product);
      const onSelect = useCallback((emblaApi: EmblaCarouselType) => {
         setSelectedIndex(emblaApi.selectedScrollSnap());
      }, []);

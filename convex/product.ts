@@ -110,28 +110,41 @@ export const getAllProducts = query({
     return await ctx.db.query("products").order("desc").collect();
   },
 });
-export const getProductsWithImage = query({
-  args: {},
-  handler: async (ctx) => {
-    const products = await ctx.db
+
+
+export const getProductsWithImagePaginated = query({
+  args: {
+    paginationOpts: v.any(),
+  },
+  handler: async (ctx, { paginationOpts }) => {
+    const page = await ctx.db
       .query("products")
-      .withIndex("by_status", (q) => q.eq(("status"), "active"))
+      .withIndex("by_status", (q) => q.eq("status", "active"))
       .order("desc")
-      .collect();
-    return Promise.all(
-      products.map(async (product) => ({
-        ...product,
-        ...(Array.isArray(product.images) && product.images.length > 0
-          ? {
-              imageUrls: await Promise.all(
-                product.images.map((imageId) => ctx.storage.getUrl(imageId))
-              ),
-            }
-          : {}),
-      }))
-    );
+      .paginate(paginationOpts);
+
+    // Attach image URLs
+    const enrichedPage = {
+      ...page,
+      page: await Promise.all(
+        page.page.map(async (product) => ({
+          ...product,
+          imageUrls:
+            Array.isArray(product.images) && product.images.length > 0
+              ? await Promise.all(
+                  product.images.map((imageId) =>
+                    ctx.storage.getUrl(imageId)
+                  )
+                )
+              : [],
+        }))
+      ),
+    };
+
+    return enrichedPage;
   },
 });
+
 
 export const getDealsProducts = query({
   args: {},
