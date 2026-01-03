@@ -10,7 +10,7 @@ export default function Footer() {
             <div>
               <div className="flex items-center gap-2 mb-4">
                 <div className="w-10 relative h-10 bg-white rounded-lg flex items-center justify-center">
-                  <Image src="/logo.png" alt="easyFix" fill />
+                  <Image src="/logo.png" alt="mwod technology" fill />
                 </div>
                 <span className="font-bold text-xl">Easy Fix</span>
               </div>

@@ -42,7 +42,7 @@ const HeroSection = ({ hotProducts, dealsProducts }: any) => {
 
             {/* ✅ SEO paragraph (VERY IMPORTANT) */}
             <p className="text-lg text-gray-700 mb-8 leading-relaxed">
-              EasyFix Tech offers affordable laptops in Rwanda including HP,
+              mwod technology Tech offers affordable laptops in Rwanda including HP,
               Dell, Lenovo, and Apple. Perfect for students, office work,
               programming, and business. Enjoy warranty, pay on delivery,
               and fast delivery in Kigali and across Rwanda.

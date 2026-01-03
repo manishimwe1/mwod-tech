@@ -17,8 +17,8 @@ const poppins = Poppins({
 
 export const metadata: Metadata = {
   title: {
-    default: "EasyFix - Sell and Buy some of electronics",
-    template: "%s | EasyFix",
+    default: "mwod technology - Sell and Buy some of electronics",
+    template: "%s | mwod technology",
   },
   description:
     "Your one-stop destination for electronics repair services and new device purchases. Expert repairs, great deals, and quality electronics.",
@@ -33,20 +33,20 @@ export const metadata: Metadata = {
     "accessories",
   ],
   authors: [{ name: "emino" }],
-  creator: "easyfix",
-  publisher: "easyfix",
+  creator: "mwod technology",
+  publisher: "mwod technology",
   openGraph: {
-    title: "EasyFix - Sell and Buy some of electronics",
+    title: "mwod technology - Sell and Buy some of electronics",
     description:
       "Your one-stop destination for electronics repair services and new device purchases. Expert repairs, great deals, and quality electronics.",
-    url: "https://easyfix.com", // Replace with your actual URL
-    siteName: "EasyFix",
+    url: "https://mwod technology.com", // Replace with your actual URL
+    siteName: "mwod technology",
     images: [
       {
-        url: "https://easyfix.com/og-image.jpg", // Replace with your actual OG image
+        url: "https://mwod technology.com/og-image.jpg", // Replace with your actual OG image
         width: 1200,
         height: 630,
-        alt: "EasyFix - Electronics Repair and Sales",
+        alt: "mwod technology - Electronics Repair and Sales",
       },
     ],
     locale: "en_US",
@@ -54,10 +54,10 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "EasyFix - Sell and Buy some of electronics",
+    title: "mwod technology - Sell and Buy some of electronics",
     description:
       "Your one-stop destination for electronics repair services and new device purchases. Expert repairs, great deals, and quality electronics.",
-    // images: ["https://easyfix.com/twitter-image.jpg"], // Replace with your actual Twitter image
+    // images: ["https://mwod technology.com/twitter-image.jpg"], // Replace with your actual Twitter image
     creator: "@eminodev", // Replace with your Twitter handle
     images:[
       "/logo.png"

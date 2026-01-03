@@ -18,7 +18,7 @@ export function ProformaInvoiceCard({ invoice }: { invoice: Doc<"invoice"> }) {
     // Header
     pdf.setFontSize(14);
     pdf.setFont("helvetica", "bold");
-    pdf.text("EASYFIX TECH", leftMargin, y);
+    pdf.text("mwod technology TECH", leftMargin, y);
     y += 6;
     pdf.setFontSize(11);
     pdf.setFont("helvetica", "normal");
@@ -127,7 +127,7 @@ export function ProformaInvoiceCard({ invoice }: { invoice: Doc<"invoice"> }) {
     // Footer text
     pdf.setFont("helvetica", "normal");
     pdf.setFontSize(10);
-    pdf.text("EASYFIX TECH LIMITED", leftMargin, finalY + 25);
+    pdf.text("mwod technology TECH LIMITED", leftMargin, finalY + 25);
     pdf.text(
       "Managing Director: Baganineza Jean Bosco",
       leftMargin,
@@ -137,7 +137,7 @@ export function ProformaInvoiceCard({ invoice }: { invoice: Doc<"invoice"> }) {
     // Thank you note
     pdf.setFont("helvetica", "italic");
     pdf.setFontSize(11);
-    const thankYouText = `Thank you ${invoice.clientName} for trusting EasyFix Tech. We truly appreciate your business!`;
+    const thankYouText = `Thank you ${invoice.clientName} for trusting mwod technology Tech. We truly appreciate your business!`;
     pdf.text(thankYouText, pageWidth / 2, finalY + 70, { align: "center" });
 
     // Add stamp image with better positioning
@@ -177,7 +177,7 @@ export function ProformaInvoiceCard({ invoice }: { invoice: Doc<"invoice"> }) {
       <CardHeader className="flex flex-row justify-between items-start p-0 mb-4">
         <div className="flex flex-col text-sm">
           <CardTitle className="flex items-start gap-2 flex-col">
-            <p>EASYFIX TECH</p>
+            <p>mwod technology TECH</p>
             <p>NYARUNGENGE</p>
             <p>KIGALI-RWANDA</p>
             <p>PHONE: 0783805516</p>
@@ -254,7 +254,7 @@ export function ProformaInvoiceCard({ invoice }: { invoice: Doc<"invoice"> }) {
 
         {/* Footer */}
         <div className="flex flex-col items-center mt-8 text-sm">
-          <p className="font-bold mb-1">EASYFIX TECH LIMITED</p>
+          <p className="font-bold mb-1">mwod technology TECH LIMITED</p>
           <p>Managing Director : Baganineza Jean Bosco</p>
 
           <div className="mt-4 w-24 h-24 flex items-center justify-end">

@@ -4,7 +4,7 @@ import "../globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 
 export const metadata: Metadata = {
-  title: "EasyFix - Electronics Repair & Shop",
+  title: "mwod technology - Electronics Repair & Shop",
   description:
     "Your one-stop destination for electronics repair services and new device purchases. Expert repairs, great deals, and quality electronics.",
 };

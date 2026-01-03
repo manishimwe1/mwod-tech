@@ -87,13 +87,13 @@ const Header = () => {
           <div className="flex items-center justify-between h-12 lg:h-16">
             {/* Logo */}
             <div className="flex items-center gap-2">
-              <div className="flex items-center justify-center relative gap-2 h-10 lg:h-14 w-10 lg:w-14">
+              <div className="flex items-center justify-center relative gap-2 h-10 lg:h-14 w-10 lg:w-14 rounded-full">
                 <Link href="/" className="text-2xl font-bold text-green-600">
                   <Image src="/logo.png" alt="logo" fill priority />
                 </Link>
               </div>
               {/* <span className="font-bold text-xl text-gray-900 hidden sm:inline">
-              EasyFix
+              mwod technology
             </span> */}
             </div>
 

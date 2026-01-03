@@ -27,7 +27,7 @@ export default async function EnhancedHomePage() {
   return (
     <div className="min-h-screen bg-white">
       {/* SEO - Hidden H1 */}
-      <h1 className="sr-only">Easyfix - Buy and Sell Electronics in Rwanda - Phones, Laptops & More</h1>
+      <h1 className="sr-only">mwod technology - Buy and Sell Electronics in Rwanda - Phones, Laptops & More</h1>
       {/* Hero Section */}
       <HeroSection
         hotProducts={hotProducts}

@@ -55,7 +55,7 @@ function LoginPage() {
     <section className="flex items-center justify-center w-full h-screen bg-gray-900 text-white">
       <div className="flex flex-col items-center justify-center p-4 md:p-8 bg-gray-800 rounded-lg shadow-lg max-w-md w-full">
         <div className="mb-6 text-center">
-          <h2 className="text-3xl font-bold tracking-tight text-white">Sign in to EasyFix</h2>
+          <h2 className="text-3xl font-bold tracking-tight text-white">Sign in to mwod technology</h2>
         </div>
 
         {/* {message && (

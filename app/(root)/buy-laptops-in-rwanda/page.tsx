@@ -28,7 +28,7 @@ export default async function BuyLaptopsInRwandaPage() {
 
       {/* SEO Intro */}
       <p className="text-gray-600 max-w-3xl mb-10">
-        Looking to buy a laptop in Rwanda? EasyFix Tech offers affordable new and
+        Looking to buy a laptop in Rwanda? mwod technology Tech offers affordable new and
         used laptops in Kigali including Dell, HP, Lenovo, and gaming laptops.
         All devices are tested, verified, and available with fast delivery and
         WhatsApp checkout.
@@ -55,12 +55,12 @@ export default async function BuyLaptopsInRwandaPage() {
       {/* SEO Footer Content */}
       <section className="mt-16 max-w-3xl text-gray-600 text-sm leading-7">
         <h3 className="text-lg font-semibold text-gray-900 mb-2">
-          Why Buy Laptops from EasyFix Tech?
+          Why Buy Laptops from mwod technology Tech?
         </h3>
         <p>
           We help customers across Rwanda find reliable laptops for work,
           school, business, and gaming. Whether you need a budget laptop or a
-          high-performance machine, EasyFix Tech connects you with trusted local
+          high-performance machine, mwod technology Tech connects you with trusted local
           sellers and transparent pricing.
         </p>
       </section>
