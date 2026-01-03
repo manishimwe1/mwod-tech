@@ -11,7 +11,7 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname:  "qualified-rook-575.convex.cloud"
+        hostname:  "amiable-bullfrog-48.convex.cloud"
       },
     ],
   },

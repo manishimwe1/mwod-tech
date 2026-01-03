@@ -143,7 +143,7 @@ const CartPage = () => {
                       href={`/product/${item?._id}`}
                       className="flex-shrink-0 mx-auto sm:mx-0"
                     >
-                      <div className="relative w-full h-48 sm:w-24 sm:h-24 md:w-28 md:h-28 rounded-xl overflow-hidden bg-gray-100 group">
+                      <div className="relative w-52 h-52  sm:w-24 sm:h-24 md:w-28 md:h-28 rounded-xl overflow-hidden bg-gray-100 group">
                         <Image
                           src={item?.imageUrls?.[0] || "/placeholder.png"}
                           alt={item?.name || "Product"}
