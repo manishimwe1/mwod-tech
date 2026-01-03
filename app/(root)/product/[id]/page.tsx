@@ -90,7 +90,7 @@ const ProductDetailPage = () => {
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
-              <BreadcrumbLink href="/products">Products</BreadcrumbLink>
+              <BreadcrumbLink href="/buy-laptops-in-rwanda">Products</BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>

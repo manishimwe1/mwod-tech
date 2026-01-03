@@ -207,7 +207,7 @@ const ProductCard = ({ product,isSelled }: { product: Doc<"products"> | Doc<"sel
           </span>
           {product.originalPrice && (
             <span className=" items-end flex  h-full text-blue-400 line-through">
-              {product.originalPrice.toLocaleString()} Rfw
+              {product.originalPrice.toLocaleString()} RWF
             </span>
           )}
         </div>
