@@ -1,6 +1,17 @@
 import { defineSchema, defineTable } from "convex/server";
 import { v } from "convex/values";
 export default defineSchema({
+  ricaForm: defineTable({
+    clientName: v.string(),
+    clientPhone: v.optional(v.string()),
+    clientId: v.optional(v.string()),
+    province: v.optional(v.string()),
+    district: v.optional(v.string()),
+    sector: v.optional(v.string()),
+    cell: v.optional(v.string()),
+    updatedAt: v.number(),
+    date: v.number(),
+  }),
   ledgerIncome: defineTable({
     totalAmount: v.number(),
     date: v.number(),

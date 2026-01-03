@@ -63,8 +63,8 @@ const data = {
       icon: PackageOpen,
     },
     {
-      title: "Team",
-      url: "#",
+      title: "Rica Form",
+      url: "/dashboard/rica-form",
       icon: IconUsers,
     },
   ],
@@ -133,23 +133,7 @@ const data = {
       icon: IconSearch,
     },
   ],
-  // documents: [
-  //   {
-  //     name: "Data Library",
-  //     url: "#",
-  //     icon: IconDatabase,
-  //   },
-  //   {
-  //     name: "Reports",
-  //     url: "#",
-  //     icon: IconReport,
-  //   },
-  //   {
-  //     name: "Word Assistant",
-  //     url: "#",
-  //     icon: IconFileWord,
-  //   },
-  // ],
+ 
 };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {

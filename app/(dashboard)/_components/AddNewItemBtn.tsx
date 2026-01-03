@@ -12,6 +12,7 @@ import {
 import { ProformaInvoiceForm } from "./PoformaForm";
 import { FactureInvoiceForm } from "./FactureInvoiceForm";
 import SellForm from "@/components/SellForm";
+import RicaForm from "./RicaForm";
 
 const AddNewItemBtn = ({ title }: { title: string }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -27,6 +28,7 @@ const AddNewItemBtn = ({ title }: { title: string }) => {
         {title === "Add Facture" && <FactureInvoiceForm onClose={setIsOpen} />}
         {title === "Add Poforma" && <ProformaInvoiceForm onClose={setIsOpen} />}
         {title === "Add Selling Product" && <SellForm />}
+        {title === "Add rica-form" && <RicaForm />}
       </DialogContent>
     </Dialog>
   );
