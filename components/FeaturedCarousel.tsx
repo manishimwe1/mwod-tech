@@ -136,7 +136,7 @@ function FeaturedSlide({ product }: { product: HotProduct }) {
         </div>
 
         <Button asChild className="mt-5">
-          <Link href={`/products/${product.slug ?? product._id}`}>
+          <Link href={`/product/${product._id}`}>
             Shop now <ArrowRight className="ml-2 h-4 w-4" />
           </Link>
         </Button>

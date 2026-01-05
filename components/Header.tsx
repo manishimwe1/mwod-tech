@@ -80,15 +80,15 @@ const Header = () => {
     backdrop-blur-xl 
     bg-white/50 
     shadow-[0_4px_20px_rgba(0,0,0,0.07)]
-    border-b border-blue-600/10 overflow-hidden
+    border-b border-blue-600/10 
   `}
     >
-      <nav className="bg-blue-400/10 rounded-b-lg ">
-        <div className="max-w-7xl mx-auto px-4">
+      <nav className="bg-blue-400/10 rounded-b-lg  py-3 ">
+        <div className="max-w-7xl mx-auto pr-4">
           <div className="flex items-center justify-between h-12 lg:h-16">
             {/* Logo */}
             <div className="flex items-center gap-2">
-              <div className="flex items-center justify-center relative gap-2 h-10 lg:h-40 w-10 lg:w-40 rounded-full">
+              <div className="flex items-center  justify-center relative gap-2 -ml-2 md:ml-0 h-40 w-40 rounded-full overflow-hidden">
                 <Link href="/" className="text-2xl font-bold text-green-600">
                   <Image
                     src="/logo1.png"
@@ -190,7 +190,7 @@ const Header = () => {
           <div
             className={`md:hidden transition-all duration-300 ${
               showSearch
-                ? "opacity-100 translate-y-0 "
+                ? "opacity-100 translate-y-3 "
                 : "opacity-0 -translate-y-3 pointer-events-none"
             }`}
           >
