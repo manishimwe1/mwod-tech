@@ -1,11 +1,11 @@
 
-import HeroSection from '@/components/Hero';
 import SocialProof from '@/components/SocialProof';
 import TrendingProducts from '@/components/TrendingProducts';
 import TrustBadges from '@/components/TrustBadges';
 import { Button } from '@/components/ui/button';
 import { fetchQuery, preloadQuery } from "convex/nextjs";
 import { api } from "@/convex/_generated/api";
+import { FeaturedCarousel } from '@/components/FeaturedCarousel';
 
 export default async function EnhancedHomePage() {
 
@@ -28,11 +28,8 @@ export default async function EnhancedHomePage() {
     <div className="min-h-screen bg-white">
       {/* SEO - Hidden H1 */}
       <h1 className="sr-only">mwod technology - Buy and Sell Electronics in Rwanda - Phones, Laptops & More</h1>
-      {/* Hero Section */}
-      <HeroSection
-        hotProducts={hotProducts}
-        dealsProducts={dealProducts}
-      />
+      
+      <FeaturedCarousel hotProducts={hotProducts} />
 
       {/* Trust Badges */}
       <div className='hidden md:block'>

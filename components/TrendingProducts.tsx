@@ -7,6 +7,7 @@ import ProductCardSkeleton from "./ProductCardSkeleton";
 import { useEffect, useRef, useState } from "react";
 import { Doc } from "@/convex/_generated/dataModel";
 import { ChevronRightIcon, FlameIcon } from "lucide-react";
+import Link from "next/link";
 
 type Props = {
   initialPage: {
@@ -57,14 +58,14 @@ export default function TrendingProducts({ initialPage }: Props) {
         <div>
           <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-2">
             <FlameIcon className="w-8 h-8 inline text-orange-500 mr-2" />
-            Trending This Week
+            All Products
           </h2>
-          <p className="text-gray-600">Hot deals everyone's talking about</p>
+          <p className="text-gray-600">All products available for purchase</p>
         </div>
-        <button className="hidden sm:flex items-center gap-2 text-blue-600 font-semibold hover:gap-3 transition-all">
+        <Link href="/buy-laptops-in-rwanda" className="hidden sm:flex items-center gap-2 text-blue-600 font-semibold hover:gap-3 transition-all">
           View All
           <ChevronRightIcon className="w-5 h-5" />
-        </button>
+        </Link>
       </div>
 
       {/* Products Grid */}

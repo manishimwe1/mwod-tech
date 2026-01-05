@@ -14,10 +14,11 @@ import { api } from "@/convex/_generated/api";
 import React, { useEffect, useState } from "react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
-import  UserButton  from "./userButton";
+import UserButton from "./userButton";
 import { useSession } from "next-auth/react";
 import { useMutation, useQuery } from "convex/react";
-
+import { NavLinks } from "@/constants";
+import { cn } from "@/lib/utils";
 
 const Header = () => {
   const [showMobileMenu, setShowMobileMenu] = useState(false);
@@ -27,7 +28,7 @@ const Header = () => {
 
   const session = useSession();
 
-    const user = useQuery(
+  const user = useQuery(
     api.users.getUserByEmail,
     session.data ? { email: session.data.user.email ?? "" } : "skip"
   );
@@ -79,17 +80,23 @@ const Header = () => {
     backdrop-blur-xl 
     bg-white/50 
     shadow-[0_4px_20px_rgba(0,0,0,0.07)]
-    border-b border-blue-600/10
+    border-b border-blue-600/10 overflow-hidden
   `}
     >
-      <nav className="bg-blue-400/10 rounded-b-lg">
+      <nav className="bg-blue-400/10 rounded-b-lg ">
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex items-center justify-between h-12 lg:h-16">
             {/* Logo */}
             <div className="flex items-center gap-2">
-              <div className="flex items-center justify-center relative gap-2 h-10 lg:h-14 w-10 lg:w-14 rounded-full">
+              <div className="flex items-center justify-center relative gap-2 h-10 lg:h-40 w-10 lg:w-40 rounded-full">
                 <Link href="/" className="text-2xl font-bold text-green-600">
-                  <Image src="/logo.png" alt="logo" fill priority />
+                  <Image
+                    src="/logo1.png"
+                    alt="logo"
+                    fill
+                    priority
+                    className="object-cover"
+                  />
                 </Link>
               </div>
               {/* <span className="font-bold text-xl text-gray-900 hidden sm:inline">
@@ -99,11 +106,14 @@ const Header = () => {
 
             {/* Desktop Navigation */}
             <div className="hidden lg:flex items-center gap-8">
-              {["Browse", "Sell", "About", "Dashboard"].map((item, i) => (
+              {NavLinks.map((item, i) => (
                 <Link
                   key={i}
                   href={item === "Browse" ? "/" : `/${item.toLowerCase()}`}
-                  className="text-gray-800 font-medium hover:text-blue-600 transition-all hover:scale-[1.03]"
+                  className={cn(
+                    "text-gray-800 font-medium hover:text-blue-600 transition-all hover:scale-[1.03]",
+                    item === "SuperDeals" ? "text-blue-600 font-semibold" : ""
+                  )}
                 >
                   {item}
                 </Link>
@@ -149,14 +159,18 @@ const Header = () => {
                   </span>
                 </Button>
               </Link>
-              {
-                user ? <UserButton/> : <Button
+              {user ? (
+                <UserButton />
+              ) : (
+                <Button
                   className="relative p-2 hover:bg-gray-100 cursor-pointer rounded-lg transition"
                   aria-label="Shopping cart"
                   variant={"secondary"}
                   size={"sm"}
-                >Sign in</Button>
-              }
+                >
+                  Sign in
+                </Button>
+              )}
               <Button
                 variant={"secondary"}
                 className="lg:hidden p-2 hover:bg-gray-100 rounded-lg transition"

@@ -1,18 +1,4 @@
-export const NavLinks = [
-    {
-        label:'products',
-        link:'#products'
-    },
-    {
-        label:'deals',
-        link:'#products'
-    },
-    {
-        label:'contact',
-        link:'#products'
-    },
-    
-]
+export const NavLinks = ["SuperDeals", "Sell", "About", "Dashboard"]
 
 export const categories = [
   "Electronics",
