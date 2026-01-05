@@ -10,9 +10,9 @@ export default function Footer() {
             <div>
               <div className="flex items-center gap-2 mb-4">
                 <div className="w-10 relative h-10 bg-white rounded-lg flex items-center justify-center">
-                  <Image src="/logo.png" alt="mwod technology" fill />
+                  <Image src="/logo1.png" alt="mwod technology" fill className="object-cover" />
                 </div>
-                <span className="font-bold text-xl">Easy Fix</span>
+                <span className="font-bold text-xl">mwod technology</span>
               </div>
               <p className="text-gray-400 text-sm mb-4">
                 Your ultimate destination for high-quality electronics and unbeatable deals. Discover innovation, reliability, and exceptional customer service.
@@ -23,9 +23,9 @@ export default function Footer() {
             <div>
               <h4 className="font-bold text-lg mb-4">Shop</h4>
               <ul className="space-y-2 text-gray-400 text-sm">
-                <li><a href="/products" className="hover:text-white transition">Products</a></li>
+                <li><a href="/buy-laptops-in-rwanda" className="hover:text-white transition">Products</a></li>
                 <li><a href="/deals" className="hover:text-white transition">Deals</a></li>
-                <li><a href="/contact" className="hover:text-white transition">Contact</a></li>
+                {/* <li><a href="/contact" className="hover:text-white transition">Contact</a></li> */}
               </ul>
             </div>
 
@@ -33,9 +33,9 @@ export default function Footer() {
             <div>
               <h4 className="font-bold text-lg mb-4">Resources</h4>
               <ul className="space-y-2 text-gray-400 text-sm">
-                <li><a href="/how-to-sell" className="hover:text-white transition">How to Sell</a></li>
-                <li><a href="/buying-guide" className="hover:text-white transition">Buying Guide</a></li>
-                <li><a href="/warranty-info" className="hover:text-white transition">Warranty Info</a></li>
+                <li><a href="/sell" className="hover:text-white transition">How to Sell</a></li>
+                <li><a href="#" className="hover:text-white transition">Buying Guide</a></li>
+                <li><a href="/#" className="hover:text-white transition">Warranty Info</a></li>
               </ul>
             </div>
 
@@ -43,9 +43,9 @@ export default function Footer() {
             <div>
               <h4 className="font-bold text-lg mb-4">Contact Us</h4>
               <ul className="space-y-3 text-gray-400 text-sm">
-                <li>Email: baganinezjb@gmail.com</li>
-                <li>Phone: +250783805516</li>
-                <li>Address: 123 Tech Lane, Innovation City, TX 78701</li>
+                <li>Email: mwodtech@gmail.com</li>
+                <li>Phone: +250790000090</li>
+                <li>Address: Kigali, Rwanda</li>
               </ul>
             </div>
           </div>
