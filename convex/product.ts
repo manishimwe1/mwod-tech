@@ -110,6 +110,12 @@ export const getAllProducts = query({
     return await ctx.db.query("products").order("desc").collect();
   },
 });
+export const getProductById = query({
+  args: { id: v.id("products") },
+  handler: async (ctx, args) => {
+    return await ctx.db.get(args.id);
+  },
+});
 
 
 export const getProductsWithImagePaginated = query({
@@ -239,6 +245,31 @@ export const deleteProduct = mutation({
     await ctx.db.delete(args.id);
 
     // 4. Return success flag
+    return { success: true };
+  },
+});
+
+
+export const sellProduct = mutation({
+  args: {
+    productId: v.id("products"),
+    quantity: v.number(),
+  },
+  handler: async (ctx, { productId, quantity }) => {
+    const product = await ctx.db.get(productId);
+
+    if (!product) {
+      throw new Error("Product not found");
+    }
+
+    if (product.stock < quantity) {
+      throw new Error("Not enough stock");
+    }
+
+    await ctx.db.patch(productId, {
+      stock: product.stock - quantity,
+    });
+
     return { success: true };
   },
 });

@@ -11,10 +11,12 @@ import {
 } from "@/components/ui/dropdown-menu";
 import DeleteProductModel from "./DeleteProductModel";
 import { EditProductModel } from "./EditProductModel";
+import SaledProductModel from "./SaledProductModel";
 
 const ProductAction = ({ product }: { product: Doc<"products"> }) => {
   const [openDelete, setOpenDelete] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
+  const [saledProduct, setSaledProduct] = useState(false);
   return (
     <>
       <DropdownMenu>
@@ -24,7 +26,12 @@ const ProductAction = ({ product }: { product: Doc<"products"> }) => {
         <DropdownMenuContent>
           <DropdownMenuLabel>Product</DropdownMenuLabel>
           <DropdownMenuSeparator />
-          <DropdownMenuItem>Saled</DropdownMenuItem>
+          <DropdownMenuItem
+            className="cursor-pointer"
+            onClick={() => setSaledProduct(true)}
+          >
+            Saled
+          </DropdownMenuItem>
           <DropdownMenuItem
             className="cursor-pointer"
             onClick={() => setOpenEdit(true)}
@@ -55,6 +62,14 @@ const ProductAction = ({ product }: { product: Doc<"products"> }) => {
         <EditProductModel
           isOpen={openEdit}
           onClose={() => setOpenEdit(false)}
+          product={product}
+        />
+      )}
+
+      {saledProduct && (
+        <SaledProductModel
+          isOpen={saledProduct}
+          onClose={() => setSaledProduct(false)}
           product={product}
         />
       )}

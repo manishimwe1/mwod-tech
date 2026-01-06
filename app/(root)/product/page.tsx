@@ -21,10 +21,13 @@ const ProductPageContent = () => {
   const searchParams = useSearchParams();
   const category = searchParams.get("category");
   const { products: fetchedProducts, setProducts } = useProductStore();
-  const productsInDB = useQuery(api.product.getProductsWithImage);
+  const productsInDB = useQuery(
+      api.product.getProductsWithImagePaginated,
+      { paginationOpts: { numItems: 12 } }
+    );
 
   useEffect(() => {
-    if (productsInDB) setProducts(productsInDB as Doc<"products">[]);
+    if (productsInDB) setProducts(productsInDB.page as Doc<"products">[]);
   }, [productsInDB, setProducts]);
 
   console.log({ fetchedProducts });

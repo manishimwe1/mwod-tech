@@ -16,6 +16,7 @@ import type * as invoice from "../invoice.js";
 import type * as ledger from "../ledger.js";
 import type * as product from "../product.js";
 import type * as ricaForm from "../ricaForm.js";
+import type * as sales from "../sales.js";
 import type * as selledProduct from "../selledProduct.js";
 import type * as users from "../users.js";
 import type * as wishlist from "../wishlist.js";
@@ -43,6 +44,7 @@ declare const fullApi: ApiFromModules<{
   ledger: typeof ledger;
   product: typeof product;
   ricaForm: typeof ricaForm;
+  sales: typeof sales;
   selledProduct: typeof selledProduct;
   users: typeof users;
   wishlist: typeof wishlist;

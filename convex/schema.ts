@@ -1,6 +1,16 @@
 import { defineSchema, defineTable } from "convex/server";
 import { v } from "convex/values";
 export default defineSchema({
+
+  sales: defineTable({
+    productId: v.id("products"),
+    quantity: v.number(),
+    unitPrice: v.number(),
+    discount: v.number(),
+    totalAmount: v.number(),
+    date: v.number(),
+  }).index("by_product", ["productId"]),
+
   ricaForm: defineTable({
     clientName: v.string(),
     clientPhone: v.optional(v.string()),
@@ -12,11 +22,17 @@ export default defineSchema({
     updatedAt: v.number(),
     date: v.number(),
   }),
+  
   ledgerIncome: defineTable({
+    type: v.union(v.literal("income"), v.literal("expense")),
+    referenceId: v.optional(v.union(
+      v.id("sales"),
+      v.id("products")
+    )),
     totalAmount: v.number(),
     date: v.number(),
-    invoiceId: v.union(v.id("invoice"), v.id("product"), v.id("facture")),
-  }).index("by_invoiceId", ["invoiceId"]),
+  }).index("by_date", ["date"]),
+
   invoice: defineTable({
     clientName: v.string(),
     clientPhone: v.optional(v.string()),
