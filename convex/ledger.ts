@@ -4,21 +4,18 @@ import { v } from "convex/values";
 // Create a new ledger income entry
 export const createLedgerIncome = mutation({
   args: {
-    totalAmount: v.number(),
     date: v.number(),
-    invoiceId: v.union(v.id("invoice"), v.id("product"), v.id("facture")),
+    referenceId: v.id("sales"),
+    totalAmount: v.number(),
   },
   handler: async (ctx, args) => {
-    const newLedgerIncome = await ctx.db.insert("ledgerIncome", {
-      totalAmount: args.totalAmount,
-      date: args.date,
-      invoiceId: args.invoiceId,
+    return await ctx.db.insert("ledgerIncome", {
+      ...args,
+      type: "income",
     });
-    return newLedgerIncome;
   },
 });
 
-// Get a single ledger income entry by ID
 export const getLedgerIncome = query({
   args: {
     id: v.id("ledgerIncome"),
@@ -38,13 +35,22 @@ export const listLedgerIncome = query({
   },
 });
 
+export const totalRevenue = query({
+  args: {},
+  handler: async (ctx) => {
+    const ledgerIncome = await ctx.db.query("ledgerIncome").collect();
+    const total = ledgerIncome.reduce((sum, entry) => sum + entry.totalAmount, 0);
+    return total;
+  },
+});
+
 // Update an existing ledger income entry
 export const updateLedgerIncome = mutation({
   args: {
     id: v.id("ledgerIncome"),
     totalAmount: v.optional(v.number()),
     date: v.optional(v.number()),
-    invoiceId: v.optional(v.union(v.id("invoice"), v.id("product"), v.id("facture"))),
+    referenceId: v.optional(v.id("sales")),
   },
   handler: async (ctx, args) => {
     const { id, ...rest } = args;
@@ -61,5 +67,25 @@ export const deleteLedgerIncome = mutation({
   handler: async (ctx, args) => {
     await ctx.db.delete(args.id);
     return { success: true };
+  },
+});
+
+export const getTotalRevenueByDateRange = query({
+  args: {
+    startDate: v.number(),
+    endDate: v.number(),
+  },
+  handler: async (ctx, args) => {
+    const ledgerIncome = await ctx.db
+      .query("ledgerIncome")
+      .filter((q) =>
+        q.and(
+          q.gte(q.field("date"), args.startDate),
+          q.lte(q.field("date"), args.endDate),
+        ),
+      )
+      .collect();
+    const total = ledgerIncome.reduce((sum, entry) => sum + entry.totalAmount, 0);
+    return total;
   },
 });
