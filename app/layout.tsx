@@ -27,7 +27,6 @@ export const metadata: Metadata = {
     "buy electronics",
     "sell electronics",
     "tech services",
-    "gadgets",
     "smartphones",
     "laptops",
     "accessories",
