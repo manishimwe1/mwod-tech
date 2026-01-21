@@ -136,13 +136,13 @@ const Header = () => {
               {NavLinks.map((item, i) => (
                 <Link
                   key={i}
-                  href={item === "Browse" ? "/" : `/${item.toLowerCase()}`}
+                  href={item.href}
                   className={cn(
                     "text-gray-800 font-medium hover:text-blue-600 transition-all hover:scale-[1.03]",
-                    item === "SuperDeals" ? "text-blue-600 font-semibold" : "",
+                    item.label === "SuperDeals" ? "text-blue-600 font-semibold" : "",
                   )}
                 >
-                  {item}
+                  {item.label}
                 </Link>
               ))}
             </div>
@@ -260,13 +260,13 @@ const Header = () => {
       {showMobileMenu && (
         <div className="lg:hidden border-t bg-white ">
           <div className="px-4 py-4 space-y-3 flex flex-col items-center">
-            {["Browse", "Sell", "About", "Dashboard"].map((item, i) => (
+            {NavLinks.map((item, i) => (
               <Link
                 key={i}
-                href={item === "Browse" ? "/" : `/${item.toLowerCase()}`}
+                href={item.href}
                 className="text-gray-800 py-2 w-[200px] font-medium hover:text-blue-600 transition-all hover:scale-[1.03]"
               >
-                {item}
+                {item.label}
               </Link>
             ))}
           </div>
