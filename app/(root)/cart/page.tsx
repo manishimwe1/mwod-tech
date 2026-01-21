@@ -19,27 +19,60 @@ import {
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useSession } from "next-auth/react";
+import { useState, useEffect } from 'react';
+import { whatsappUrl } from "@/constants";
 
 const CartPage = () => {
   const session = useSession();
   const user = useQuery(
     api.users.getUserByEmail,
-    session.data ? { email: session.data.user.email ?? "" } : "skip"
+    session.data ? { email: session.data.user.email ?? "" } : "skip",
   );
-  const cartItems = useQuery(
-    api.cart.get,
-    user?._id ? { userId: user._id as any } : "skip"
-  );
+
+  const [anonymousId, setAnonymousId] = useState<string | null>(null);
+
+  useEffect(() => {
+    const getAnonymousId = () => {
+      let id = localStorage.getItem("anonymousId");
+      if (!id) {
+        id = crypto.randomUUID();
+        localStorage.setItem("anonymousId", id);
+      }
+      return id;
+    };
+
+    if (!user) {
+      const id = getAnonymousId();
+      setAnonymousId(id);
+    }
+  }, [user]);
+
+  let cartItems;
+  if (!user) {
+    cartItems = useQuery(
+      api.cart.get,
+      anonymousId ? { anonymousId } : "skip",
+    );
+  } else {
+    cartItems = useQuery(
+      api.cart.get,
+      user?._id ? { userId: user._id as any } : "skip",
+    );
+  }
+
   const removeCartItem = useMutation(api.cart.remove);
   const updateCartItemQuantity = useMutation(api.cart.updateQuantity);
 
   const handleRemoveFromCart = async (productId: Doc<"products">["_id"]) => {
-    if (!user) return;
-    await removeCartItem({ productId, userId: user._id as any });
+    if (user) {
+      await removeCartItem({ productId, userId: user._id as any });
+    } else if (anonymousId) {
+      await removeCartItem({ productId, anonymousId });
+    }
   };
 
   const handleUpdateQuantity = async (cartId: Id<"cart">, quantity: number) => {
-    if (!user) return;
+    // if (!user) return;
     if (quantity < 1) return;
     await updateCartItemQuantity({ cartId, quantity });
   };
@@ -76,7 +109,9 @@ const CartPage = () => {
       <div className="min-h-[70vh] flex items-center justify-center">
         <div className="text-center">
           <div className="w-12 h-12 sm:w-16 sm:h-16 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-sm sm:text-base text-gray-600">Loading your cart...</p>
+          <p className="text-sm sm:text-base text-gray-600">
+            Loading your cart...
+          </p>
         </div>
       </div>
     );
@@ -96,10 +131,7 @@ const CartPage = () => {
             Discover amazing products and add them to your cart
           </p>
           <Link href="/">
-            <Button
-              size="lg"
-              className="shopping-btn w-full sm:w-auto"
-            >
+            <Button size="lg" className="shopping-btn w-full sm:w-auto">
               Start Shopping
               <ArrowRight className="ml-2 w-4 h-4" />
             </Button>
@@ -111,7 +143,7 @@ const CartPage = () => {
 
   const totalAmount = cartItems.reduce(
     (sum, item) => sum + (item?.price ?? 0) * (item?.quantity ?? 0),
-    0
+    0,
   );
 
   return (
@@ -174,7 +206,7 @@ const CartPage = () => {
                             onClick={() =>
                               handleUpdateQuantity(
                                 item?.cartId as Id<"cart">,
-                                (item?.quantity ?? 0) - 1
+                                (item?.quantity ?? 0) - 1,
                               )
                             }
                           >
@@ -190,7 +222,7 @@ const CartPage = () => {
                             onClick={() =>
                               handleUpdateQuantity(
                                 item?.cartId as Id<"cart">,
-                                (item?.quantity ?? 0) + 1
+                                (item?.quantity ?? 0) + 1,
                               )
                             }
                           >
@@ -204,7 +236,7 @@ const CartPage = () => {
                         <Button
                           variant="ghost"
                           size="sm"
-                          className="w-full sm:w-auto text-red-500 hover:text-red-700 hover:bg-red-50"
+                          className="w-full cursor-pointer sm:w-auto text-red-500 hover:text-red-700 hover:bg-red-50"
                           onClick={() =>
                             handleRemoveFromCart(item?._id as Id<"products">)
                           }
@@ -264,7 +296,6 @@ const CartPage = () => {
                       variant="secondary"
                       className="flex-1 text-sm sm:text-base w-full cursor-pointer h-11 sm:h-12 bg-green-600 text-white hover:bg-green-700"
                       onClick={() => {
-                        const whatsappUrl = `https://wa.me/250783805516`;
                         window.open(whatsappUrl, "_blank");
                       }}
                     >

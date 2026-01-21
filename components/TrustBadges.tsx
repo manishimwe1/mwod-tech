@@ -16,7 +16,7 @@ const TrustBadges = () => {
             {
               icon: ShieldCheck,
               title: "Warranty Included",
-              desc: "Up to 3 months warranty",
+              desc: "Up to 6 months warranty",
             },
             {
               icon: Truck,

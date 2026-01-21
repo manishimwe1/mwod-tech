@@ -23,3 +23,7 @@ export const brands = [
   "Sony",
   "LG",
 ];
+
+export const CLIENT_PHONE='+250784151129'
+export const CLIENT_EMAIL='mwodtech@gmail.com'
+export const whatsappUrl = `https://wa.me/250784151129`

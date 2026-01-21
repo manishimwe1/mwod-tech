@@ -175,10 +175,13 @@ export default defineSchema({
     .index("by_userId_productId", ["userId", "productId"]),
 
   cart: defineTable({
-    userId: v.id("user"),
+    userId: v.optional(v.id("user")),
+    anonymousId: v.optional(v.string()),
     productId: v.id("products"),
     quantity: v.number(),
   })
     .index("by_userId", ["userId"])
-    .index("by_userId_productId", ["userId", "productId"]),
+    .index("by_anonymousId", ["anonymousId"])
+    .index("by_userId_productId", ["userId", "productId"])
+    .index("by_anonymousId_productId", ["anonymousId", "productId"]),
 });
