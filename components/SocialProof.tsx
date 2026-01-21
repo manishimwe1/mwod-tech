@@ -7,7 +7,7 @@ const SocialProof = () => {
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-12">
             <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
-              Why 10,000+ Rwandans Trust ElectroX
+              Why 10,000+ Rwandans Trust mwod technology
             </h2>
             <p className="text-lg text-gray-600">Real reviews from real customers</p>
           </div>

@@ -4,16 +4,32 @@ import { mutation, query } from "./_generated/server";
 export const add = mutation({
   args: {
     productId: v.id("products"),
-    userId: v.id("user"),
+    userId: v.optional(v.id("user")),
+    anonymousId: v.optional(v.string()),
     quantity: v.number(),
   },
   handler: async (ctx, args) => {
-    const existingCartItem = await ctx.db
-      .query("cart")
-      .withIndex("by_userId_productId", (q) =>
-        q.eq("userId", args.userId).eq("productId", args.productId)
-      )
-      .first();
+    // Validate that either userId or anonymousId is provided
+    if (!args.userId && !args.anonymousId) {
+      throw new Error("Either userId or anonymousId must be provided");
+    }
+
+    let existingCartItem;
+    if (args.userId) {
+      existingCartItem = await ctx.db
+        .query("cart")
+        .withIndex("by_userId_productId", (q) =>
+          q.eq("userId", args.userId).eq("productId", args.productId)
+        )
+        .first();
+    } else {
+      existingCartItem = await ctx.db
+        .query("cart")
+        .withIndex("by_anonymousId_productId", (q) =>
+          q.eq("anonymousId", args.anonymousId!).eq("productId", args.productId)
+        )
+        .first();
+    }
 
     if (existingCartItem) {
       await ctx.db.patch(existingCartItem._id, {
@@ -24,6 +40,7 @@ export const add = mutation({
       const cartId = await ctx.db.insert("cart", {
         productId: args.productId,
         userId: args.userId,
+        anonymousId: args.anonymousId,
         quantity: args.quantity,
       });
       return cartId;
@@ -34,15 +51,31 @@ export const add = mutation({
 export const remove = mutation({
   args: {
     productId: v.id("products"),
-    userId: v.id("user"),
+    userId: v.optional(v.id("user")),
+    anonymousId: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
-    const existingCartItem = await ctx.db
-      .query("cart")
-      .withIndex("by_userId_productId", (q) =>
-        q.eq("userId", args.userId).eq("productId", args.productId)
-      )
-      .first();
+    // Validate that either userId or anonymousId is provided
+    if (!args.userId && !args.anonymousId) {
+      throw new Error("Either userId or anonymousId must be provided");
+    }
+
+    let existingCartItem;
+    if (args.userId) {
+      existingCartItem = await ctx.db
+        .query("cart")
+        .withIndex("by_userId_productId", (q) =>
+          q.eq("userId", args.userId).eq("productId", args.productId)
+        )
+        .first();
+    } else {
+      existingCartItem = await ctx.db
+        .query("cart")
+        .withIndex("by_anonymousId_productId", (q) =>
+          q.eq("anonymousId", args.anonymousId!).eq("productId", args.productId)
+        )
+        .first();
+    }
 
     if (existingCartItem) {
       await ctx.db.delete(existingCartItem._id);
@@ -66,13 +99,27 @@ export const updateQuantity = mutation({
 
 export const get = query({
   args: {
-    userId: v.id("user"),
+    userId: v.optional(v.id("user")),
+    anonymousId: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
-    const cartItems = await ctx.db
-      .query("cart")
-      .withIndex("by_userId", (q) => q.eq("userId", args.userId))
-      .collect();
+    // Validate that either userId or anonymousId is provided
+    if (!args.userId && !args.anonymousId) {
+      throw new Error("Either userId or anonymousId must be provided");
+    }
+
+    let cartItems;
+    if (args.userId) {
+      cartItems = await ctx.db
+        .query("cart")
+        .withIndex("by_userId", (q) => q.eq("userId", args.userId))
+        .collect();
+    } else {
+      cartItems = await ctx.db
+        .query("cart")
+        .withIndex("by_anonymousId", (q) => q.eq("anonymousId", args.anonymousId!))
+        .collect();
+    }
 
     const productsInCart = await Promise.all(
       cartItems.map(async (item) => {

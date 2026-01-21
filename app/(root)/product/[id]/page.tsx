@@ -38,6 +38,7 @@ import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import LeftProductDetailsImage from "@/components/LeftProductDetailsImage";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { whatsappUrl } from "@/constants";
 
 const ProductDetailPage = () => {
   const [quantity, setQuantity] = useState(1);
@@ -245,10 +246,10 @@ const ProductDetailPage = () => {
                       const message = `Hello, I am interested in buying ${
                         product.name
                       } for ${product.price.toLocaleString()} RWF.`;
-                      const whatsappUrl = `https://wa.me/250783805516?text=${encodeURIComponent(
+                      const whatsappUrlCoded = `${whatsappUrl}?text=${encodeURIComponent(
                         message
                       )}`;
-                      window.open(whatsappUrl, "_blank");
+                      window.open(whatsappUrlCoded, "_blank");
                     }}
                   >
                     <MessageCircle className="w-5 h-5 mr-2" />

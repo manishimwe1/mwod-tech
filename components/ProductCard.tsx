@@ -59,15 +59,35 @@ const ProductCard = ({ product,isSelled }: { product: Doc<"products"> | Doc<"sel
    // Prevent event from bubbling up to the Link component
    console.log('here',user);
    
-    if (!user) {
-      router.push("/login");
-      return;
-    }
-    await addCart({
-      productId,
-      userId: user._id as Id<"user">,
-      quantity: 1,
-    });
+   // Generate or get anonymous ID from localStorage (client-side only)
+   const getAnonymousId = () => {
+     if (typeof window === 'undefined') {
+       return null;
+     }
+     let anonymousId = localStorage.getItem('anonymousId');
+     if (!anonymousId) {
+       anonymousId = crypto.randomUUID();
+       localStorage.setItem('anonymousId', anonymousId);
+     }
+     return anonymousId;
+   };
+   
+   if (!user) {
+     const anonymousId = getAnonymousId();
+     if (anonymousId) {
+       await addCart({
+         productId,
+         anonymousId,
+         quantity: 1,
+       });
+     }
+   } else {
+     await addCart({
+       productId,
+       userId: user._id as Id<"user">,
+       quantity: 1,
+     });
+   }
   };
 
   return (

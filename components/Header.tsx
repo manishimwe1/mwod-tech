@@ -30,12 +30,39 @@ const Header = () => {
 
   const user = useQuery(
     api.users.getUserByEmail,
-    session.data ? { email: session.data.user.email ?? "" } : "skip"
+    session.data ? { email: session.data.user.email ?? "" } : "skip",
   );
-  const cartItems = useQuery(
-    api.cart.get,
-    user?._id ? { userId: user._id as any } : "skip"
-  );
+
+  const [anonymousId, setAnonymousId] = useState<string | null>(null);
+
+  useEffect(() => {
+    const getAnonymousId = () => {
+      let id = localStorage.getItem("anonymousId");
+      if (!id) {
+        id = crypto.randomUUID();
+        localStorage.setItem("anonymousId", id);
+      }
+      return id;
+    };
+
+    if (!user) {
+      const id = getAnonymousId();
+      setAnonymousId(id);
+    }
+  }, [user]);
+
+  let cartItems;
+  if (!user) {
+    cartItems = useQuery(
+      api.cart.get,
+      anonymousId ? { anonymousId } : "skip",
+    );
+  } else {
+    cartItems = useQuery(
+      api.cart.get,
+      user?._id ? { userId: user._id as any } : "skip",
+    );
+  }
 
   useEffect(() => {
     const handleScroll = () => {
@@ -112,7 +139,7 @@ const Header = () => {
                   href={item === "Browse" ? "/" : `/${item.toLowerCase()}`}
                   className={cn(
                     "text-gray-800 font-medium hover:text-blue-600 transition-all hover:scale-[1.03]",
-                    item === "SuperDeals" ? "text-blue-600 font-semibold" : ""
+                    item === "SuperDeals" ? "text-blue-600 font-semibold" : "",
                   )}
                 >
                   {item}
@@ -163,9 +190,9 @@ const Header = () => {
                 <UserButton />
               ) : (
                 <Link
-                prefetch
+                  prefetch
                   className="relative p-2 hover:bg-gray-100 cursor-pointer rounded-lg transition"
-                  href='/login'
+                  href="/login"
                 >
                   Log in
                 </Link>

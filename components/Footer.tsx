@@ -1,4 +1,5 @@
 // components/Footer.jsx
+import { CLIENT_EMAIL, CLIENT_PHONE } from "@/constants";
 import Image from "next/image";
 
 export default function Footer() {
@@ -43,8 +44,8 @@ export default function Footer() {
             <div>
               <h4 className="font-bold text-lg mb-4">Contact Us</h4>
               <ul className="space-y-3 text-gray-400 text-sm">
-                <li>Email: mwodtech@gmail.com</li>
-                <li>Phone: +250790000090</li>
+                <li>Email: {CLIENT_EMAIL}</li>
+                <li>Phone: {CLIENT_PHONE}</li>
                 <li>Address: Kigali, Rwanda</li>
               </ul>
             </div>
