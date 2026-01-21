@@ -21,7 +21,7 @@ import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
-import { useQuery } from "convex/react";
+import { useMutation, useQuery } from "convex/react";
 import { motion } from "motion/react";
 import {
   Check,
@@ -39,10 +39,19 @@ import { useEffect, useState } from "react";
 import LeftProductDetailsImage from "@/components/LeftProductDetailsImage";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { whatsappUrl } from "@/constants";
+import { useSession } from "next-auth/react";
 
 const ProductDetailPage = () => {
   const [quantity, setQuantity] = useState(1);
   const [isClient, setIsClient] = useState(false);
+  const session = useSession();
+
+  const user = useQuery(
+    api.users.getUserByEmail,
+    session?.data?.user?.email ? { email: session.data.user.email } : "skip",
+  );
+  const addCart = useMutation(api.cart.add);
+
   const params = useParams();
 
   useEffect(() => {
@@ -51,7 +60,7 @@ const ProductDetailPage = () => {
 
   const product = useQuery(
     api.product.getProduct,
-    isClient && params.id ? { id: params.id as Id<"products"> } : "skip"
+    isClient && params.id ? { id: params.id as Id<"products"> } : "skip",
   );
 
   if (!isClient) return <Loading title="Loading..." />;
@@ -71,6 +80,41 @@ const ProductDetailPage = () => {
         100
       ).toFixed(0)
     : null;
+
+  const handleAddToCart = async (productId: Id<"products">) => {
+    // Prevent event from bubbling up to the Link component
+    console.log("here", user);
+
+    // Generate or get anonymous ID from localStorage (client-side only)
+    const getAnonymousId = () => {
+      if (typeof window === "undefined") {
+        return null;
+      }
+      let anonymousId = localStorage.getItem("anonymousId");
+      if (!anonymousId) {
+        anonymousId = crypto.randomUUID();
+        localStorage.setItem("anonymousId", anonymousId);
+      }
+      return anonymousId;
+    };
+
+    if (!user) {
+      const anonymousId = getAnonymousId();
+      if (anonymousId) {
+        await addCart({
+          productId,
+          anonymousId,
+          quantity: 1,
+        });
+      }
+    } else {
+      await addCart({
+        productId,
+        userId: user._id as Id<"user">,
+        quantity: 1,
+      });
+    }
+  };
 
   const handleQuantityChange = (type: "increment" | "decrement") => {
     if (type === "increment" && quantity < product.stock) {
@@ -146,7 +190,7 @@ const ProductDetailPage = () => {
                   )}
                 </div>
 
-                <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-foreground">
+                <h1 className="text-3xl md:text-4xl truncate line-clamp-2 font-bold tracking-tight text-foreground">
                   {product.name}
                 </h1>
 
@@ -247,7 +291,7 @@ const ProductDetailPage = () => {
                         product.name
                       } for ${product.price.toLocaleString()} RWF.`;
                       const whatsappUrlCoded = `${whatsappUrl}?text=${encodeURIComponent(
-                        message
+                        message,
                       )}`;
                       window.open(whatsappUrlCoded, "_blank");
                     }}

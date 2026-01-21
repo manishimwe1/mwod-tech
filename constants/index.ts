@@ -1,4 +1,9 @@
-export const NavLinks = ["SuperDeals", "Sell", "About", "Dashboard"]
+export const NavLinks = [
+  { label: "SuperDeals", href: "/buy-laptops-in-rwanda" },
+  { label: "Sell", href: "/sell" },
+  { label: "About", href: "/about" },
+  { label: "Dashboard", href: "/dashboard" },
+];
 
 export const categories = [
   "Electronics",
