@@ -1,6 +1,7 @@
 // create a product mutation
 import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
+import { paginationOptsValidator } from "convex/server";
 
 export const generateUploadUrl = mutation(async (ctx) => {
   return await ctx.storage.generateUploadUrl();
@@ -271,5 +272,178 @@ export const sellProduct = mutation({
     });
 
     return { success: true };
+  },
+});
+
+export const searchProducts = query({
+  args: {
+    query: v.string(),
+  },
+  handler: async (ctx, args) => {
+    const { query } = args;
+    const searchTerm = query.toLowerCase().trim();
+
+    // Get all products with active status
+    const allProducts = await ctx.db
+      .query("products")
+      .withIndex("by_status", (q) => q.eq("status", "active"))
+      .order("desc")
+      .collect();
+
+    // Filter products based on search term
+    const filteredProducts = allProducts.filter((product) => {
+      const searchableFields = [
+        product.name,
+        product.description,
+        product.brand,
+        product.category,
+        product.serialNumber,
+        product.condition,
+      ].filter(Boolean);
+
+      return searchableFields.some((field) =>
+        field?.toLowerCase().includes(searchTerm)
+      );
+    });
+
+    // Attach image URLs to filtered products
+    return Promise.all(
+      filteredProducts.map(async (product) => ({
+        ...product,
+        imageUrls:
+          Array.isArray(product.images) && product.images.length > 0
+            ? await Promise.all(
+                product.images.map((imageId) => ctx.storage.getUrl(imageId))
+              )
+            : [],
+      }))
+    );
+  },
+});
+
+
+
+export const getFilteredProductsWithImagePaginated = query({
+  args: {
+    paginationOpts: paginationOptsValidator,
+    filters: v.optional(v.object({
+      category: v.optional(v.string()),
+      brand: v.optional(v.string()),
+      minPrice: v.optional(v.number()),
+      maxPrice: v.optional(v.number()),
+      condition: v.optional(v.union(
+        v.literal("Like New"),
+        v.literal("New"),
+        v.literal("Good"),
+        v.literal("Used")
+      )),
+      sortBy: v.optional(v.union(
+        v.literal("price-low"),
+        v.literal("price-high"),
+        v.literal("newest"),
+        v.literal("popular")
+      )),
+    })),
+  },
+  handler: async (ctx, { paginationOpts, filters }) => {
+    // Choose the right index based on sortBy
+    let query;
+    
+    switch (filters?.sortBy) {
+      case "price-low":
+        query = ctx.db
+          .query("products")
+          .withIndex("by_status_and_price", (q) => 
+            q.eq("status", "active")
+          )
+          .order("asc");
+        break;
+      
+      case "price-high":
+        query = ctx.db
+          .query("products")
+          .withIndex("by_status_and_price", (q) => 
+            q.eq("status", "active")
+          )
+          .order("desc");
+        break;
+      
+     case "newest":
+  query = ctx.db
+    .query("products")
+    .withIndex("by_status", (q) => 
+      q.eq("status", "active")
+    )
+    .order("desc"); // This automatically orders by _creationTime
+  break;
+
+
+      case "popular":
+        query = ctx.db
+          .query("products")
+          .withIndex("by_status_and_views", (q) => 
+            q.eq("status", "active")
+          )
+          .order("desc");
+        break;
+      
+        // Also update the default case:
+default:
+  query = ctx.db
+    .query("products")
+    .withIndex("by_status", (q) => 
+      q.eq("status", "active")
+    )
+    .order("desc");
+    }
+
+    // Apply filters
+    if (filters?.category) {
+      const category = filters.category; // Capture in const
+      query = query.filter((q) => q.eq(q.field("category"), category));
+    }
+
+    if (filters?.brand) {
+      const brand = filters.brand; // Capture in const
+      query = query.filter((q) => q.eq(q.field("brand"), brand));
+    }
+
+    if (filters?.minPrice !== undefined) {
+      const minPrice = filters.minPrice; // Capture in const
+      query = query.filter((q) => q.gte(q.field("price"), minPrice));
+    }
+
+    if (filters?.maxPrice !== undefined) {
+      const maxPrice = filters.maxPrice; // Capture in const
+      query = query.filter((q) => q.lte(q.field("price"), maxPrice));
+    }
+
+    if (filters?.condition) {
+      const condition = filters.condition; // Capture in const
+      query = query.filter((q) => q.eq(q.field("condition"), condition));
+    }
+
+    // Get paginated results
+    const page = await query.paginate(paginationOpts);
+
+    // Attach image URLs
+    const enrichedPage = {
+      ...page,
+      page: await Promise.all(
+        page.page.map(async (product) => ({
+          ...product,
+          imageUrls:
+            Array.isArray(product.images) && product.images.length > 0
+              ? await Promise.all(
+                  product.images.map((imageId) =>
+                    ctx.storage.getUrl(imageId)
+                  )
+                )
+              : [],
+        }))
+      ),
+    };
+
+    return enrichedPage;
   },
 });

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "../globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-
+import WhatsappWidget from "@/components/WhatsappWidget";
 
 export const metadata: Metadata = {
   title: {
@@ -67,13 +67,14 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  
   return (
-    <main className="min-h-screen flex flex-col justify-start w-full">
+    <main className="min-h-screen relative flex flex-col justify-start w-full">
       <Header />
-      {children}
+      <main className="flex-1 relative">
+        {children}
+      </main>
+        <WhatsappWidget />
       <Footer />
-
     </main>
   );
 }

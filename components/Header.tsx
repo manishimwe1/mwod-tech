@@ -15,17 +15,19 @@ import React, { useEffect, useState } from "react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import UserButton from "./userButton";
-import { useSession } from "next-auth/react";
+import { useSession, signIn, signOut } from "next-auth/react";
 import { useMutation, useQuery } from "convex/react";
 import { NavLinks } from "@/constants";
 import { cn } from "@/lib/utils";
+import { useRouter } from "next/navigation";
+import { UserProfileButton } from "./UserProfileButton";
 
 const Header = () => {
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [showSearch, setshowSearch] = useState(false);
   const [searchValue, setsearchValue] = useState("");
-
+  const router = useRouter();
   const session = useSession();
 
   const user = useQuery(
@@ -101,6 +103,28 @@ const Header = () => {
     return () => document.removeEventListener("click", handleClickOutside);
   }, [showSearch]);
 
+  // Prepare user data for UserProfileButton
+  const userData = session.data?.user
+    ? {
+        name: session.data.user.name || "User",
+        email: session.data.user.email || "",
+        image: session.data.user.image || undefined,
+      }
+    : null;
+
+  // Handle Google login with native account picker
+  const handleGoogleLogin = () => {
+    signIn("google", { 
+      callbackUrl: "/",
+      // The prompt: "select_account" is set in your NextAuth config
+    });
+  };
+
+  // Handle logout
+  const handleLogout = () => {
+    signOut({ callbackUrl: "/" });
+  };
+
   return (
     <header
       className={`sticky top-0 z-50  transition-all duration-300 rounded-b-lg
@@ -126,9 +150,6 @@ const Header = () => {
                   />
                 </Link>
               </div>
-              {/* <span className="font-bold text-xl text-gray-900 hidden sm:inline">
-              mwod technology
-            </span> */}
             </div>
 
             {/* Desktop Navigation */}
@@ -156,12 +177,20 @@ const Header = () => {
                   placeholder="Search for phones, laptops, accessories..."
                   className="w-full pl-10 pr-4 py-2 border  placeholder:text-stone-500 text-stone-800 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
                   aria-label="Search products"
+                  value={searchValue}
+                  onChange={(e) => setsearchValue(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" && searchValue.trim()) {
+                      router.push(`/search?query=${encodeURIComponent(searchValue.trim())}`);
+                    }
+                  }}
                 />
               </div>
             </div>
 
             {/* Action Buttons */}
             <div className="flex items-center gap-3">
+              {/* Search Button - Mobile */}
               <div className="lg:hidden flex items-center">
                 <Button
                   className="p-2 hover:bg-gray-100 cursor-pointer rounded-lg transition"
@@ -173,6 +202,8 @@ const Header = () => {
                   <Search className="w-6 h-6 text-gray-700" />
                 </Button>
               </div>
+
+              {/* Cart Button */}
               <Link href={"/cart"} prefetch>
                 <Button
                   className="relative p-2 hover:bg-gray-100 cursor-pointer rounded-lg transition"
@@ -186,17 +217,15 @@ const Header = () => {
                   </span>
                 </Button>
               </Link>
-              {user ? (
-                <UserButton />
-              ) : (
-                <Link
-                  prefetch
-                  className="relative p-2 hover:bg-gray-100 cursor-pointer rounded-lg transition"
-                  href="/login"
-                >
-                  Log in
-                </Link>
-              )}
+
+              {/* User Profile Button - NEW INTEGRATION */}
+              <UserProfileButton
+                user={userData}
+                onLogout={handleLogout}
+                onGoogleLogin={handleGoogleLogin}
+              />
+
+              {/* Mobile Menu Toggle */}
               <Button
                 variant={"secondary"}
                 className="lg:hidden p-2 hover:bg-gray-100 rounded-lg transition"
@@ -213,6 +242,7 @@ const Header = () => {
             </div>
           </div>
 
+          {/* Mobile Search Bar */}
           <div
             className={`md:hidden transition-all duration-300 ${
               showSearch
@@ -249,6 +279,11 @@ const Header = () => {
                   aria-label="Search products"
                   value={searchValue}
                   onChange={(e) => setsearchValue(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" && searchValue.trim()) {
+                      router.push(`/search?query=${encodeURIComponent(searchValue.trim())}`);
+                    }
+                  }}
                 />
               </div>
             </div>
@@ -265,6 +300,7 @@ const Header = () => {
                 key={i}
                 href={item.href}
                 className="text-gray-800 py-2 w-[200px] font-medium hover:text-blue-600 transition-all hover:scale-[1.03]"
+                onClick={() => setShowMobileMenu(false)}
               >
                 {item.label}
               </Link>
