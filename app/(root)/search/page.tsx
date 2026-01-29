@@ -1,5 +1,7 @@
 "use client";
 
+export const dynamic = 'client';
+
 import { api } from "@/convex/_generated/api";
 import { useQuery } from "convex/react";
 import ProductCard from "@/components/ProductCard";
