@@ -13,6 +13,10 @@ const nextConfig: NextConfig = {
         protocol: 'https',
         hostname:  "careful-mole-955.convex.cloud"
       },
+      {
+        protocol: 'https',
+        hostname:  "lh3.googleusercontent.com"
+      },
     ],
   },
 }

@@ -1,6 +1,18 @@
 import { defineSchema, defineTable } from "convex/server";
 import { v } from "convex/values";
 export default defineSchema({
+  // Cart tracking for abandoned cart reminders
+  cartTracking: defineTable({
+    userId: v.optional(v.id("user")),
+    anonymousId: v.optional(v.string()),
+    lastActivity: v.number(), // timestamp
+    reminderSent: v.boolean(),
+    reminderSentAt: v.optional(v.number()), // timestamp
+    createdAt: v.number(), // timestamp
+  })
+    .index("by_user", ["userId"])
+    .index("by_anonymous", ["anonymousId"])
+    .index("by_activity", ["lastActivity", "reminderSent"]),
 
   sales: defineTable({
     productId: v.id("products"),
@@ -22,13 +34,10 @@ export default defineSchema({
     updatedAt: v.number(),
     date: v.number(),
   }),
-  
+
   ledgerIncome: defineTable({
     type: v.union(v.literal("income"), v.literal("expense")),
-    referenceId: v.optional(v.union(
-      v.id("sales"),
-      v.id("products")
-    )),
+    referenceId: v.optional(v.union(v.id("sales"), v.id("products"))),
     totalAmount: v.number(),
     date: v.number(),
   }).index("by_date", ["date"]),
@@ -42,7 +51,7 @@ export default defineSchema({
         description: v.string(),
         quantity: v.number(),
         unitPrice: v.number(),
-      })
+      }),
     ),
     status: v.union(v.literal("draft"), v.literal("sent"), v.literal("paid")),
     totalAmount: v.number(),
@@ -76,7 +85,7 @@ export default defineSchema({
     status: v.union(
       v.literal("active"),
       v.literal("inactive"),
-      v.literal("draft")
+      v.literal("draft"),
     ),
     updatedAt: v.string(),
     createdBy: v.id("user"),
@@ -85,23 +94,25 @@ export default defineSchema({
         v.literal("Like New"),
         v.literal("New"),
         v.literal("Good"),
-        v.literal("Used")
-      )
+        v.literal("Used"),
+      ),
     ),
     badge: v.optional(
       v.union(
         v.literal("NEW"),
         v.literal("HOT"),
         v.literal("SALE"),
-        v.literal("Deals")
-      )
+        v.literal("Deals"),
+      ),
     ),
     views: v.optional(v.number()),
     likes: v.optional(v.number()),
     rating: v.optional(v.number()),
   })
     .index("by_category", ["category"])
-    .index("by_status", ["status"]),
+    .index("by_status", ["status"])
+    .index("by_status_and_price", ["status", "price"]) // For price sorting
+    .index("by_status_and_views", ["status", "views"]), // For popular sorting
   selledProducts: defineTable({
     name: v.string(),
     description: v.string(),
@@ -114,7 +125,7 @@ export default defineSchema({
     status: v.union(
       v.literal("active"),
       v.literal("inactive"),
-      v.literal("draft")
+      v.literal("draft"),
     ),
     updatedAt: v.string(),
     condition: v.optional(
@@ -122,16 +133,16 @@ export default defineSchema({
         v.literal("Like New"),
         v.literal("New"),
         v.literal("Good"),
-        v.literal("Used")
-      )
+        v.literal("Used"),
+      ),
     ),
     badge: v.optional(
       v.union(
         v.literal("NEW"),
         v.literal("HOT"),
         v.literal("SALE"),
-        v.literal("Deals")
-      )
+        v.literal("Deals"),
+      ),
     ),
     views: v.optional(v.number()),
     likes: v.optional(v.number()),
@@ -149,7 +160,7 @@ export default defineSchema({
         quantity: v.number(),
         unitPrice: v.number(),
         totalPrice: v.number(),
-      })
+      }),
     ),
     status: v.union(v.literal("draft"), v.literal("sent"), v.literal("paid")),
     totalAmount: v.number(),
