@@ -1,7 +1,5 @@
 "use client";
 
-export const dynamic = 'client';
-
 import { api } from "@/convex/_generated/api";
 import { useQuery } from "convex/react";
 import ProductCard from "@/components/ProductCard";
@@ -9,8 +7,10 @@ import { useSearchParams } from "next/navigation";
 import { Search } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { Suspense } from "react";
 
-const SearchPage = () => {
+// Separate the search logic into its own component
+function SearchResults() {
   const searchParams = useSearchParams();
   const query = searchParams.get("query") || "";
 
@@ -94,6 +94,27 @@ const SearchPage = () => {
         </div>
       </div>
     </div>
+  );
+}
+
+// Loading fallback component
+function SearchLoadingFallback() {
+  return (
+    <div className="min-h-[70vh] flex items-center justify-center">
+      <div className="text-center">
+        <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+        <p className="text-gray-600">Loading search...</p>
+      </div>
+    </div>
+  );
+}
+
+// Main page component wrapped with Suspense
+const SearchPage = () => {
+  return (
+    <Suspense fallback={<SearchLoadingFallback />}>
+      <SearchResults />
+    </Suspense>
   );
 };
 
